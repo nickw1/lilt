@@ -17,7 +17,11 @@ export default class AnswerController {
         if(qid && answer && uid) {
             if(this.userDao.findUserById(uid) && this.questionDao.findQuestion(qid)) {
                 const info = this.answerDao.addAnswer(uid, qid, answer);
-                res.status(info.changes ? 200:500).json({answerAdded: info.changes==1});
+                if(info === null) {
+                    res.status(400).json({error: "Question already answered."});
+                } else {
+                    res.status(info.changes ? 200:500).json({answerAdded: info.changes==1});
+                }
             } else {
                 res.status(404).json({error: "User and/or question ID not found."});
             }

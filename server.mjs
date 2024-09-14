@@ -1,9 +1,12 @@
 import express from 'express';
 import expressSession from 'express-session';
 import Database from 'better-sqlite3';
+import dotenv from 'dotenv';
+dotenv.config();
 import betterSqlite3Session from 'express-session-better-sqlite3';
 import answerRouter from './server/routes/answer.mjs';
 import userRouter from './server/routes/user.mjs';
+import pageRouter from './server/routes/page.mjs';
 
 import db from './server/db/db.mjs';
 
@@ -54,6 +57,7 @@ app.use(['/answer/new'], (req, res, next) => {
  
 app.use('/answer', answerRouter);
 app.use('/user', userRouter);
+app.use('/page', pageRouter);
 
 const exerciseDao = new ExerciseDao(db);
 

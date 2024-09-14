@@ -6,9 +6,13 @@ export default class AnswerDao {
     }
 
     addAnswer(uid, qid, answer) {
-        const stmt = this.db.prepare("INSERT INTO answers(uid, qid, answer, authorised) VALUES (?,?,?,?)");
-        const info = stmt.run(uid, qid, answer, 0);
-        return info;
+        if(!this.hasUserAnsweredQuestion(uid, qid)) {
+            const stmt = this.db.prepare("INSERT INTO answers(uid, qid, answer, authorised) VALUES (?,?,?,?)");
+            const info = stmt.run(uid, qid, answer, 0);
+            return info;
+        } else {
+            return null;
+        }
     }
 
     findAnswer(id) {
@@ -23,10 +27,12 @@ export default class AnswerDao {
         return results !== null;
     }
 
-    hasUserCompletedExercise(eid) {
-        const stmt = this.db.prepare("SELECT a.authorised FROM questions q INNER JOIN answers a ON q.id=a.qid WHERE q.eid=?");
-        const results = stmt.get(eid);
-        return results.filter ( result => result.authorised === 0 ).length == 0;
+    hasUserCompletedExercise(uid, eid) {
+        const stmt = this.db.prepare("SELECT a.authorised,q.id,q.eid FROM questions q INNER JOIN answers a ON q.id=a.qid WHERE q.eid=? AND a.uid=? AND a.authorised=1");
+        const results = stmt.all(eid, uid);
+        const stmt2 = this.db.prepare("SELECT COUNT(*) AS count FROM questions q WHERE q.eid=?");
+        const results2 = stmt2.get(eid);
+        return results.length == results2.count;
     }
 
     authoriseAnswer(id) {
