@@ -7,8 +7,8 @@ export default class AnswerDao {
 
     addAnswer(uid, qid, answer) {
         if(!this.hasUserAnsweredQuestion(uid, qid)) {
-            const stmt = this.db.prepare("INSERT INTO answers(uid, qid, answer, authorised) VALUES (?,?,?,?)");
-            const info = stmt.run(uid, qid, answer, 0);
+            const stmt = this.db.prepare("INSERT INTO answers(uid, qid, answer, authorised,submitted) VALUES (?,?,?,?,?)");
+            const info = stmt.run(uid, qid, answer, 0, Math.round(Date.now() / 1000));
             return info;
         } else {
             return null;
@@ -24,11 +24,14 @@ export default class AnswerDao {
     hasUserAnsweredQuestion(uid, qid) {
         const stmt = this.db.prepare("SELECT * FROM answers WHERE uid=? AND qid=?");
         const results = stmt.get(uid, qid);
-        return results !== null;
+        return results !== undefined;
     }
 
-    hasUserCompletedExercise(uid, eid) {
-        const stmt = this.db.prepare("SELECT a.authorised,q.id,q.eid FROM questions q INNER JOIN answers a ON q.id=a.qid WHERE q.eid=? AND a.uid=? AND a.authorised=1");
+    hasUserCompletedExercise(uid, eid, allowUnauthorised=false) {
+        const stmt = this.db.prepare(allowUnauthorised ?
+            "SELECT a.authorised,q.id,q.eid FROM questions q INNER JOIN answers a ON q.id=a.qid WHERE q.eid=? AND a.uid=?" :
+            "SELECT a.authorised,q.id,q.eid FROM questions q INNER JOIN answers a ON q.id=a.qid WHERE q.eid=? AND a.uid=? AND a.authorised=1"
+        );
         const results = stmt.all(eid, uid);
         const stmt2 = this.db.prepare("SELECT COUNT(*) AS count FROM questions q WHERE q.eid=?");
         const results2 = stmt2.get(eid);
@@ -36,7 +39,7 @@ export default class AnswerDao {
     }
 
     authoriseAnswer(id) {
-        const stmt = this.db.prepare("UPDATE answers SET authorised=1 WHERE id=?");
+        const stmt = this.db.prepare("UPDATE answers SET authorised=1, answer=NULL WHERE id=?");
         const info = stmt.run(id);
         return info.changes === 1;
     }
@@ -54,7 +57,15 @@ export default class AnswerDao {
     }
 
     getAnswersForExercise(eid) {
-        const stmt = this.db.prepare("SELECT q.id as qid, a.uid, a.answer, a.authorised FROM questions q INNER JOIN answers a ON a.qid=q.id INNER JOIN exercises e ON q.eid=e.id WHERE e.id=? AND a.authorised=0 ORDER BY q.id");
+        const stmt = this.db.prepare("SELECT a.id, q.id as qid, a.uid, a.answer, a.authorised FROM questions q INNER JOIN answers a ON a.qid=q.id INNER JOIN exercises e ON q.eid=e.id WHERE e.id=? AND a.authorised=0 ORDER BY q.id");
+        console.log(eid);
+        console.log(stmt.all(eid));
         return stmt.all(eid);
+    }
+
+    deleteOldAnswers() {
+        const stmt = this.db.prepare("DELETE FROM answers WHERE ?-submitted > 604800");
+        const info = stmt.run(Date.now());
+        return info;
     }
 }

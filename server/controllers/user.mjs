@@ -12,7 +12,7 @@ export default class UserController {
     }
 
     login(req, res) {
-        if(req.body.usercode) {    
+        if(req.body.usercode && req.body.usercode.match("^\\d+$")) {    
             const user = this.userDao.findUserByCode(req.body.usercode);
             if(user) {
                 req.session.uid = user.id;
@@ -38,4 +38,24 @@ export default class UserController {
             res.json({usercode: null});
         }
     } 
+
+    async adminLogin(req, res) {
+        if(req.body.username && req.body.password) {
+            console.log(req.body);
+            const user = await this.userDao.findAdmin(req.body.username, req.body.password);
+            console.log(user);
+            if(user === null) {
+                res.status(401).json({error: "Cannot find admin user"});
+            } else {
+                req.session.admin = true;
+                res.json({loggedIn: true});
+            }
+        } else {
+            res.status(400).json({error: "No login details provided."});
+        }
+    }
+
+    getAdminLogin(req, res) {
+        res.json({loggedIn: req.session.admin ? true: false});
+    }
 }

@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 
 export default class UserDao {
     
@@ -13,7 +14,7 @@ export default class UserDao {
         }
         if(attempts < 10) {
             const stmt = this.db.prepare("INSERT INTO usercodes(usercode, created) VALUES(?,?)");
-            const info = stmt.run(code, Math.round(new Date().getTime() / 1000));
+            const info = stmt.run(code, Math.round(Date.now() / 1000));
             return info.changes ? code : 0;
         } else {
             return 0;
@@ -38,5 +39,27 @@ export default class UserDao {
         const stmt2 = this.db.prepare("DELETE FROM usercodes WHERE id=?");
         const info = stmt2.run(id);
         return info.changes;
+    }
+
+    async findAdmin(username, password) {
+        const stmt = this.db.prepare("SELECT * FROM admins WHERE username=?");
+        const result = stmt.get(username);
+        if(result) {
+            const match = await bcrypt.compare(password, result.password);
+            return result.username;
+        }
+        return null;
+    }
+
+    async addAdmin(username, password) {
+        const encPassword = await bcrypt.hash(password, 10);
+        const stmt = this.db.prepare("INSERT INTO admins(username, password) VALUES(?, ?)");
+        return stmt.run(username, encPassword);
+    }
+
+    deleteOldUsercodes() {
+        const stmt = this.db.prepare("DELETE FROM usercodes WHERE ?-created > 604800");
+        const info = stmt.run(Date.now() / 1000);
+        return info;
     }
 }

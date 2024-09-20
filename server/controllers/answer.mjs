@@ -1,6 +1,7 @@
 import AnswerDao from '../dao/answer.mjs';
 import UserDao from '../dao/user.mjs';
 import QuestionDao from '../dao/question.mjs';
+import xss from 'xss';
 
 export default class AnswerController {
 
@@ -14,9 +15,9 @@ export default class AnswerController {
         const { qid, answer } = req.body;
         const uid = req.session?.uid || 0;
 
-        if(qid && answer && uid) {
+        if(qid && answer && uid && qid.match("^\\d+$")) {
             if(this.userDao.findUserById(uid) && this.questionDao.findQuestion(qid)) {
-                const info = this.answerDao.addAnswer(uid, qid, answer);
+                const info = this.answerDao.addAnswer(xss(uid), xss(qid), xss(answer));
                 if(info === null) {
                     res.status(400).json({error: "Question already answered."});
                 } else {
@@ -29,6 +30,28 @@ export default class AnswerController {
             res.status(400).json({error: "Input data not supplied."});
         }
     } 
+
+    answerQuestions(req, res) {
+        const { answers } = req.body;
+        const uid = req.session?.uid || 0;
+        if(uid && this.userDao.findUserById(uid)) {
+            const status = [];
+            let nAnswered = 0;
+            for(let answer of answers.filter(ans => ans.qid.match("^\\d+$"))) {
+                if(answer.qid && answer.answer) {
+                    const info = this.answerDao.addAnswer(xss(uid), xss(answer.qid), xss(answer.answer));
+                    if(info === null) {
+                        status.push(`Question ${answer.qid} already answered, ignoring.`);
+                    } else {
+                        nAnswered += info.changes;
+                    }
+                }
+            }
+            res.json({status, nAnswered});
+        } else {
+            res.status(401).json({"error": "Not logged in / invalid user"});
+        }
+    }
 
     authoriseAnswer(req, res) {
         if(req.params.id) {

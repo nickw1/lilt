@@ -1,4 +1,5 @@
 import express from 'express';
+import ViteExpress from 'vite-express';
 import expressSession from 'express-session';
 import Database from 'better-sqlite3';
 import dotenv from 'dotenv';
@@ -6,7 +7,10 @@ dotenv.config();
 import betterSqlite3Session from 'express-session-better-sqlite3';
 import answerRouter from './server/routes/answer.mjs';
 import userRouter from './server/routes/user.mjs';
-import pageRouter from './server/routes/page.mjs';
+import notesRouter from './server/routes/notes.mjs';
+import exerciseRouter from './server/routes/exercise.mjs';
+import topicRouter from './server/routes/topic.mjs';
+import moduleRouter from './server/routes/module.mjs';
 
 import db from './server/db/db.mjs';
 
@@ -33,21 +37,27 @@ app.use(expressSession({
     }
 }));
 
+/*
 app.get('/', (req, res) => {
     res.send('<h1>Welcome to nwnotes!</h1>');
 });
+*/
 
-const isadmin = true;
-
-app.use(['/answer/authorise','/answer/exercise/:id(\\d+)'], (req, res, next) => {
-    if(isadmin || req.method == 'GET') {
+app.use([
+        '/answer/:id(\\d+)/authorise',
+        '/answer/exercise/:id(\\d+)',
+        '/topic/new',
+        '/topic/:id(\\d+)/makePublic',
+        '/module/new'
+    ], (req, res, next) => {
+    if(req.session.admin || req.method == 'GET') {
         next();
     } else {
         res.status(401).json({error: "Not authorised to perform this action."});
     }
 });
    
-app.use(['/answer/new'], (req, res, next) => {
+app.use(['/answer/new', '/answer/multiple'], (req, res, next) => {
     if(req.session.uid) {
         next();
     } else {
@@ -57,7 +67,10 @@ app.use(['/answer/new'], (req, res, next) => {
  
 app.use('/answer', answerRouter);
 app.use('/user', userRouter);
-app.use('/page', pageRouter);
+app.use('/notes', notesRouter);
+app.use('/exercise', exerciseRouter);
+app.use('/topic', topicRouter);
+app.use('/module', moduleRouter);
 
 const exerciseDao = new ExerciseDao(db);
 
@@ -74,4 +87,5 @@ app.get('/exercise/:id(\\d+)', (req, res) => {
 
 const PORT = 3000;
 
-app.listen(PORT, () => { console.log(`App listening on port ${PORT}.`) });
+//app.listen(PORT, () => { console.log(`App listening on port ${PORT}.`) });
+ViteExpress.listen(app, PORT, () => { console.log(`App listening on port ${PORT}.`) });
