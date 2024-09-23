@@ -6,7 +6,7 @@ export default function AdminModuleComponent() {
     const [modules, setModules] = useState({});
 
     useEffect(() => {
-        fetch('/module/all')
+        fetch('module/all')
             .then(response => response.json())
             .then(json => {
                 const modulesMap = {};

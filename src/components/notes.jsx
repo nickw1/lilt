@@ -12,7 +12,7 @@ export default function NotesComponent({usercode, module}) {
         if(!module) {
             setContent(<p>Please select a module.</p>);
         } else { 
-            fetch( `/topic/${module}/all`)
+            fetch( `topic/${module}/all`)
                 .then(response => response.json())
                 .then(json => {
                     setTopicsList(json);
@@ -30,7 +30,7 @@ export default function NotesComponent({usercode, module}) {
         if(topic > 0) {
             const arr = [];
             let key=0;
-            fetch(`/notes/${module}/${topic}.json`)
+            fetch(`notes/${module}/${topic}.json`)
                 .then(response => {
                     if(response.status == 404) {
                         throw new Error(`Topic ${topic} for module ${module} does not exist.`);

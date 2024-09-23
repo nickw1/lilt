@@ -24,7 +24,7 @@ export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
 
     async function login() {
         try {
-            const response = await fetch('/user/login', {
+            const response = await fetch('user/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json'
@@ -47,7 +47,7 @@ export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
     async function newUser() {
         if(newUserState == 1) {
             try {
-                const response = await fetch('/user/new', {
+                const response = await fetch('user/new', {
                     method: 'POST',
                 });
                 const json = await response.json();
@@ -67,7 +67,7 @@ export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
 
     async function logout() {
         try {
-            const response = await fetch('/user/logout', {
+            const response = await fetch('user/logout', {
                 method: 'POST'
             });
             const json = await response.json();

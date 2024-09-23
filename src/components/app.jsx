@@ -5,19 +5,8 @@ import NotesComponent from './notes.jsx';
 import useLoggedIn from '../hooks/login.jsx';
 
 export default function App() {
-    //const [usercode, setUsercode] = useState(null);
     const [module, setModule] = useState('');
 	const [usercode, setUsercode] = useLoggedIn();
-
-	/*
-    useEffect(() => {
-        fetch('/user/login')
-            .then(response => response.json())
-            .then(json => {
-                setUsercode(json.usercode);
-            })
-    }, []);
-	*/
 
     const loginComponent = 
         <LoginComponent 

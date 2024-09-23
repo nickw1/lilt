@@ -6,7 +6,7 @@ export default function AdminTopicComponent() {
     const [topics, setTopics] = useState({});
 
     useEffect(() => {
-        fetch('/topic/all')
+        fetch('topic/all')
             .then(response => response.json())
             .then(json => {
                 const topicsMap = {};
@@ -38,7 +38,7 @@ export default function AdminTopicComponent() {
     async function makePublic(e) {
         const id = e.target.getAttribute('data-id');
         try {
-            const response = await fetch(`/topic/${id}/makePublic`, {
+            const response = await fetch(`topic/${id}/makePublic`, {
                 method: 'POST'
             });
             if(response.status == 200) {

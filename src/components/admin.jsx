@@ -7,19 +7,8 @@ import AdminModuleComponent from './adminmodules.jsx';
 import useAdminLoggedIn from '../hooks/admin.jsx';
 
 export default function AdminComponent() {
-//    const [loggedIn, setLoggedIn] = useState(null);
     const [loggedIn, setLoggedIn] = useAdminLoggedIn(false);
 
-
-    /*
-    useEffect(() => {
-        fetch('/user/admin/login')
-            .then(response => response.json())
-            .then(json => {
-                setLoggedIn(json.loggedIn);
-            })
-    }, []);
-    */
 
     return <div><h1>Admin page</h1>
         <AdminLoginComponent 

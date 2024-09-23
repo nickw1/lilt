@@ -7,7 +7,7 @@ export default function AdminAnswersComponent() {
     const [eid, setEid] = useState(1);
 
     useEffect( () => {
-        fetch('/exercise/all')
+        fetch('exercise/all')
             .then(response => response.json())
             .then(json => {
                 console.log(json);
@@ -18,8 +18,7 @@ export default function AdminAnswersComponent() {
     // id, qid, uid, answer, authorised
     useEffect( () => {
         const allAnswers = [];
-        console.log('fetch');
-        fetch(`/answer/exercise/${eid}`)
+        fetch(`answer/exercise/${eid}`)
             .then(response => response.json())
             .then(ans => {
                 let currentQuestionId = 0, currentQuestion = null;
@@ -79,7 +78,7 @@ export default function AdminAnswersComponent() {
     async function authorise(e) {
         const answerId = e.target.getAttribute('data-id');
         try {
-            const response = await fetch(`/answer/${answerId}/authorise`, {
+            const response = await fetch(`answer/${answerId}/authorise`, {
                 method: 'POST'
             });
             if(response.status == 200) {

@@ -15,7 +15,8 @@ const router = createBrowserRouter([{
         path: "/adminanswers",
         element: <AdminAnswersMain />,
     }
-]);
+], // { basename: '/lilt' } // uncomment for non-default base urls 
+);
 
 const root = ReactDOM.createRoot(
     document.getElementById('root')

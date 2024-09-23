@@ -20,7 +20,7 @@ export default function AdminLoginComponent({loggedIn, onLoggedIn, onLoggedOut})
 
     async function login() {
         try {
-            const response = await fetch('/user/admin/login', {
+            const response = await fetch('user/admin/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json'
@@ -44,7 +44,7 @@ export default function AdminLoginComponent({loggedIn, onLoggedIn, onLoggedOut})
 
     async function logout() {
         try {
-            const response = await fetch('/user/logout', {
+            const response = await fetch('user/logout', {
                 method: 'POST'
             });
             const json = await response.json();

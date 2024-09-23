@@ -18,7 +18,7 @@ export default function AdminAddModuleComponent({onModuleAdded}) {
                 name: document.getElementById('moduleName').value
             };
 
-            const response = await fetch('/module/new', {
+            const response = await fetch('module/new', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

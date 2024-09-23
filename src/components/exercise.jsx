@@ -43,7 +43,7 @@ export default function ExerciseComponent({exercise}) {
                 return { qid: element.id.substr(1), answer: element.value }
             } );
         try {
-            const response = await fetch('/answer/multiple', {
+            const response = await fetch('answer/multiple', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

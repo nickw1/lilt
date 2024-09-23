@@ -5,7 +5,7 @@ export default function useLoggedIn() {
 
     useEffect(() => {
         try {
-            fetch('/user/login')
+            fetch('user/login')
                 .then(response => response.json())
                 .then(json => setUsercode(json.usercode));
         } catch(e){
