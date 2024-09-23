@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import LoginComponent from './login.jsx';
 import ModuleChooseComponent from './modulechoose.jsx';
 import NotesComponent from './notes.jsx';
+import useLoggedIn from '../hooks/login.jsx';
 
 export default function App() {
-    const [usercode, setUsercode] = useState(null);
+    //const [usercode, setUsercode] = useState(null);
     const [module, setModule] = useState('');
+	const [usercode, setUsercode] = useLoggedIn();
 
+	/*
     useEffect(() => {
         fetch('/user/login')
             .then(response => response.json())
@@ -14,6 +17,7 @@ export default function App() {
                 setUsercode(json.usercode);
             })
     }, []);
+	*/
 
     const loginComponent = 
         <LoginComponent 
@@ -35,7 +39,7 @@ export default function App() {
         <>{moduleChooseComponent}</> : <div>{moduleChooseComponent}</div>;
 
     return <div style={{height: "100%"}}><div className={ module? 'loginstuff' : 'intro'}>
-        <h1>nwnotes</h1>
+        <h1>lilt</h1>
         {login}
         {modChoose}
         </div>

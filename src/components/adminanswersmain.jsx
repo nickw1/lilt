@@ -6,31 +6,18 @@ import AdminTopicComponent from './admintopics.jsx';
 import AdminModuleComponent from './adminmodules.jsx';
 import useAdminLoggedIn from '../hooks/admin.jsx';
 
-export default function AdminComponent() {
-//    const [loggedIn, setLoggedIn] = useState(null);
+export default function AdminAnswersMain() {
     const [loggedIn, setLoggedIn] = useAdminLoggedIn(false);
 
 
-    /*
-    useEffect(() => {
-        fetch('/user/admin/login')
-            .then(response => response.json())
-            .then(json => {
-                setLoggedIn(json.loggedIn);
-            })
-    }, []);
-    */
-
-    return <div><h1>Admin page</h1>
+    return <div><h1>Admin Answers page</h1>
         <AdminLoginComponent 
             onLoggedIn={() => setLoggedIn(true)} 
             onLoggedOut={() => setLoggedIn(false)} 
             loggedIn={loggedIn} />
         {loggedIn ? 
         <Fragment>
-        <AddExerciseComponent />
-        <AdminTopicComponent />
-        <AdminModuleComponent />
+        <AdminAnswersComponent eid='1' />
         </Fragment>
         : "" }
         </div>

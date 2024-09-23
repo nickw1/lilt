@@ -2,8 +2,14 @@ import React, { useState, useEffect, Fragment } from 'react';
 
 export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
 
+    const [newUserState, setNewUserState] = useState(0);
 
-    return usercode === null ?
+    return usercode === null ? 
+         newUserState == 1 ?  <div>
+        <p style={{fontSize: '75%'}}><strong>Privacy notice:</strong> Your answers to questions, and progress (which questions you have answered) will be stored on the lilt server and linked to your user code, which is valid for one week. After one week, this information will be deleted. <strong>No personally identifiable information, for example name or email address, will be stored at all. This is a completely anonymous tool; user codes are randomly generated.</strong></p>
+        <input type='button' onClick={newUser} value='Click to accept the above.' />
+        </div>
+        :
         <Fragment>
         User code: <input id='usercode' />
         <input type='button' value='Login' onClick={login} />
@@ -11,12 +17,10 @@ export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
         <input type='button' value='Get New User Code' onClick={newUser} />
         <div id='loginError'></div>
         </Fragment>
-
-        :
-
+		:
         <Fragment>Your user code: <strong>{usercode}</strong>
         <input type='button' value='Logout' onClick={logout} />
-        </Fragment>;
+        </Fragment>
 
     async function login() {
         try {
@@ -41,18 +45,23 @@ export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
     }
 
     async function newUser() {
-        try {
-            const response = await fetch('/user/new', {
-                method: 'POST',
-            });
-            const json = await response.json();
-            if(response.status == 200) {
-                alert(`Your user code: ${json.userCode}. This is valid for one week; please use it this week and then get a new one next week.`);
-            } else {
-                document.getElementById('loginError').innerHTML = json.error;
+        if(newUserState == 1) {
+            try {
+                const response = await fetch('/user/new', {
+                    method: 'POST',
+                });
+                const json = await response.json();
+                if(response.status == 200) {
+                    alert(`Your user code: ${json.userCode}. This is valid for one week; please use it this week and then get a new one next week.`);
+                    setNewUserState(0);
+                } else {
+                    document.getElementById('loginError').innerHTML = json.error;
+                }
+            } catch(e) {
+                document.getElementById('loginError').innerHTML = e; 
             }
-        } catch(e) {
-            document.getElementById('loginError').innerHTML = e; 
+        } else {
+            setNewUserState(1);
         }
     }
 

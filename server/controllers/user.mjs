@@ -41,9 +41,7 @@ export default class UserController {
 
     async adminLogin(req, res) {
         if(req.body.username && req.body.password) {
-            console.log(req.body);
             const user = await this.userDao.findAdmin(req.body.username, req.body.password);
-            console.log(user);
             if(user === null) {
                 res.status(401).json({error: "Cannot find admin user"});
             } else {

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, useLoaderData } from 'react-router-dom';
 import App from './components/app.jsx';
 import Admin from './components/admin.jsx';
+import AdminAnswersMain from './components/adminanswersmain.jsx';
 
 const router = createBrowserRouter([{
         path: "/",
@@ -10,6 +11,9 @@ const router = createBrowserRouter([{
     }, {  
         path: "/admin",
         element: <Admin />,
+    }, {  
+        path: "/adminanswers",
+        element: <AdminAnswersMain />,
     }
 ]);
 
