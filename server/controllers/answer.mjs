@@ -34,6 +34,7 @@ export default class AnswerController {
     answerQuestions(req, res) {
         const { answers } = req.body;
         const uid = req.session?.uid || 0;
+        const answered = [];
         if(uid && this.userDao.findUserById(uid)) {
             const status = [];
             let nAnswered = 0;
@@ -42,12 +43,12 @@ export default class AnswerController {
                     const info = this.answerDao.addAnswer(xss(uid), xss(answer.qid), xss(answer.answer));
                     if(info === null) {
                         status.push(`Question ${answer.qid} already answered, ignoring.`);
-                    } else {
-                        nAnswered += info.changes;
+                    } else if (info.changes) {
+                        answered.push(answer.qid);
                     }
                 }
             }
-            res.json({status, nAnswered});
+            res.json({status, answered});
         } else {
             res.status(401).json({"error": "Not logged in / invalid user"});
         }

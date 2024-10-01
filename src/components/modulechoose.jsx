@@ -6,7 +6,7 @@ export default function ModuleChooseComponent ({onModuleChosen})  {
 
 
     useEffect(() => {
-        fetch('module/all')
+        fetch('/module/all')
         .then(response => response.json())
         .then(modules => setModules(modules))
     }, []);

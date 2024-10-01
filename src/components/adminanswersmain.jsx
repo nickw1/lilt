@@ -17,6 +17,7 @@ export default function AdminAnswersMain() {
             loggedIn={loggedIn} />
         {loggedIn ? 
         <Fragment>
+        <p><a href='/admin'>Go to main admin page</a></p>
         <AdminAnswersComponent eid='1' />
         </Fragment>
         : "" }

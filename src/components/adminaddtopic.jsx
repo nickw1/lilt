@@ -18,7 +18,7 @@ export default function AdminAddTopicComponent({onTopicAdded}) {
                 title: document.getElementById('topicTitle').value
             };
 
-            const response = await fetch('topic/new', {
+            const response = await fetch('/topic/new', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

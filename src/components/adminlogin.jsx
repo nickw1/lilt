@@ -20,7 +20,7 @@ export default function AdminLoginComponent({loggedIn, onLoggedIn, onLoggedOut})
 
     async function login() {
         try {
-            const response = await fetch('user/admin/login', {
+            const response = await fetch('/user/admin/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json'
@@ -32,8 +32,8 @@ export default function AdminLoginComponent({loggedIn, onLoggedIn, onLoggedOut})
             });
             const json = await response.json();
             if(response.status == 200) {
-                // possible question - how do we transmit login status to the rest of the app?
                 onLoggedIn();
+                document.getElementById('adminLoginError').innerHTML = '';
             } else {
                 document.getElementById('adminLoginError').innerHTML = json.error;
             }
@@ -44,7 +44,7 @@ export default function AdminLoginComponent({loggedIn, onLoggedIn, onLoggedOut})
 
     async function logout() {
         try {
-            const response = await fetch('user/logout', {
+            const response = await fetch('/user/logout', {
                 method: 'POST'
             });
             const json = await response.json();

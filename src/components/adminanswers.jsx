@@ -7,10 +7,9 @@ export default function AdminAnswersComponent() {
     const [eid, setEid] = useState(1);
 
     useEffect( () => {
-        fetch('exercise/all')
+        fetch('/exercise/all')
             .then(response => response.json())
             .then(json => {
-                console.log(json);
                 setExercises(json);
             })
     }, []);
@@ -18,14 +17,12 @@ export default function AdminAnswersComponent() {
     // id, qid, uid, answer, authorised
     useEffect( () => {
         const allAnswers = [];
-        fetch(`answer/exercise/${eid}`)
+        fetch(`/answer/exercise/${eid}`)
             .then(response => response.json())
             .then(ans => {
                 let currentQuestionId = 0, currentQuestion = null;
                 for(let answer of ans) {
-                    console.log(answer);
                     if(answer.qid != currentQuestionId) {
-                        console.log(`NEW QUESTION`);
                         if(currentQuestion != null) {
                             allAnswers.push(currentQuestion);
                         }
@@ -35,22 +32,16 @@ export default function AdminAnswersComponent() {
                         };
                         currentQuestionId = answer.qid;
                     }
-                    console.log('pushing answer: current answers:');
                     currentQuestion.answers.push(answer);
-                    console.log(currentQuestion)
                 }
                 if(currentQuestion != null) {
                     allAnswers.push(currentQuestion);
                 }
-                console.log('setAnswers');
                 setAnswers(allAnswers);
             });
     }, [eid]);
 
-    console.log('answers');
-    console.log(answers);
     const output = answers.map( answer => {
-            console.log(`answer: ${answer}`);
             const answersForQuestion = answer.answers.map ( 
                 indivAnswer =>     
                     <li key={indivAnswer.id}>{indivAnswer.answer}
@@ -78,7 +69,7 @@ export default function AdminAnswersComponent() {
     async function authorise(e) {
         const answerId = e.target.getAttribute('data-id');
         try {
-            const response = await fetch(`answer/${answerId}/authorise`, {
+            const response = await fetch(`/answer/${answerId}/authorise`, {
                 method: 'POST'
             });
             if(response.status == 200) {

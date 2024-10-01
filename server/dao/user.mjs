@@ -46,7 +46,7 @@ export default class UserDao {
         const result = stmt.get(username);
         if(result) {
             const match = await bcrypt.compare(password, result.password);
-            return result.username;
+            return match ?  result.username : null;
         }
         return null;
     }

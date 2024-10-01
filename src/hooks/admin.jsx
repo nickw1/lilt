@@ -5,7 +5,7 @@ export default function useAdminLoggedIn() {
 
     useEffect(() => {
         try {
-            fetch('user/admin/login')
+            fetch('/user/admin/login')
                 .then(response => response.json())
                 .then(json => setLoggedIn(json.loggedIn));
         } catch(e){

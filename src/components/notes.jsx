@@ -2,17 +2,19 @@ import React, { useState, useEffect, Fragment } from 'react';
 import ExerciseComponent from './exercise.jsx';
 import { Interweave } from 'interweave';
 
-export default function NotesComponent({usercode, module}) {
+export default function NotesComponent({usercode, module, initTopic}) {
 
     const [topicsList, setTopicsList] = useState([]);
     const [content, setContent] = useState([]);
-    const [topic, setTopic] = useState(0);
+    const [topic, setTopic] = useState(initTopic || 0);
+
+    console.log(`initTopic ${initTopic} topic ${topic}`);
 
     useEffect( () => {
         if(!module) {
             setContent(<p>Please select a module.</p>);
         } else { 
-            fetch( `topic/${module}/all`)
+            fetch(`/topic/${module}/all`)
                 .then(response => response.json())
                 .then(json => {
                     setTopicsList(json);
@@ -30,7 +32,7 @@ export default function NotesComponent({usercode, module}) {
         if(topic > 0) {
             const arr = [];
             let key=0;
-            fetch(`notes/${module}/${topic}.json`)
+            fetch(`/notes/${module}/${topic}.json`)
                 .then(response => {
                     if(response.status == 404) {
                         throw new Error(`Topic ${topic} for module ${module} does not exist.`);
@@ -98,11 +100,14 @@ export default function NotesComponent({usercode, module}) {
         }
     }, [topic, module, usercode]);
 
+//                <a href='#' onClick={()=>setTopic(t.number)}>{t.number} : {t.title}</a>
+                    //href='#' 
+                    //onClick={()=>setTopic(t.number)}>{t.number}</a>
     const displayedTopics = topic == 0 ?
         <ul>
         {topicsList.map( t => 
             <li key={topic.number}>
-                <a href='#' onClick={()=>setTopic(t.number)}>{t.number} : {t.title}</a>
+                <a href={`/?topic=${t.number}&module=${module}`}>{t.number} : {t.title}</a>
             </li>)
         }
         </ul>
@@ -115,8 +120,7 @@ export default function NotesComponent({usercode, module}) {
                     backgroundColor: t.number==topic  ? 'blue': 'gray', 
                     color: 'white', 
                     margin: '4px' }} 
-                    href='#' 
-                    onClick={()=>setTopic(t.number)}>{t.number}</a>
+                    href={`/?topic=${t.number}&module=${module}`}>{t.number}</a>
                 )
             }</div>;
                 

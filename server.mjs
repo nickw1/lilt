@@ -2,6 +2,7 @@ import express from 'express';
 import ViteExpress from 'vite-express';
 import expressSession from 'express-session';
 import Database from 'better-sqlite3';
+import path from 'path';
 import dotenv from 'dotenv';
 dotenv.config();
 import betterSqlite3Session from 'express-session-better-sqlite3';
@@ -83,9 +84,15 @@ app.get('/exercise/:id(\\d+)', (req, res) => {
     const exercise = exerciseDao.getFullExercise(req.params.id);
     res.json(exercise);
 });
-    
 
-const PORT = 3000;
+/*
+app.get('*', (req, res) => {
+    const file = path.resolve('dist/index.html');
+    res.sendFile(file);
+});    
+*/
+
+const PORT = 3002;
 
 //app.listen(PORT, () => { console.log(`App listening on port ${PORT}.`) });
 ViteExpress.listen(app, PORT, () => { console.log(`App listening on port ${PORT}.`) });

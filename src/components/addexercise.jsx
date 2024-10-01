@@ -46,7 +46,7 @@ export default function AddExerciseComponent() {
         try {
             const topic = document.getElementById('topic').value;
             const intro = document.getElementById('intro').value;
-            const response = await fetch('exercise/new', {
+            const response = await fetch('/exercise/new', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -3,10 +3,12 @@ import LoginComponent from './login.jsx';
 import ModuleChooseComponent from './modulechoose.jsx';
 import NotesComponent from './notes.jsx';
 import useLoggedIn from '../hooks/login.jsx';
+import { useSearchParams } from 'react-router-dom';
 
 export default function App() {
-    const [module, setModule] = useState('');
-	const [usercode, setUsercode] = useLoggedIn();
+    const [usercode, setUsercode] = useLoggedIn();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [module, setModule] = useState(searchParams.get('module') || '');
 
     const loginComponent = 
         <LoginComponent 
@@ -34,7 +36,7 @@ export default function App() {
         </div>
         { module ?  
         <div className='notes'>
-        <NotesComponent usercode={usercode} module={module} />
+        <NotesComponent usercode={usercode} module={module} initTopic={searchParams.get('topic') || 0} />
         </div> : ""  }
         </div>;
 
