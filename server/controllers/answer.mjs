@@ -14,6 +14,7 @@ export default class AnswerController {
     answerQuestion(req, res) {
         const { qid, answer } = req.body;
         const uid = req.session?.uid || 0;
+        let info = null;
 
         if(qid && answer && uid && qid.match("^\\d+$")) {
             if(this.userDao.findUserById(uid) && this.questionDao.findQuestion(qid)) {

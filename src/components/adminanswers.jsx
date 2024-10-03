@@ -16,29 +16,32 @@ export default function AdminAnswersComponent() {
 
     // id, qid, uid, answer, authorised
     useEffect( () => {
-        const allAnswers = [];
-        fetch(`/answer/exercise/${eid}`)
-            .then(response => response.json())
-            .then(ans => {
-                let currentQuestionId = 0, currentQuestion = null;
-                for(let answer of ans) {
-                    if(answer.qid != currentQuestionId) {
-                        if(currentQuestion != null) {
-                            allAnswers.push(currentQuestion);
+        const timerHandle= setInterval( () => {
+            const allAnswers = [];
+            fetch(`/answer/exercise/${eid}`)
+                .then(response => response.json())
+                .then(ans => {
+                    let currentQuestionId = 0, currentQuestion = null;
+                    for(let answer of ans) {
+                        if(answer.qid != currentQuestionId) {
+                            if(currentQuestion != null) {
+                                allAnswers.push(currentQuestion);
+                            }
+                            currentQuestion = {
+                                qid: answer.qid,
+                                answers: []
+                            };
+                            currentQuestionId = answer.qid;
                         }
-                        currentQuestion = {
-                            qid: answer.qid,
-                            answers: []
-                        };
-                        currentQuestionId = answer.qid;
+                        currentQuestion.answers.push(answer);
                     }
-                    currentQuestion.answers.push(answer);
-                }
-                if(currentQuestion != null) {
-                    allAnswers.push(currentQuestion);
-                }
-                setAnswers(allAnswers);
-            });
+                    if(currentQuestion != null) {
+                        allAnswers.push(currentQuestion);
+                    }
+                    setAnswers(allAnswers);
+                });
+        }, 3000);
+        return () => clearInterval(timerHandle);
     }, [eid]);
 
     const output = answers.map( answer => {

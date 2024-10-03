@@ -52,7 +52,11 @@ export default function ExerciseComponent({exercise}) {
             });
             const json = await response.json();
             if(response.status == 200) {
-                alert('Question(s) answered successfully');
+                if(json.status.length > 0) {
+                    alert(json.status.join("\n"));
+                } else {
+                    alert('Question(s) answered successfully');
+                }
             } else {
                 alert(json.error);
             }

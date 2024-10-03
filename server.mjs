@@ -85,13 +85,6 @@ app.get('/exercise/:id(\\d+)', (req, res) => {
     res.json(exercise);
 });
 
-/*
-app.get('*', (req, res) => {
-    const file = path.resolve('dist/index.html');
-    res.sendFile(file);
-});    
-*/
-
 const PORT = 3002;
 
 //app.listen(PORT, () => { console.log(`App listening on port ${PORT}.`) });
