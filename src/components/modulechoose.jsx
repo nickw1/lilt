@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import useModules from '../hooks/modules.jsx';
 
 export default function ModuleChooseComponent ({onModuleChosen})  {
 
-    const [modules, setModules] = useState([]);
-
-
-    useEffect(() => {
-        fetch('/module/all')
-        .then(response => response.json())
-        .then(modules => setModules(modules))
-    }, []);
+    const [modules, setModules] = useModules();
 
     const moduleInfo = modules.map(module => 
         <option key={module.id} value={module.code}>{module.name}</option>

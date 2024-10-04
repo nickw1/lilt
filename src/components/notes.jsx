@@ -1,5 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import ExerciseComponent from './exercise.jsx';
+import TopicListComponent from './topiclist.jsx';
+import TopicNavComponent from './topicnav.jsx';
 import { Interweave } from 'interweave';
 
 export default function NotesComponent({usercode, module, initTopic}) {
@@ -7,8 +9,6 @@ export default function NotesComponent({usercode, module, initTopic}) {
     const [topicsList, setTopicsList] = useState([]);
     const [content, setContent] = useState([]);
     const [topic, setTopic] = useState(initTopic || 0);
-
-    console.log(`initTopic ${initTopic} topic ${topic}`);
 
     useEffect( () => {
         if(!module) {
@@ -45,22 +45,21 @@ export default function NotesComponent({usercode, module, initTopic}) {
                     const parts = [];
     
                     if(json.header) {
-                        parts.push(<header key={key++}><Interweave content={json.header} /></header>);
+                        parts.push(<header key={key++} className='notesHeader'><Interweave content={json.header} /></header>);
                     }
 
                     for(let section of json.main) {
-                        console.log(section);
                         switch(section.type) {
                             case "public":
                                 parts.push(<Interweave key={key++} content={section.content} />);
                                 break;
     
                             case "protected":
-                                parts.push(<h2>Discussion on exercise {section.dependencies}</h2>);
+                                parts.push(<h2 key={key++}>Discussion on exercise {section.dependencies}</h2>);
                                 if(section.status === "unmetDependencies") {
                                     parts.push(
-                                        <div>
-                                        <p key={key++} style={dependencyMsgStyle}>
+                                        <div key={key++}>
+                                        <p style={dependencyMsgStyle}>
                                         <em>Further content is available, but you need to complete Exercise {section.dependencies} and have your answers authorised by the tutor to view it.</em>
                                         </p>
                                         </div>);
@@ -70,7 +69,7 @@ export default function NotesComponent({usercode, module, initTopic}) {
                                 break;
                     
                             case "exercise":
-                                parts.push(<h2>Exercise {section.id}</h2>);
+                                parts.push(<h2 key={key++}>Exercise {section.id}</h2>);
                                 if(usercode) {
                                     if(section.status === "unmetDependencies") {
                                         parts.push(
@@ -80,13 +79,13 @@ export default function NotesComponent({usercode, module, initTopic}) {
                                             </p>);
                                     } else if (section.completed === true) {
                                         parts.push(
-                                            <p><em>You have completed exercise {section.id}. If you do not see the discussion below the exercise, the tutor may need to authorise your answers.</em></p>
+                                            <p key={key++}><em>You have completed exercise {section.id}. If you do not see the discussion below the exercise, the tutor may need to authorise your answers.</em></p>
                                         );
                                     } else {
                                         parts.push(<ExerciseComponent key={key++} exercise={section} />);
                                     }
                                 } else {
-                                    parts.push(<p style={dependencyMsgStyle}><em>You need to be logged in to attempt Exercise {section.id}.</em></p>);
+                                    parts.push(<p key={key++} style={dependencyMsgStyle}><em>You need to be logged in to attempt Exercise {section.id}.</em></p>);
                                 } 
                         }
                     setContent(parts);
@@ -100,29 +99,12 @@ export default function NotesComponent({usercode, module, initTopic}) {
         }
     }, [topic, module, usercode]);
 
-//                <a href='#' onClick={()=>setTopic(t.number)}>{t.number} : {t.title}</a>
-                    //href='#' 
-                    //onClick={()=>setTopic(t.number)}>{t.number}</a>
-    const displayedTopics = topic == 0 ?
-        <ul>
-        {topicsList.map( t => 
-            <li key={topic.number}>
-                <a href={`/?topic=${t.number}&module=${module}`}>{t.number} : {t.title}</a>
-            </li>)
-        }
-        </ul>
-        :
-        <div style={{display: 'flex', justifyContent:'flex-end'}}>{
-            topicsList.map(t => 
-                <a style={{
-                    padding: '8px', 
-                    border: '1px solid black', 
-                    backgroundColor: t.number==topic  ? 'blue': 'gray', 
-                    color: 'white', 
-                    margin: '4px' }} 
-                    href={`/?topic=${t.number}&module=${module}`}>{t.number}</a>
-                )
-            }</div>;
-                
-    return <div>{displayedTopics}<div>{content}</div></div>;
+    const displayedTopics = topic == 0 ? 
+        <TopicListComponent module={module} topicsList={topicsList} /> :
+        <TopicNavComponent module={module} topicsList={topicsList} currentTopic={topic} /> ;
+               
+    return <div>
+        {displayedTopics}
+        <div>{content}</div>
+        </div>;
 }
