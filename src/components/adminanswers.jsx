@@ -61,7 +61,7 @@ export default function AdminAnswersComponent() {
         <h2>Answers</h2>
         Choose an exercise:
         <select onChange={(e) => setEid(e.target.value)}>
-        { exercises.map (exercise => <option key={exercise.id}>{exercise.id}</option>) }
+        { exercises.map (exercise => <option key={exercise.id}>{exercise.moduleCode}: {exercise.publicNumber}</option>) }
         </select>
         <h3>Answers for exercise {eid}</h3>
         {output.length > 0 ? output: "No answers."}

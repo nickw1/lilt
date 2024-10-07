@@ -10,6 +10,8 @@ export default function AddExerciseComponent() {
     return <div>
             <h2>Add an Exercise</h2>
             <form>
+            Module code: <br />
+            <input id='moduleCode' /><br />
             Topic Number: <br />
             <input type='number' id='topic' /><br />    
             Exercise Introduction:<br />
@@ -46,12 +48,13 @@ export default function AddExerciseComponent() {
         try {
             const topic = document.getElementById('topic').value;
             const intro = document.getElementById('intro').value;
+            const moduleCode = document.getElementById('moduleCode').value;
             const response = await fetch('/exercise/new', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({topic, intro, questions})
+                body: JSON.stringify({topic, intro, questions, moduleCode})
             });
             const json = await response.json();
             if(response.status == 200) {

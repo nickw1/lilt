@@ -4,6 +4,8 @@ export default function AdminAddTopicComponent({onTopicAdded}) {
 
     return <div>
         <h3>Add Topic</h3>
+        Module code:<br />
+        <input id='moduleCode2' /><br />
         Topic number: <br />
         <input id='topicNumber' type='number' /><br />
         Topic title: <br />
@@ -14,10 +16,10 @@ export default function AdminAddTopicComponent({onTopicAdded}) {
     async function addTopic() {
         try {
             const topic = {
+                moduleCode: document.getElementById('moduleCode2').value,
                 number: document.getElementById('topicNumber').value,
                 title: document.getElementById('topicTitle').value
             };
-
             const response = await fetch('/topic/new', {
                 method: 'POST',
                 headers: {

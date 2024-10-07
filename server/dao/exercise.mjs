@@ -5,18 +5,24 @@ export default class ExerciseDao {
         this.db = db;
     }
 
-    addExercise(topic, intro) {
-        const stmt = this.db.prepare("INSERT INTO exercises(topic, exercise) VALUES (?,?)");
-        const info = stmt.run(topic, intro);
+    addExercise(topicid, intro, moduleid) {
+        const stmt0 = this.db.prepare("SELECT COUNT(*) AS count FROM exercises WHERE moduleid=?");
+        const { count } = stmt0.get(moduleid);
+        const stmt = this.db.prepare("INSERT INTO exercises(topic, exercise, publicNumber, moduleid) VALUES (?,?,?,?)");
+        const info = stmt.run(topicid, intro, count+1, moduleid);
         return info.lastInsertRowid;
     }
 
     getExercisesForTopic(topicId) {
-        const stmt = this.db.prepare("SELECT * FROM exercises WHERE topic=?");
+        const stmt = this.db.prepare("SELECT * FROM exercises WHERE topic=? AND moduleid=?");
         const results = stmt.all(topicId);
         return results;        
     }
 
+    getExerciseByPublicNumber(topicId, publicNumber) {
+        const stmt = this.db.prepare("SELECT * FROM exercises WHERE topic=? AND publicNumber=?");
+        return stmt.get(topicId, publicNumber);
+    }
 
     getFullExercise(exerciseId) {
         const stmt0 = this.db.prepare("SELECT exercise FROM exercises WHERE id=?");
@@ -55,8 +61,14 @@ export default class ExerciseDao {
         }
     }    
 
+
+    getModuleAndPublicNumberFromId(eid) {
+        const stmt = this.db.prepare("SELECT e.publicNumber, m.code FROM exercises e INNER JOIN modules m ON e.moduleid=m.id");
+        return stmt.get();
+    }
+
     getAll() {
-        const stmt = this.db.prepare("SELECT * FROM exercises ORDER BY id");
+        const stmt = this.db.prepare("SELECT e.*, m.code AS moduleCode FROM exercises e INNER JOIN modules m ON e.moduleid=m.id ORDER BY e.id");
         return stmt.all();
     }
 }

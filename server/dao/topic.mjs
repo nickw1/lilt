@@ -5,9 +5,9 @@ export default class TopicDao {
         this.db = db;
     }
 
-    addTopic(number, title) {
-        const stmt = this.db.prepare("INSERT INTO topics(number, title, unlocked) VALUES (?,?,0)");
-        const info = stmt.run(number, title);
+    addTopic(moduleId, number, title) {
+        const stmt = this.db.prepare("INSERT INTO topics(moduleid, number, title, unlocked) VALUES (?,?,?,0)");
+        const info = stmt.run(moduleId, number, title);
         return info.lastInsertRowid;
     }
 
@@ -27,9 +27,9 @@ export default class TopicDao {
         return stmt.all(moduleCode);
     }
 
-    getTopicByNumber(topicNum) {
-        const stmt = this.db.prepare("SELECT * FROM topics WHERE number=?");
-        return stmt.get(topicNum);
+    getTopicByNumber(moduleId, topicNum) {
+        const stmt = this.db.prepare("SELECT * FROM topics WHERE moduleid=? AND number=?");
+        return stmt.get(moduleId, topicNum);
     }
 }
         

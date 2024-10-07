@@ -58,8 +58,6 @@ export default class AnswerDao {
 
     getAnswersForExercise(eid) {
         const stmt = this.db.prepare("SELECT a.id, q.id as qid, a.uid, a.answer, a.authorised FROM questions q INNER JOIN answers a ON a.qid=q.id INNER JOIN exercises e ON q.eid=e.id WHERE e.id=? AND a.authorised=0 ORDER BY q.id");
-        console.log(eid);
-        console.log(stmt.all(eid));
         return stmt.all(eid);
     }
 

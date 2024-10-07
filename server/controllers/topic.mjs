@@ -1,18 +1,25 @@
 import db from '../db/db.mjs'
 import TopicDao from '../dao/topic.mjs';
+import ModuleDao from '../dao/module.mjs';
 import xss from 'xss';
 
 export default class TopicController {
 
     constructor() {
         this.dao = new TopicDao(db);
+        this.moduleDao = new ModuleDao(db);
     }
 
     addTopic(req, res) {
         try {
-            if(req.body.number && req.body.title && req.body.number.match("^\\d+$")) {
-                const id = this.dao.addTopic(xss(req.body.number), xss(req.body.title));
-                res.json({id});
+            if(req.body.moduleCode && req.body.number && req.body.title && req.body.number.match("^\\d+$")) {
+                const moduleInfo = this.moduleDao.getModuleByCode(xss(req.body.moduleCode));
+                if(moduleInfo) {
+                    const id = this.dao.addTopic(moduleInfo.id, xss(req.body.number), xss(req.body.title));
+                    res.json({id});    
+                } else {
+                    res.status(404).json({error: "Cannot find that module."});
+                }
             } else {
                 res.status(400).json({error: "Topic number and title not supplied."});
             }

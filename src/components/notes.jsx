@@ -69,23 +69,23 @@ export default function NotesComponent({usercode, module, initTopic}) {
                                 break;
                     
                             case "exercise":
-                                parts.push(<h2 key={key++}>Exercise {section.id}</h2>);
+                                parts.push(<h2 key={key++}>Exercise {section.publicNumber}</h2>);
                                 if(usercode) {
                                     if(section.status === "unmetDependencies") {
                                         parts.push(
                                             <p style={dependencyMsgStyle} 
                                             key={key++}>
-                                            <em>You need to complete Exercise {section.dependencies} first before attempting Exercise {section.id}.</em>
+                                            <em>You need to complete Exercise {section.dependencies} first before attempting Exercise {section.publicNumber}.</em>
                                             </p>);
                                     } else if (section.completed === true) {
                                         parts.push(
-                                            <p key={key++}><em>You have completed exercise {section.id}. If you do not see the discussion below the exercise, the tutor may need to authorise your answers.</em></p>
+                                            <p key={key++}><em>You have completed exercise {section.publicNumber}. If you do not see the discussion below the exercise, the tutor may need to authorise your answers.</em></p>
                                         );
                                     } else {
                                         parts.push(<ExerciseComponent key={key++} exercise={section} />);
                                     }
                                 } else {
-                                    parts.push(<p key={key++} style={dependencyMsgStyle}><em>You need to be logged in to attempt Exercise {section.id}.</em></p>);
+                                    parts.push(<p key={key++} style={dependencyMsgStyle}><em>You need to be logged in to attempt Exercise {section.publicNumber}.</em></p>);
                                 } 
                         }
                     setContent(parts);

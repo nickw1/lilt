@@ -15,5 +15,10 @@ export default class ModuleDao {
         const stmt = this.db.prepare("SELECT * FROM modules ORDER BY code");
         return stmt.all();
     }
+
+    getModuleByCode(code) {
+        const stmt = this.db.prepare("SELECT * FROM modules WHERE code=?");
+        return stmt.get(code);
+    }
 }
         
