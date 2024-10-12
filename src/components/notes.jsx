@@ -35,13 +35,17 @@ export default function NotesComponent({usercode, module, initTopic}) {
             fetch(`/notes/${module}/${topic}.json`)
                 .then(response => {
                     if(response.status == 404) {
-                        throw new Error(`Topic ${topic} for module ${module} does not exist.`);
+                        throw new Error(`Notes for topic ${topic} for module ${module} do not exist yet.`);
                     } else {
                         return response.json();
                     }
                 })
                 .then(json => {
-        
+       
+                    if(json.error) {
+                        throw(json.error);
+                    }
+ 
                     const parts = [];
     
                     if(json.header) {
@@ -70,26 +74,25 @@ export default function NotesComponent({usercode, module, initTopic}) {
                     
                             case "exercise":
                                 parts.push(<h2 key={key++}>Exercise {section.publicNumber}</h2>);
-                                if(usercode) {
-                                    if(section.status === "unmetDependencies") {
-                                        parts.push(
-                                            <p style={dependencyMsgStyle} 
-                                            key={key++}>
-                                            <em>You need to complete Exercise {section.dependencies} first before attempting Exercise {section.publicNumber}.</em>
-                                            </p>);
-                                    } else if (section.completed === true) {
+                                if(section.status === "unmetDependencies") {
+                                    parts.push(
+                                        <p style={dependencyMsgStyle} 
+                                        key={key++}>
+                                        <em>You need to complete Exercise {section.dependencies} first before attempting Exercise {section.publicNumber}.</em>
+                                        </p>);
+                                } else if (section.status === 'notLoggedIn') {
+                                    parts.push(<p key={key++} style={dependencyMsgStyle}><em>You need to be logged in to attempt Exercise {section.publicNumber}.</em></p>);
+                                } else {
+                                     if (section.completed === true) {
                                         parts.push(
                                             <p key={key++}><em>You have completed exercise {section.publicNumber}. If you do not see the discussion below the exercise, the tutor may need to authorise your answers.</em></p>
                                         );
-                                    } else {
-                                        parts.push(<ExerciseComponent key={key++} exercise={section} />);
                                     }
-                                } else {
-                                    parts.push(<p key={key++} style={dependencyMsgStyle}><em>You need to be logged in to attempt Exercise {section.publicNumber}.</em></p>);
-                                } 
-                        }
-                    setContent(parts);
+                                    parts.push(<ExerciseComponent key={key++} exercise={section} />);
+                                }
+                    }
                 }
+                setContent(parts);
             })
             .catch(e =>  { 
                 setContent(<p>{e.toString()}</p>); 

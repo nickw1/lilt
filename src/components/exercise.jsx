@@ -25,8 +25,7 @@ export default function ExerciseComponent({exercise}) {
                 });
                 arr.push(<form id={formId}>{item.exercise.intro}
                     <ul>{q}</ul>
-                    <input type='button' value='Answer Questions' 
-                    onClick={answerQuestions} /></form>);
+                    { exercise.showInputs ? <input type='button' value='Answer Questions' onClick={answerQuestions} /> : <em>Submission disabled now the notes are fully visible.</em> } </form>);
             } else {
                 arr.push(<Interweave content={item} />);
             }

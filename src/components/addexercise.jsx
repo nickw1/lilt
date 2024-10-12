@@ -18,7 +18,7 @@ export default function AddExerciseComponent() {
             <textarea id='intro' style={{width:'50%', height:'100px'}}></textarea>
             <h3>Add a question to the exercise</h3>
             Question type:
-            <select id='questionType' onChange={addQuestion} defaultValue='0'>
+            <select id='questionType' onChange={addQuestion} value={qType} defaultValue={qType}>
             <option value='0'>--Select--</option>
             <option value='1'>Text</option>
             <option value='2'>Multiple choice</option>
@@ -28,6 +28,7 @@ export default function AddExerciseComponent() {
             <>
             <AddQuestionComponent qType={qType} onQuestionAdded={onQuestionAdded}/>
             </> : "" }
+            {questions.length ? <p>***{questions.length} questions added so far.</p>: ""}
             <input type='button' value='Save Exercise To Database' onClick={saveExerciseToServer} /><br />
             </form>
             </div>
@@ -41,6 +42,7 @@ export default function AddExerciseComponent() {
         qs.push(q);
         setQuestions(qs);
         setQType(0);    
+        //document.getElementById('questionType').value = 0;
     }
 
     async function saveExerciseToServer() {
@@ -59,6 +61,7 @@ export default function AddExerciseComponent() {
             const json = await response.json();
             if(response.status == 200) {
                 alert('Saved exercise');
+                setQuestions([]);
             } else {
                 alert(json.error);
             }

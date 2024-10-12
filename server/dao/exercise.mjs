@@ -6,8 +6,8 @@ export default class ExerciseDao {
     }
 
     addExercise(topicid, intro, moduleid) {
-        const stmt0 = this.db.prepare("SELECT COUNT(*) AS count FROM exercises WHERE moduleid=?");
-        const { count } = stmt0.get(moduleid);
+        const stmt0 = this.db.prepare("SELECT COUNT(*) AS count FROM exercises WHERE moduleid=? AND topic=?");
+        const { count } = stmt0.get(moduleid, topicid);
         const stmt = this.db.prepare("INSERT INTO exercises(topic, exercise, publicNumber, moduleid) VALUES (?,?,?,?)");
         const info = stmt.run(topicid, intro, count+1, moduleid);
         return info.lastInsertRowid;
@@ -68,7 +68,7 @@ export default class ExerciseDao {
     }
 
     getAll() {
-        const stmt = this.db.prepare("SELECT e.*, m.code AS moduleCode FROM exercises e INNER JOIN modules m ON e.moduleid=m.id ORDER BY e.id");
+        const stmt = this.db.prepare("SELECT e.*, m.code AS moduleCode FROM exercises e INNER JOIN modules m ON e.moduleid=m.id ORDER BY m.code, e.topic, e.publicNumber");
         return stmt.all();
     }
 }

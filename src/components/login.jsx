@@ -18,7 +18,7 @@ export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
         <div id='loginError'></div>
         </Fragment>
         :
-        <Fragment>Your user code: <strong>{usercode}</strong>
+        <Fragment>Your user code: <strong>{usercode==1 ? "admin": usercode}</strong>
         <input type='button' value='Logout' onClick={logout} />
         </Fragment>
 

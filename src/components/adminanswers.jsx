@@ -4,7 +4,7 @@ export default function AdminAnswersComponent() {
 
     const [answers, setAnswers] = useState([]);
     const [exercises, setExercises] = useState([]);
-    const [eid, setEid] = useState(1);
+    const [exerciseDetail, setExerciseDetail] = useState([1,1]);
 
     useEffect( () => {
         fetch('/exercise/all')
@@ -16,35 +16,12 @@ export default function AdminAnswersComponent() {
 
     // id, qid, uid, answer, authorised
     useEffect( () => {
-        const timerHandle= setInterval( () => {
-            const allAnswers = [];
-            fetch(`/answer/exercise/${eid}`)
-                .then(response => response.json())
-                .then(ans => {
-                    let currentQuestionId = 0, currentQuestion = null;
-                    for(let answer of ans) {
-                        if(answer.qid != currentQuestionId) {
-                            if(currentQuestion != null) {
-                                allAnswers.push(currentQuestion);
-                            }
-                            currentQuestion = {
-                                qid: answer.qid,
-                                answers: []
-                            };
-                            currentQuestionId = answer.qid;
-                        }
-                        currentQuestion.answers.push(answer);
-                    }
-                    if(currentQuestion != null) {
-                        allAnswers.push(currentQuestion);
-                    }
-                    setAnswers(allAnswers);
-                });
-        }, 3000);
+        const timerHandle = setInterval(pollServer,  3000);
+        pollServer();
         return () => clearInterval(timerHandle);
-    }, [eid]);
+    }, [exerciseDetail]);
 
-    const output = answers.map( answer => {
+    const output = answers.map( (answer,i) => {
             const answersForQuestion = answer.answers.map ( 
                 indivAnswer =>     
                     <li key={indivAnswer.id}>{indivAnswer.answer}
@@ -52,7 +29,7 @@ export default function AdminAnswersComponent() {
                     </li>
                 );
             return <div>
-                <h4>Question {answer.qid}</h4>
+                <h4>Question {i+1}</h4>
                 <ul>{answersForQuestion}</ul>
             </div>;
     });
@@ -60,10 +37,12 @@ export default function AdminAnswersComponent() {
     return <div>
         <h2>Answers</h2>
         Choose an exercise:
-        <select onChange={(e) => setEid(e.target.value)}>
-        { exercises.map (exercise => <option key={exercise.id}>{exercise.moduleCode}: {exercise.publicNumber}</option>) }
+        <select onChange={(e) => {
+            setExerciseDetail(e.target.value.split(':'));
+        }}>
+        { exercises.map (exercise => <option key={exercise.id} value={`${exercise.id}:${exercise.publicNumber}`}>{exercise.moduleCode}: T{exercise.topicNumber}: Ex {exercise.publicNumber}</option>) }
         </select>
-        <h3>Answers for exercise {eid}</h3>
+        <h3>Answers for exercise {exerciseDetail[1]}</h3>
         {output.length > 0 ? output: "No answers."}
         </div>;
 
@@ -87,5 +66,31 @@ export default function AdminAnswersComponent() {
             }
         } catch(e) {
         }
+    }
+    
+    function pollServer() {
+        const allAnswers = [];
+        fetch(`/answer/exercise/${exerciseDetail[0]}`)
+            .then(response => response.json())
+            .then(ans => {
+                let currentQuestionId = 0, currentQuestion = null;
+                for(let answer of ans) {
+                    if(answer.qid != currentQuestionId) {
+                        if(currentQuestion != null) {
+                            allAnswers.push(currentQuestion);
+                        }
+                        currentQuestion = {
+                            qid: answer.qid,
+                            answers: []
+                        };
+                        currentQuestionId = answer.qid;
+                    }
+                    currentQuestion.answers.push(answer);
+                }
+                if(currentQuestion != null) {
+                    allAnswers.push(currentQuestion);
+                }
+                setAnswers(allAnswers);
+            });
     }
 }

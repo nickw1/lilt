@@ -31,5 +31,10 @@ export default class TopicDao {
         const stmt = this.db.prepare("SELECT * FROM topics WHERE moduleid=? AND number=?");
         return stmt.get(moduleId, topicNum);
     }
+
+    getTopicById(topicId) {
+        const stmt = this.db.prepare("SELECT * FROM topics WHERE id=?");
+        return stmt.get(topicId);
+    }
 }
         

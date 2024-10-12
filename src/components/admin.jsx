@@ -17,7 +17,8 @@ export default function AdminComponent() {
             loggedIn={loggedIn} />
         {loggedIn ? 
         <Fragment>
-        <p><a href='/admin/answers'>View submitted answers</a></p>
+        <p><a href='/admin/answers'>View submitted answers</a> | 
+        <a href='/'>Course notes</a></p>
         <AddExerciseComponent />
         <AdminTopicComponent />
         <AdminModuleComponent />

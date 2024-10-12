@@ -24,6 +24,8 @@ const sessDb = new Database("session.db");
 
 const SqliteStore = betterSqlite3Session(expressSession, sessDb);
 
+app.use(express.static('dist'));
+
 app.use(expressSession({
     store: new SqliteStore(), 
     secret: 'ReplaceWithRandomString', 

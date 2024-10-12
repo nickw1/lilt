@@ -31,7 +31,9 @@ export default class UserController {
     }
 
     checkLogin(req, res) {
-        if(req.session?.uid) {
+        if(req.session?.admin) {
+            res.json({usercode: req.session.uid});
+        } else if(req.session?.uid) {
             const user = this.userDao.findUserById(req.session.uid);
             res.json({usercode: user.usercode}); 
         } else {
@@ -46,6 +48,7 @@ export default class UserController {
                 res.status(401).json({error: "Cannot find admin user"});
             } else {
                 req.session.admin = true;
+                req.session.uid = 1; // use 1 for admin user
                 res.json({loggedIn: true});
             }
         } else {

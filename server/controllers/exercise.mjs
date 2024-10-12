@@ -39,13 +39,19 @@ export default class ExerciseController {
                 res.status(400).json({error:"Missing or invalid topic, intro and/or questions."});
             }
         } catch(e) {
-            res.status(500).json({error: "Internal server error. Probably a coding bug - please add an issue on GitHub."});
+            res.status(500).json({error: `Internal server error. Probably a coding bug - please add an issue on GitHub. Details: ${e.toString()}`});
+            throw e;
         }
     }
 
     getAll(req, res) {
         try {
-            res.json(this.exerciseDao.getAll());
+            const exAll = this.exerciseDao.getAll();
+            exAll.forEach ( ex => {
+                const topic = this.topicDao.getTopicById(ex.topic);
+                ex.topicNumber = topic.number;
+            });
+            res.json(exAll);
         } catch(e) {
             res.status(500).json({error: "Internal server error"});
         }
