@@ -16,7 +16,7 @@ export default function AdminAnswersComponent() {
 
     // id, qid, uid, answer, authorised
     useEffect( () => {
-        const timerHandle = setInterval(pollServer,  3000);
+        const timerHandle= setInterval( pollServer,  3000);
         pollServer();
         return () => clearInterval(timerHandle);
     }, [exerciseDetail]);
@@ -28,7 +28,7 @@ export default function AdminAnswersComponent() {
                         <input type='button' data-id={indivAnswer.id} value='Authorise' onClick={authorise} />
                     </li>
                 );
-            return <div>
+            return <div style={{whiteSpace: 'pre-wrap'}}>
                 <h4>Question {i+1}</h4>
                 <ul>{answersForQuestion}</ul>
             </div>;
@@ -69,28 +69,28 @@ export default function AdminAnswersComponent() {
     }
     
     function pollServer() {
-        const allAnswers = [];
-        fetch(`/answer/exercise/${exerciseDetail[0]}`)
-            .then(response => response.json())
-            .then(ans => {
-                let currentQuestionId = 0, currentQuestion = null;
-                for(let answer of ans) {
-                    if(answer.qid != currentQuestionId) {
-                        if(currentQuestion != null) {
-                            allAnswers.push(currentQuestion);
+            const allAnswers = [];
+            fetch(`/answer/exercise/${exerciseDetail[0]}`)
+                .then(response => response.json())
+                .then(ans => {
+                    let currentQuestionId = 0, currentQuestion = null;
+                    for(let answer of ans) {
+                        if(answer.qid != currentQuestionId) {
+                            if(currentQuestion != null) {
+                                allAnswers.push(currentQuestion);
+                            }
+                            currentQuestion = {
+                                qid: answer.qid,
+                                answers: []
+                            };
+                            currentQuestionId = answer.qid;
                         }
-                        currentQuestion = {
-                            qid: answer.qid,
-                            answers: []
-                        };
-                        currentQuestionId = answer.qid;
+                        currentQuestion.answers.push(answer);
                     }
-                    currentQuestion.answers.push(answer);
-                }
-                if(currentQuestion != null) {
-                    allAnswers.push(currentQuestion);
-                }
-                setAnswers(allAnswers);
-            });
+                    if(currentQuestion != null) {
+                        allAnswers.push(currentQuestion);
+                    }
+                    setAnswers(allAnswers);
+                });
     }
 }
