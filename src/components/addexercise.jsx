@@ -7,6 +7,9 @@ export default function AddExerciseComponent() {
     const [qType, setQType] = useState(0);
     const [questions, setQuestions] = useState([]);
 
+    const displayedQuestions = questions.map ((q,i) =>
+        <li key={i}>{q.question} {q.options ? `[${q.options.join(',')}]` : ""}</li>
+    );
     return <div>
             <h2>Add an Exercise</h2>
             <form>
@@ -28,7 +31,9 @@ export default function AddExerciseComponent() {
             <>
             <AddQuestionComponent qType={qType} onQuestionAdded={onQuestionAdded}/>
             </> : "" }
-            {questions.length ? <p>***{questions.length} questions added so far.</p>: ""}
+            <h4>Questions so far</h4>
+            <ul>{displayedQuestions}</ul>
+            {questions.length ? <p>{questions.length} questions added so far.</p>: ""}
             <input type='button' value='Save Exercise To Database' onClick={saveExerciseToServer} /><br />
             </form>
             </div>
