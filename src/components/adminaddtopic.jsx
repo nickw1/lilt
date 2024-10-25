@@ -7,7 +7,7 @@ export default function AdminAddTopicComponent({onTopicAdded}) {
         Module code:<br />
         <input id='moduleCode2' /><br />
         Topic number: <br />
-        <input id='topicNumber' type='number' /><br />
+        <input id='topicNumber2' type='number' /><br />
         Topic title: <br />
         <input id='topicTitle' type='text' style={{width:"400px"}}/><br />
         <input type='button' value='Go!' onClick={addTopic} />
@@ -17,7 +17,7 @@ export default function AdminAddTopicComponent({onTopicAdded}) {
         try {
             const topic = {
                 moduleCode: document.getElementById('moduleCode2').value,
-                number: document.getElementById('topicNumber').value,
+                number: document.getElementById('topicNumber2').value,
                 title: document.getElementById('topicTitle').value
             };
             const response = await fetch('/topic/new', {

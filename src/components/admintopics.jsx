@@ -3,25 +3,19 @@ import AdminAddTopicComponent from './adminaddtopic.jsx';
 
 export default function AdminTopicComponent() {
 
-    const [topics, setTopics] = useState({});
+    const [topics, setTopics] = useState([]);
 
     useEffect(() => {
         fetch('/topic/all')
             .then(response => response.json())
-            .then(json => {
-                const topicsMap = {};
-                for(let topic of json) {
-                    topicsMap[topic.id] = topic;
-                }
-                setTopics(topicsMap);
-            }); 
+            .then(json =>  setTopics(json)); 
     }, []);
 
-    const tops = Object.keys(topics)
-        .map(topicId => <li key={topicId}>{
-            topics[topicId].number} : {topics[topicId].title} 
-            {topics[topicId].unlocked ? "" : 
-                <input type='button' value='Make Public' data-id={topicId} onClick={makePublic} />
+    const tops = topics 
+        .map(topic => <li key={topic.id}>
+            {topic.number} : {topic.title} ({topic.moduleCode})
+            {topic.unlocked ? "" : 
+                <input type='button' value='Make Public' data-id={topic.id} onClick={makePublic} />
             }</li>)
 
     return <div>
@@ -29,7 +23,7 @@ export default function AdminTopicComponent() {
         <ul>{tops.length > 0 ? tops: "No topics."}</ul>
         <AdminAddTopicComponent onTopicAdded={(topic)=> {
             const newTopics = structuredClone(topics);
-            newTopics[topic.id] = topic;
+            newTopics.push(topic);
             setTopics(newTopics);
         } } />
         </div>;
@@ -43,10 +37,12 @@ export default function AdminTopicComponent() {
             });
             if(response.status == 200) {
                 const newTopics = structuredClone(topics);
-                newTopics[id].unlocked = 1;
+                const t = newTopics.find(topic => topic.id == id);
+                if(t) t.unlocked = 1;
                 setTopics(newTopics);
             }
         } catch(e) {
+            alert(e.toString());
         }
     }
 }

@@ -17,5 +17,10 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
     "vite": "^5.4.6"
+  },
+  "scripts": {
+    "dev": "npx vite dev",
+    "build": "npx vite build",
+    "start": "NODE_ENV=production node server.mjs"
   }
 }

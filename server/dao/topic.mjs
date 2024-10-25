@@ -18,7 +18,7 @@ export default class TopicDao {
     }
     
     getAll() {
-        const stmt = this.db.prepare("SELECT * FROM topics ORDER BY number");
+        const stmt = this.db.prepare("SELECT t.id,t.number,t.title,t.unlocked,m.code AS moduleCode FROM topics t INNER JOIN modules m ON t.moduleid=m.id ORDER BY m.code, t.number");
         return stmt.all();
     }
 
