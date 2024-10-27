@@ -10,6 +10,7 @@
 
 First of all, a quick word on what `lilt` is not. It is not, and does not aim to be, a full Virtual Learning Environment (VLE). Students do not provide their personal details at all, providing a private and anonymous environment. `lilt` does not aim to assess students over the period of a whole module, but just aims to check their understanding of the current topic.
 
+It's also geared at tutors who are happy using HTML (and Markdown, though support for the latter is not yet implemented) to write their notes. Notes are expected to be provided in plain HTML, or in due course, in Markdown; it does not yet support PowerPoint slides for example and may not for some considerable time.
 
 ## What lilt can do
 
@@ -65,6 +66,51 @@ Inside your `<main>` you should create a series of `<div>`s each of which should
 - `content-exercise` : this `div` will contain an exercise. It must take an attribute `data-id` which should be set equal to the exercise's number. It can contain arbitrary content, but **must** contain a child `<div>` with a class of `questions`. This will contain the exercise's questions. These are setup via the admin interface - see below. 
 
 - `content-protected`: `<div>`s with this class are **protected**. This means that they can only be viewed if a particular exercise has been completed, and the tutor/admin has authorised students' answers. This is specified via the `data-depends` attribute, which should be set equal to the number of the exercise which must be completed to view this protected section. You can similarly also add a `data-depends` attribute to `content-exercise` `<div>`s, to only show a later exercise when an earlier one has been completed.
+
+Here is an example HTML document:
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>Example Notes</title>
+<meta charset="utf-8">
+</head>
+
+<body>
+<main>
+
+<div class='content-public'>
+This is some public content. It will always be available to view.
+</div>
+
+<div class='content-exercise' data-id='1'>
+<p>This is an introductory paragraph for the exercise.</p>
+<div class='questions'></div> <!-- questions will be automatically inserted here -->
+</div>
+
+<div class='content-protected' data-depends='1'>
+This is protected content. It will not be visible to a given student until they have answered Exercise 1 and had their answers authorised by the tutor.
+</div>
+
+<div class='content-public'>
+This is some more public content.
+</div>
+
+<div class='content-exercise' data-id='2' data-depends='1'>
+<p>This is a second exercise. It will not be visible until the student has completed Exercise 1 and had their answers authorised by the tutor.</p>
+<div class='questions'></div>
+</div>
+
+<div class='content-protected' data-depends='2'>
+This protected content will not be visible until the student has answered Exercise 2 and had their answers authorised by the tutor.
+</div>
+
+</main>
+</body>
+
+</html>
+```
 
 ### Setup exercises
 
