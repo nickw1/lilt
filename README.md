@@ -53,6 +53,14 @@ A `lilt` server should have one or more admin users. These are setup by means of
 
 ### Write your notes
 
+#### Where to save your notes
+
+- Notes should be placed in the directory specified by the `RESOURCES` environment variable (you can, for example, place this in a `.env` file). 
+- Within this directory you should create separate subdirectories for each module, using the module code you specify when adding a module as an admin user as the directory name.
+- Then, you create numbered directories within the module directory corresponding to each topic, and save your HTML for a given module as `index.html` within the appropriate module directory.
+
+#### How to write your notes
+
 With `lilt` you just write your notes in plain old HTML5, though it is planned to add Markdown support. You break the page down into a series of `<div>`s and label them with appropriate classes to determine whether the content should be public, an exercise, or protected. Protected content is content which is only visible when a particular exercise has been answered and discussed, allowing students to try to think through questions themselves without "cheating" by reading later content!
 
 Your notes MUST be well-formed HTML, if they are not, `lilt` may fail to render them properly. Before you test your pages, make sure you run them through the W3C HTML validator and fix all errors.
