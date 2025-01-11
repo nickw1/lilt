@@ -3,6 +3,7 @@ import ViteExpress from 'vite-express';
 import expressSession from 'express-session';
 import Database from 'better-sqlite3';
 import path from 'path';
+import fs from 'fs';
 import dotenv from 'dotenv';
 dotenv.config();
 import betterSqlite3Session from 'express-session-better-sqlite3';
@@ -12,6 +13,7 @@ import notesRouter from './server/routes/notes.mjs';
 import exerciseRouter from './server/routes/exercise.mjs';
 import topicRouter from './server/routes/topic.mjs';
 import moduleRouter from './server/routes/module.mjs';
+
 
 import db from './server/db/db.mjs';
 
@@ -24,7 +26,6 @@ const sessDb = new Database("session.db");
 
 const SqliteStore = betterSqlite3Session(expressSession, sessDb);
 
-app.use(express.static('dist'));
 
 app.use(expressSession({
     store: new SqliteStore(), 
@@ -87,6 +88,19 @@ app.get('/exercise/:id(\\d+)', (req, res) => {
     res.json(exercise);
 });
 
+app.get('/images/:filename', async(req, res) => {
+    const imgStream =  fs.createReadStream(`${process.env.RESOURCES}/images/${req.params.filename}`);
+    imgStream.on("error", e => {
+        if(e.code === 'ENOENT') {
+            res.status(404).json({error: "Cannot find image file"});
+        } else {
+            res.status(500).json({error: e});
+        }
+    });
+    imgStream.pipe(res);
+});
+
+app.use(express.static('dist'));
 const PORT = 3002;
 
 //app.listen(PORT, () => { console.log(`App listening on port ${PORT}.`) });
