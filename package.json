@@ -8,6 +8,7 @@
     "express": "^4.21.0",
     "express-session": "^1.18.0",
     "express-session-better-sqlite3": "^1.2.1",
+    "iron-session": "^8.0.4",
     "node-html-parser": "^6.1.13",
     "react-markdown": "^9.0.3",
     "readline-sync": "^1.4.10",

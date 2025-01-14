@@ -57,6 +57,32 @@ export default class UserDao {
         return stmt.run(username, encPassword);
     }
 
+    setLoggedIn(id, loginStatus) {
+        console.log(`setLoggedIn ${id} ${loginStatus}`);
+        const stmt = this.db.prepare("UPDATE usercodes SET loggedin=? WHERE id=?");
+        const info = stmt.run(loginStatus ? 1:0, id);
+		console.log(info.changes);
+        return info.changes;
+    }
+
+    setAdminLoggedIn(username, loginStatus) {
+        const stmt = this.db.prepare("UPDATE admins SET loggedin=? WHERE username=?");
+        const info = stmt.run(usercode, loginStatus ? 1:0);
+        return info.changes;
+    }
+    
+    isLoggedIn(id) {
+        const stmt = this.db.prepare("SELECT loggedin FROM usercodes WHERE id=?");
+        const row = stmt.get(id);
+        return row ? (row.loggedin ? true : false) : false;
+    }
+
+    isAdminLoggedIn(username) {
+        const stmt = this.db.prepare("SELECT loggedin FROM admins WHERE usernamee=?");
+        const row = stmt.get(username);
+        return row ? (row.loggedin ? true : false) : false;
+    }
+    
     deleteOldUsercodes() {
         const stmt = this.db.prepare("DELETE FROM usercodes WHERE ?-created > 604800");
         const info = stmt.run(Date.now() / 1000);

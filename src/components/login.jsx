@@ -1,83 +1,32 @@
-import React, { useState, useEffect, Fragment } from 'react';
+"use client"
+import { login } from '../actions/user';
+import { logout } from '../actions/user.mjs';
+import Logout from './logout';
+import { useActionState } from 'react';
 
-export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
 
-    const [newUserState, setNewUserState] = useState(0);
+export default function Login() {
 
-    return usercode === null ? 
-         newUserState == 1 ?  <div>
-        <p style={{fontSize: '75%'}}><strong>Privacy notice:</strong> Your answers to questions, and progress (which questions you have answered) will be stored on the lilt server and linked to your user code, which is valid for one week. After one week, this information will be deleted. <strong>No personally identifiable information, for example name or email address, will be stored at all. This is a completely anonymous tool; user codes are randomly generated.</strong></p>
-        <input type='button' onClick={newUser} value='Click to accept the above.' />
-        </div>
-        :
-        <Fragment>
-        User code: <input id='usercode' />
-        <input type='button' value='Login' onClick={login} />
-        <br />
-        <input type='button' value='Get New User Code' onClick={newUser} />
-        <div id='loginError'></div>
-        </Fragment>
-        :
-        <Fragment>Your user code: <strong>{usercode==1 ? "admin": usercode}</strong>
-        <input type='button' value='Logout' onClick={logout} />
-        </Fragment>
+	const [loginState, modLogin] = useActionState(login, { usercode: 0 });
+	const [logoutState, modLogout] = useActionState(logout, { loggedout: false });
 
-    async function login() {
-        try {
-            const response = await fetch('/user/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type' : 'application/json'
-                },
-                body: JSON.stringify({
-                    usercode : document.getElementById('usercode').value
-                })
-            });
-            const json = await response.json();
-            if(response.status == 200) {
-                onLoggedIn(json.usercode);
-            } else {
-                document.getElementById('loginError').innerHTML = json.error;
-            }
-        } catch(e) {
-            document.getElementById('loginError').innerHTML = e; 
-        }
-    }
+	console.log(logoutState.loggedout);
 
-    async function newUser() {
-        if(newUserState == 1) {
-            try {
-                const response = await fetch('/user/new', {
-                    method: 'POST',
-                });
-                const json = await response.json();
-                if(response.status == 200) {
-                    alert(`Your user code: ${json.userCode}. This is valid for one week; please use it this week and then get a new one next week.`);
-                    setNewUserState(0);
-                } else {
-                    document.getElementById('loginError').innerHTML = json.error;
-                }
-            } catch(e) {
-                document.getElementById('loginError').innerHTML = e; 
-            }
-        } else {
-            setNewUserState(1);
-        }
-    }
-
-    async function logout() {
-        try {
-            const response = await fetch('/user/logout', {
-                method: 'POST'
-            });
-            const json = await response.json();
-            if(response.status == 200) {
-                onLoggedOut();
-            } else {
-                alert("Logout error - this probably shouldn't happen!");
-            }
-        } catch(e) {
-            alert(e);
-        }
-    }
-}
+    return loginState.usercode > 0 && logoutState.loggedout == false ?
+		<>Loggedout: {logoutState.loggedout}<h2>Logged in as {loginState.usercode}</h2>
+		<form action={modLogout}>
+		<input type="submit" value="Logout!" />
+		</form></>
+		:
+		<div>
+		Loggedout: {logoutState.loggedout}
+        <h2>Login</h2>
+        <form action={modLogin}>
+		{JSON.stringify(loginState)}
+        Usercode: <br />
+        <input name="usercode" /><br />
+        <input type="submit" value="Go!" />
+	
+        </form>
+        </div>;
+}        
