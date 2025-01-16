@@ -5,8 +5,8 @@ import GetUsercode from '../components/getusercode.jsx';
 import { getIronSession } from 'iron-session';
 import Cookies from '../misc/cookies.mjs';
 import { cookieName, password } from '../misc/session.mjs';
-import UserDao from '../dao/user.mjs';
-import db from '../db/db.mjs';
+import UserDao from '../server/dao/user.mjs';
+import db from '../server/db/db.mjs';
 import { useHttpContext } from '@lazarv/react-server';
 
 export default async function User() {
