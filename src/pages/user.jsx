@@ -1,7 +1,7 @@
 
 import Login from '../components/login.jsx';
 import Logout from '../components/logout.jsx';
-import GetUsercode from '../components/getusercode.jsx';
+import NewUser from '../components/newuser.jsx';
 import { getIronSession } from 'iron-session';
 import Cookies from '../misc/cookies.mjs';
 import { cookieName, password } from '../misc/session.mjs';
@@ -17,10 +17,11 @@ export default async function User() {
         session = await getIronSession(cookies, { password, cookieName });
         const userDao = new UserDao(db); 
 		console.log(`Session.uid = ${session.uid}, loggedin=${userDao.isLoggedIn(session.uid)}`);
-        return (session.uid && userDao.isLoggedIn(session.uid)) ?
+        return  (session.uid && userDao.isLoggedIn(session.uid)) ?
             <><h1>Logged in with id {session.uid}</h1><Logout /></> :
-            <>{session.uid}<Login /></>;
+            <>{session.uid}<Login /><NewUser /></>;
     } catch(e) {
+		console.log(e);
         return <h1>Error: ${e.code}</h1>;    
     }
 }
