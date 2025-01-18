@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import AddQuestionComponent from './addquestion.jsx';
 import { useRouteLoaderData } from 'react-router-dom';
+import ModuleChooseComponent from './modulechoose.jsx';
 
 export default function AddExerciseComponent() {
 
     const [qType, setQType] = useState(0);
     const [questions, setQuestions] = useState([]);
-    const [moduleCodes, setModuleCodes] = useState([]);
     const [moduleTopics, setModuleTopics] = useState([]);
-    const [completedModuleDetails, setCompletedModuleDetails] = useState(false);
+    const [moduleCode, setModuleCode] = useState("");
 
-    useEffect ( () => {
-        fetch('/module/all')
-            .then(response => response.json())
-            .then(json => setModuleCodes(json.map(module => module.code)))
-    }, []);
-
-    const displayedQuestions = completedModuleDetails ?
+    const displayedQuestions = moduleCode != "" ?
         questions.map ((q,i) =>
         <li key={i}>{q.question} {q.options ? `[${q.options.join(',')}]` : ""} <input type='button' value='Remove' onClick={() => { 
             const newQuestions = structuredClone(questions);
@@ -27,11 +21,10 @@ export default function AddExerciseComponent() {
     return <div>
             <h2>Add an Exercise</h2>
             <form>
-            Module code: <br />
-            <select id='moduleCode' onChange={populateTopics}>
-            <option value=''>--None--</option>
-            { moduleCodes.map ( code => <option>{code}</option> ) }
-            </select> 
+            <ModuleChooseComponent onModuleChosen={code => {
+                populateTopics(code);
+                setModuleCode(code);
+            }} />
             <br />
             Topic Number: <br />
             <select id='topicNumber'>
@@ -40,7 +33,7 @@ export default function AddExerciseComponent() {
             <br />
             Exercise Introduction:<br />
             <textarea id='intro' style={{width:'50%', height:'100px'}}></textarea>
-            { completedModuleDetails ? 
+            { moduleCode != "" ? 
             <>
             <h3>Add a question to the exercise</h3>
             <div style={{
@@ -66,7 +59,7 @@ export default function AddExerciseComponent() {
             <h4>Questions so far</h4>
             <ul>{displayedQuestions}</ul>
             {questions.length ? <p>{questions.length} questions added so far.</p>: ""}
-            { completedModuleDetails && questions.length > 0 ? <><input type='button' value='Save Exercise To Database' onClick={saveExerciseToServer} /><br /></> : "" }
+            { moduleCode != "" && questions.length > 0 ? <><input type='button' value='Save Exercise To Database' onClick={saveExerciseToServer} /><br /></> : "" }
             </form>
             </div>
 
@@ -82,14 +75,13 @@ export default function AddExerciseComponent() {
         //document.getElementById('questionType').value = 0;
     }
 
-    async function populateTopics(ev) {
+    async function populateTopics(code) {
         
-        if(ev.target.value != "") {
+        if(code != "") {
             try {
-                const response = await fetch(`/topic/${ev.target.value}/all`);
+                const response = await fetch(`/topic/${code}/all`);
                 const topics = await response.json();
                 setModuleTopics(topics.map (topic => topic.number));
-                setCompletedModuleDetails(true);
             } catch(e) {
                 alert(e.toString());
             }
@@ -104,7 +96,6 @@ export default function AddExerciseComponent() {
         try {
             const topic = document.getElementById('topicNumber').value;
             const intro = document.getElementById('intro').value;
-            const moduleCode = document.getElementById('moduleCode').value;
             const response = await fetch('/exercise/new', {
                 method: 'POST',
                 headers: {

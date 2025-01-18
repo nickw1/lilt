@@ -10,10 +10,8 @@ export default function ModuleChooseComponent ({onModuleChosen})  {
     );
 
     return <>Please choose a module:
-            <select id='moduleCode' onChange={(e)=>{
-            if(e.target.value != "") {
-                onModuleChosen(e.target.value);
-            }
+            <select onChange={e=>{
+            onModuleChosen(e.target.value);
         }}><option value=''>--Please select--</option>{moduleInfo}</select>
             </>;
     
