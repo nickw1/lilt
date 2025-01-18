@@ -5,7 +5,7 @@ export default function AdminAddModuleComponent({onModuleAdded}) {
     return <div>
         <h3>Add Module</h3>
         Module code: <br />
-        <input id='moduleCode' type='code' /><br />
+        <input id='moduleCode3' type='text' /><br />
         Module name: <br />
         <input id='moduleName' type='text' style={{width:"400px"}}/><br />
         <input type='button' value='Go!' onClick={addModule} />
@@ -14,7 +14,7 @@ export default function AdminAddModuleComponent({onModuleAdded}) {
     async function addModule() {
         try {
             const module = {
-                code: document.getElementById('moduleCode').value,
+                code: document.getElementById('moduleCode3').value,
                 name: document.getElementById('moduleName').value
             };
 
