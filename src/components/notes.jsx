@@ -59,7 +59,9 @@ export default function NotesComponent({usercode, module, initTopic}) {
                                 break;
     
                             case "protected":
-                                parts.push(<h2 key={key++}>Discussion on exercise {section.dependencies}</h2>);
+                                if(section.discussionForExercise) {
+                                    parts.push(<h2 key={key++}>Discussion on exercise {section.discussionForExercise}</h2>);
+                                }
                                 if(section.status === "unmetDependencies") {
                                     parts.push(
                                         <div key={key++}>
