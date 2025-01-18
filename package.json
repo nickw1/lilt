@@ -20,7 +20,7 @@
     "vite": "^5.4.6"
   },
   "scripts": {
-    "dev": "npx vite dev",
+    "dev": "node server.mjs",
     "build": "npx vite build",
     "start": "NODE_ENV=production node server.mjs"
   }
