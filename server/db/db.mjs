@@ -1,4 +1,4 @@
 import Database from 'better-sqlite3';
 
-const db = new Database('nwnotes.db');
+const db = new Database('lilt.db');
 export default db;
