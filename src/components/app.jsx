@@ -4,12 +4,14 @@ import ModuleChooseComponent from './modulechoose.jsx';
 import LinkModuleChooseComponent from './modulechooselink.jsx';
 import NotesComponent from './notes.jsx';
 import useLoggedIn from '../hooks/login.jsx';
+import useModules from '../hooks/modules.jsx';
 import { useSearchParams } from 'react-router-dom';
 
 export default function App() {
     const [usercode, setUsercode] = useLoggedIn();
     const [searchParams, setSearchParams] = useSearchParams();
     const [module, setModule] = useState(searchParams.get('module') || '');
+    const [modules, setModules] = useModules();
 
     const loginComponent = 
         <LoginComponent 
@@ -19,7 +21,7 @@ export default function App() {
             onLoggedOut={()=>setUsercode(null)} />;
 
     const moduleChooseComponent = 
-        <ModuleChooseComponent 
+        <ModuleChooseComponent modules={modules}
             style={{display: module ? 'inline': 'block' }} 
             onModuleChosen={onModuleChosen} />;
 

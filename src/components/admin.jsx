@@ -4,11 +4,14 @@ import AddExerciseComponent from './addexercise.jsx';
 import AdminAnswersComponent from './adminanswers.jsx';
 import AdminTopicComponent from './admintopics.jsx';
 import AdminModuleComponent from './adminmodules.jsx';
+import AdminAddModuleComponent from './adminaddmodule.jsx';
 import useAdminLoggedIn from '../hooks/admin.jsx';
+import useModules from '../hooks/modules.jsx';
+import ModulesContext from '../context/modulescontext.mjs';
 
 export default function AdminComponent() {
     const [loggedIn, setLoggedIn] = useAdminLoggedIn(false);
-
+    const [modules, setModules] = useModules();
 
     return <div><h1>Admin page</h1>
         <AdminLoginComponent 
@@ -19,9 +22,16 @@ export default function AdminComponent() {
         <Fragment>
         <p><a href='/admin/answers'>View submitted answers</a> | 
         <a href='/'>Course notes</a></p>
+        <ModulesContext.Provider value={modules}>
         <AddExerciseComponent />
         <AdminTopicComponent />
-        <AdminModuleComponent />
+        </ModulesContext.Provider>
+		<AdminModuleComponent modules={modules}/>
+        <AdminAddModuleComponent onModuleAdded={module => {
+			const newModules = structuredClone(modules);
+			newModules.push(module);
+			setModules(newModules);
+		}} />
         </Fragment>
         : "" }
         </div>

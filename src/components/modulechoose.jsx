@@ -1,9 +1,7 @@
 import React from 'react';
-import useModules from '../hooks/modules.jsx';
 
-export default function ModuleChooseComponent ({onModuleChosen})  {
+export default function ModuleChooseComponent ({modules, onModuleChosen})  {
 
-    const [modules, setModules] = useModules();
 
     const moduleInfo = modules.map(module => 
         <option key={module.id} value={module.code}>{module.name}</option>

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import AddQuestionComponent from './addquestion.jsx';
 import { useRouteLoaderData } from 'react-router-dom';
 import ModuleChooseComponent from './modulechoose.jsx';
+import ModulesContext from '../context/modulescontext.mjs';
 
 export default function AddExerciseComponent() {
 
@@ -9,6 +10,7 @@ export default function AddExerciseComponent() {
     const [questions, setQuestions] = useState([]);
     const [moduleTopics, setModuleTopics] = useState([]);
     const [moduleCode, setModuleCode] = useState("");
+    const modules = useContext(ModulesContext);
 
     const displayedQuestions = moduleCode != "" ?
         questions.map ((q,i) =>
@@ -21,7 +23,7 @@ export default function AddExerciseComponent() {
     return <div>
             <h2>Add an Exercise</h2>
             <form>
-            <ModuleChooseComponent onModuleChosen={code => {
+            <ModuleChooseComponent modules={modules} onModuleChosen={code => {
                 populateTopics(code);
                 setModuleCode(code);
             }} />

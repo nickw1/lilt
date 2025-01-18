@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ModuleChooseComponent from './modulechoose.jsx';
+import ModulesContext from '../context/modulescontext.mjs';
 
 export default function AdminAddTopicComponent({onTopicAdded}) {
 
     const [moduleCode, setModuleCode] = useState("");
+    const modules = useContext(ModulesContext);
     return <div>
         <h3>Add Topic</h3>
-        <ModuleChooseComponent onModuleChosen={code=>{
+        <ModuleChooseComponent modules={modules} onModuleChosen={code=>{
             setModuleCode(code);
         } } /><br />
         Topic number: <br />
