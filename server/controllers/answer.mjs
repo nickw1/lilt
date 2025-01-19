@@ -1,6 +1,7 @@
 import AnswerDao from '../dao/answer.mjs';
 import UserDao from '../dao/user.mjs';
 import QuestionDao from '../dao/question.mjs';
+import TopicDao from '../dao/topic.mjs';
 import xss from 'xss';
 
 export default class AnswerController {
@@ -9,6 +10,7 @@ export default class AnswerController {
         this.answerDao = new AnswerDao(db); 
         this.userDao = new UserDao(db); 
         this.questionDao = new QuestionDao(db);
+        this.topicDao = new TopicDao(db);
     }
 
     answerQuestion(req, res) {
@@ -59,6 +61,9 @@ export default class AnswerController {
         if(req.params.id) {
             if(this.answerDao.findAnswer(req.params.id)) {
                 const authorised = this.answerDao.authoriseAnswer(req.params.id);
+				if(authorised) {
+					this.topicDao.updateTopicOnAuthorisation(req.params.id);
+				}
                 res.status(authorised ? 200:500).json({authorised});
             } else {
                 res.status(404).json({error: "Answer ID not found."});

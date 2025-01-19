@@ -68,8 +68,6 @@ export default class NotesController {
                 } else if (classes.indexOf("content-protected") >= 0) {
                     let depends = JSON.parse(div.getAttribute("data-depends"));
                     if(depends !== undefined) {
-						console.log('data-discussion...');
-						console.log(div.getAttribute('data-discussion'));
                         notesJson.main.push(
                             this.handleProtected(depends, uid, div.innerHTML, topicInfo.id, unlocked, div.getAttribute('data-discussion') || null)
                         );
@@ -128,7 +126,6 @@ export default class NotesController {
     }
 
     handleProtected(depends, uid, content, topicId, unlocked, discussionForExercise) {
-		console.log(discussionForExercise);
         return unlocked || this.checkDependencies(topicId, depends, uid) ?
             ({
                 "type": "protected",

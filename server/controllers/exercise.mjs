@@ -20,7 +20,6 @@ export default class ExerciseController {
                 const module = this.moduleDao.getModuleByCode(moduleCode);
                 if(module) {
                     const topicObj = this.topicDao.getTopicByNumber(module.id, topic);
-                    console.log(`addExercise: module=${module}, topicObj=${topicObj}`);
                     if(topicObj) {
                         const eid = this.exerciseDao.addExercise(topicObj.id, xss(intro), module.id);
                         if(eid > 0) {

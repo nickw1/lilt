@@ -9,6 +9,7 @@ export default function NotesComponent({usercode, module, initTopic}) {
     const [topicsList, setTopicsList] = useState([]);
     const [content, setContent] = useState([]);
     const [topic, setTopic] = useState(initTopic || 0);
+    const [updated, setUpdated] = useState(0);
 
     useEffect( () => {
         if(!module) {
@@ -31,6 +32,7 @@ export default function NotesComponent({usercode, module, initTopic}) {
 
         if(topic > 0) {
             const arr = [];
+            const unmets = [];
             let key=0;
             fetch(`/notes/${module}/${topic}.json`)
                 .then(response => {
@@ -41,7 +43,8 @@ export default function NotesComponent({usercode, module, initTopic}) {
                     }
                 })
                 .then(json => {
-       
+
+                     
                     if(json.error) {
                         throw(json.error);
                     }
@@ -62,13 +65,14 @@ export default function NotesComponent({usercode, module, initTopic}) {
                                 if(section.discussionForExercise) {
                                     parts.push(<h2 key={key++}>Discussion on exercise {section.discussionForExercise}</h2>);
                                 }
-                                if(section.status === "unmetDependencies") {
+                                if(section.status === "unmetDependencies" && unmets.indexOf(section.dependencies) == -1) {
                                     parts.push(
                                         <div key={key++}>
                                         <p style={dependencyMsgStyle}>
                                         <em>Further content is available, but you need to complete Exercise {section.dependencies} and have your answers authorised by the tutor to view it.</em>
                                         </p>
                                         </div>);
+                                    unmets.push(section.dependencies);
                                 } else {
                                     parts.push(<Interweave key={key++} content={section.content} />);
                                 }
@@ -102,7 +106,20 @@ export default function NotesComponent({usercode, module, initTopic}) {
         } else if (module) {
             setContent(<p>Please select a topic.</p>);
         }
-    }, [topic, module, usercode]);
+    }, [topic, module, usercode, updated]);
+
+    // Poll the server every 10 secs to see if the topic has been updated
+    // (due to answer authorisation)
+    useEffect( () => {
+        const timer = setInterval( async() => {
+            if(topic > 0) {
+                const response = await fetch(`/topic/${module}/${topic}.json`);
+                const json = await response.json();
+                setUpdated(json.updated);
+            }
+        }, 10000);
+        return () => clearInterval(timer);    
+    }, []);
 
     const displayedTopics = topic == 0 ? 
         <TopicListComponent module={module} topicsList={topicsList} /> :

@@ -56,4 +56,13 @@ export default class TopicController {
             res.status(500).json({error: "Internal server error"});
         }
     }
+
+    getTopicByModuleCodeAndNumber(req, res) {
+        try {
+            const result = this.dao.getTopicByModuleCodeAndNumber(req.params.moduleCode, req.params.topicNum);
+            res.status(result ? 200:404).json(result || {error:"No topic with that ID."});
+        } catch(e) {
+            res.status(500).json({error: "Internal server error"});
+        }
+    }
 }
