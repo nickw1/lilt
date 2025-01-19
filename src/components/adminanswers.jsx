@@ -16,7 +16,7 @@ export default function AdminAnswersComponent() {
 
     // id, qid, uid, answer, authorised
     useEffect( () => {
-        const timerHandle= setInterval( pollServer,  3000);
+        const timerHandle= setInterval( pollServer,  10000);
         pollServer();
         return () => clearInterval(timerHandle);
     }, [exerciseDetail]);
@@ -29,7 +29,7 @@ export default function AdminAnswersComponent() {
                     </li>
                 );
             return <div style={{whiteSpace: 'pre-wrap'}}>
-                <h4>Question {i+1}</h4>
+                <h4>Question ID {answer.qid}</h4>
                 <ul>{answersForQuestion}</ul>
             </div>;
     });
