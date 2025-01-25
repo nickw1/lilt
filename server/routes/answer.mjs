@@ -8,6 +8,7 @@ const controller = new AnswerController(db);
 router.post('/new', controller.answerQuestion.bind(controller));
 router.post('/multiple', controller.answerQuestions.bind(controller));
 router.post('/:id(\\d+)/authorise', controller.authoriseAnswer.bind(controller));
+router.post('/question/:qid(\\d+)/authorise', controller.authoriseQuestionAnswers.bind(controller));
 router.get('/exercise/:eid(\\d+)', controller.getAnswersForExercise.bind(controller));
 
 

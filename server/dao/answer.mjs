@@ -44,6 +44,12 @@ export default class AnswerDao {
         return info.changes === 1;
     }
 
+    authoriseQuestionAnswers(qid) {
+        const stmt = this.db.prepare("UPDATE answers SET authorised=1, answer=NULL WHERE qid=?");
+        const info = stmt.run(qid);
+        return info.changes > 0;
+    }
+
     deleteAnswer(id) {
         const stmt = this.db.prepare("DELETE FROM answers WHERE id=?");
         const info = stmt.run(id);

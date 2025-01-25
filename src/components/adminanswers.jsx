@@ -24,13 +24,12 @@ export default function AdminAnswersComponent() {
     const output = answers.map( (answer,i) => {
             const answersForQuestion = answer.answers.map ( 
                 indivAnswer =>     
-                    <li key={indivAnswer.id}>{indivAnswer.answer}
-                        <input type='button' data-id={indivAnswer.id} value='Authorise' onClick={authorise} />
-                    </li>
+                    <li key={indivAnswer.id}>{indivAnswer.answer}</li>
                 );
             return <div style={{whiteSpace: 'pre-wrap'}}>
                 <h4>Question ID {answer.qid}</h4>
                 <ul>{answersForQuestion}</ul>
+                {answersForQuestion.length > 0 ? <input type='button' data-id={answer.qid} value='Authorise All' onClick={authoriseAll} /> : ''}
             </div>;
     });
 
@@ -62,6 +61,20 @@ export default function AdminAnswersComponent() {
                         answers: question.answers.filter ( answer => answer.id != answerId )
                     });
                 });
+                setAnswers(newAnswers);
+            }
+        } catch(e) {
+        }
+    }
+
+    async function authoriseAll(e) {
+        const questionId = e.target.getAttribute('data-id');
+        try {
+            const response = await fetch(`/answer/question/${questionId}/authorise`, {
+                method: 'POST'
+            });
+            if(response.status == 200) {
+                const newAnswers = answers.filter( q => q.qid != questionId );
                 setAnswers(newAnswers);
             }
         } catch(e) {

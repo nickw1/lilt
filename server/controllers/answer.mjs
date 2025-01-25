@@ -61,15 +61,27 @@ export default class AnswerController {
         if(req.params.id) {
             if(this.answerDao.findAnswer(req.params.id)) {
                 const authorised = this.answerDao.authoriseAnswer(req.params.id);
-				if(authorised) {
-					this.topicDao.updateTopicOnAuthorisation(req.params.id);
-				}
+                if(authorised) {
+                    this.topicDao.updateTopicOnAuthorisation(req.params.id);
+                }
                 res.status(authorised ? 200:500).json({authorised});
             } else {
                 res.status(404).json({error: "Answer ID not found."});
             }
         } else {
             res.status(400).json({error: "Answer ID not supplied."});
+        } 
+    }
+
+    authoriseQuestionAnswers(req, res) {
+        if(req.params.qid) {
+            const authorised = this.answerDao.authoriseQuestionAnswers(req.params.qid);
+            if(authorised) {
+                this.topicDao.updateTopicOnAuthorisationByQuestion(req.params.qid);
+            }
+            res.status(authorised ? 200:404).json({authorised});
+        } else {
+            res.status(400).json({error: "Question ID not supplied."});
         } 
     }
 
