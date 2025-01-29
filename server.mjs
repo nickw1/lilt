@@ -88,16 +88,16 @@ app.get('/exercise/:id(\\d+)', (req, res) => {
     res.json(exercise);
 });
 
-app.get('/images/:filename', async(req, res) => {
-    const imgStream =  fs.createReadStream(`${process.env.RESOURCES}/images/${req.params.filename}`);
-    imgStream.on("error", e => {
+app.get('/content/:filename([\\d\\w]+\\.[\\d\\w]+)', async(req, res) => {
+    const stream =  fs.createReadStream(`${process.env.RESOURCES}/public/${req.params.filename}`);
+    stream.on("error", e => {
         if(e.code === 'ENOENT') {
-            res.status(404).json({error: "Cannot find image file"});
+            res.status(404).json({error: "Cannot find specified content"});
         } else {
             res.status(500).json({error: e});
         }
     });
-    imgStream.pipe(res);
+    stream.pipe(res);
 });
 
 app.use(express.static('dist'));
