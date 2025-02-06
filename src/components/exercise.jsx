@@ -39,7 +39,7 @@ export default function ExerciseComponent({exercise}) {
         const answers = Array.from(document.getElementById(`ex${exercise.id}`)
             .querySelectorAll("textarea,input[type=text],select"))
             .map ( element => {
-                return { qid: element.id.substr(1), answer: element.value }
+                return { qid: element.id.substr(1), answer: element.value.trim() == "" ? "No answer" : element.value }
             } );
         try {
             const response = await fetch('/answer/multiple', {

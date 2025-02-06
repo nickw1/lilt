@@ -69,7 +69,7 @@ export default class AnswerDao {
 
     deleteOldAnswers() {
         const stmt = this.db.prepare("DELETE FROM answers WHERE ?-submitted > 604800");
-        const info = stmt.run(Date.now());
+        const info = stmt.run(Math.round(Date.now() / 1000));
         return info;
     }
 }

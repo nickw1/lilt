@@ -5,7 +5,7 @@ import UserDao from '../dao/user.mjs';
 import Database from 'better-sqlite3';
 
 
-const db = new Database('../../nwnotes.db');
+const db = new Database('../../lilt.db');
 const answerDao = new AnswerDao(db);
 const userDao = new UserDao(db);
 
