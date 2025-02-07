@@ -20,7 +20,7 @@ export default function AdminComponent() {
             loggedIn={loggedIn} />
         {loggedIn ? 
         <Fragment>
-        <p><a href='/admin/answers'>View submitted answers</a> | 
+        <p><a href='/admin/exercises'>Exercises and answers</a> | 
         <a href='/'>Course notes</a></p>
         <ModulesContext.Provider value={modules}>
         <AddExerciseComponent />

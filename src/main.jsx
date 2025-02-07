@@ -12,7 +12,7 @@ const router = createBrowserRouter([{
         path: "/admin",
         element: <Admin />,
     }, {  
-        path: "/admin/answers",
+        path: "/admin/exercises",
         element: <AdminAnswersMain />,
     }
 ]);

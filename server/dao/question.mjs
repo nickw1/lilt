@@ -32,4 +32,28 @@ export default class QuestionDao {
         }
         return qid;
     }
+
+    editQuestion(id, question, options) {
+        if(options.length) {
+            const stmt0 = this.db.prepare("DELETE FROM qoptions WHERE qid=?");
+            stmt0.run(id);
+            for(let option of options) {
+                const stmt1 = this.db.prepare("INSERT INTO qoptions(qid, option) VALUES (?,?)");
+                stmt1.run(id, xss(option));
+            }
+        }
+        const stmt = this.db.prepare("UPDATE questions SET question=? WHERE id=?");
+        const info = stmt.run(xss(question), id);
+        return info.changes; 
+    }
+
+    deleteQuestion(id) {
+        const stmt0 = this.db.prepare("DELETE FROM answers WHERE qid=?");
+        stmt0.run(id);
+        const stmt1 = this.db.prepare("DELETE FROM qoptions WHERE qid=?");
+        stmt1.run(id);
+        const stmt2 = this.db.prepare("DELETE FROM questions WHERE id=?");
+        const info = stmt2.run(id);
+        return info.changes; 
+    }
 }

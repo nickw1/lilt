@@ -13,6 +13,7 @@ import notesRouter from './server/routes/notes.mjs';
 import exerciseRouter from './server/routes/exercise.mjs';
 import topicRouter from './server/routes/topic.mjs';
 import moduleRouter from './server/routes/module.mjs';
+import questionRouter from './server/routes/question.mjs';
 
 
 import db from './server/db/db.mjs';
@@ -52,7 +53,9 @@ app.use([
         '/answer/exercise/:id(\\d+)',
         '/topic/new',
         '/topic/:id(\\d+)/makePublic',
-        '/module/new'
+        '/module/new',
+        '/question/:id(\\d+)',
+        '/exercise/:id(\\d+)'
     ], (req, res, next) => {
     if(req.session.admin || req.method == 'GET') {
         next();
@@ -75,6 +78,7 @@ app.use('/notes', notesRouter);
 app.use('/exercise', exerciseRouter);
 app.use('/topic', topicRouter);
 app.use('/module', moduleRouter);
+app.use('/question', questionRouter);
 
 const exerciseDao = new ExerciseDao(db);
 

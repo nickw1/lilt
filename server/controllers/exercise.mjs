@@ -55,4 +55,26 @@ export default class ExerciseController {
             res.status(500).json({error: "Internal server error"});
         }
     }
+
+    editExercise(req, res) {
+        try {
+            if(req.body.exercise) {
+                const nUpdated = this.exerciseDao.editExercise(req.params.id, req.body.exercise);
+                res.status(nUpdated ? 200 : 404).json({nUpdated});
+            } else {
+                res.status(400).json({error: "No exercise text provided."});
+            }
+        } catch(e) {
+            res.status(500).json({error: "Internal server error"});
+        }
+    }
+
+    deleteExercise(req, res) {
+        try {
+            const nUpdated = this.exerciseDao.deleteExercise(req.params.id);
+            res.status(nUpdated ? 200 : 404).json({nUpdated});
+        } catch(e) {
+            res.status(500).json({error: "Internal server error"});
+        }
+    }
 }

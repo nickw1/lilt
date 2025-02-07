@@ -1,17 +1,20 @@
 
-import React, { useState, Fragment } from 'react';
+import React, { useState } from 'react';
+import QOptionsComponent from './qoptions.jsx';
 
 export default function AddQuestionComponent({qType, onQuestionAdded}) {
+
+    const [optString, setOptString] = useState("");
 
     return <div>
         Question text: <br />
         <input id='questionText' /><br />
         { qType == 2 ? 
-            <>List the options. Begin each option with a star.<br />
-            <textarea id='questionOptions' 
-                style={{width:"50%", height:"50px"}}>
-            </textarea>
-            </>
+            <QOptionsComponent 
+                options={optString} 
+                onOptionsChanged={ 
+                    newOptString => setOptString(newOptString) 
+                } />
             : 
         "" 
         }
@@ -23,11 +26,7 @@ export default function AddQuestionComponent({qType, onQuestionAdded}) {
         const q = {};
         q.question = document.getElementById('questionText').value;
         if(qType == 2) {
-            q.options = document.getElementById('questionOptions')
-                .value
-                .split("*")
-                .splice(1)
-                .map (option => option.trim());
+            q.options = optString.split('*').splice(1).map ( opt => opt.trim() );
         }
         onQuestionAdded(q);
     }

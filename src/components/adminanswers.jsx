@@ -1,25 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
-export default function AdminAnswersComponent() {
+export default function AdminAnswersComponent({exId, exNum}) { 
 
     const [answers, setAnswers] = useState([]);
-    const [exercises, setExercises] = useState([]);
-    const [exerciseDetail, setExerciseDetail] = useState([1,1]);
-
-    useEffect( () => {
-        fetch('/exercise/all')
-            .then(response => response.json())
-            .then(json => {
-                setExercises(json);
-            })
-    }, []);
 
     // id, qid, uid, answer, authorised
     useEffect( () => {
         const timerHandle= setInterval( pollServer,  10000);
         pollServer();
         return () => clearInterval(timerHandle);
-    }, [exerciseDetail]);
+    }, [exId]);
 
     const output = answers.map( (answer,i) => {
             const answersForQuestion = answer.answers.map ( 
@@ -35,13 +25,7 @@ export default function AdminAnswersComponent() {
 
     return <div>
         <h2>Answers</h2>
-        Choose an exercise:
-        <select onChange={(e) => {
-            setExerciseDetail(e.target.value.split(':'));
-        }}>
-        { exercises.map (exercise => <option key={exercise.id} value={`${exercise.id}:${exercise.publicNumber}`}>{exercise.moduleCode}: T{exercise.topicNumber}: Ex {exercise.publicNumber}</option>) }
-        </select>
-        <h3>Answers for exercise {exerciseDetail[1]}</h3>
+        <h3>Answers for exercise {exNum}</h3>
         {output.length > 0 ? output: "No answers."}
         </div>;
 
@@ -83,7 +67,7 @@ export default function AdminAnswersComponent() {
     
     function pollServer() {
             const allAnswers = [];
-            fetch(`/answer/exercise/${exerciseDetail[0]}`)
+            fetch(`/answer/exercise/${exId}`)
                 .then(response => response.json())
                 .then(ans => {
                     let currentQuestionId = 0, currentQuestion = null;

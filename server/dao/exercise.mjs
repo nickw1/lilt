@@ -1,3 +1,4 @@
+import xss from 'xss';
 
 export default class ExerciseDao {
     
@@ -9,7 +10,7 @@ export default class ExerciseDao {
         const stmt0 = this.db.prepare("SELECT COUNT(*) AS count FROM exercises WHERE moduleid=? AND topic=?");
         const { count } = stmt0.get(moduleid, topicid);
         const stmt = this.db.prepare("INSERT INTO exercises(topic, exercise, publicNumber, moduleid) VALUES (?,?,?,?)");
-        const info = stmt.run(topicid, intro, count+1, moduleid);
+        const info = stmt.run(topicid, xss(intro), count+1, moduleid);
         return info.lastInsertRowid;
     }
 
@@ -70,5 +71,19 @@ export default class ExerciseDao {
     getAll() {
         const stmt = this.db.prepare("SELECT e.*, m.code AS moduleCode FROM exercises e INNER JOIN modules m ON e.moduleid=m.id ORDER BY m.code, e.topic, e.publicNumber");
         return stmt.all();
+    }
+
+    editExercise(id, exercise) {
+        const stmt = this.db.prepare("UPDATE exercises SET exercise=? WHERE id=?");
+        const info = stmt.run(xss(exercise), id);
+        return info.changes; 
+    }
+
+    deleteExercise(id) {
+        const stmt0 = this.db.prepare("DELETE FROM questions WHERE eid=?");
+        stmt0.run(id);
+        const stmt = this.db.prepare("DELETE FROM exercises WHERE id=?");
+        const info = stmt.run(id);
+        return info.changes; 
     }
 }
