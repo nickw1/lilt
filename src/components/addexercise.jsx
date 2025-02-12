@@ -61,7 +61,7 @@ export default function AddExerciseComponent() {
             <h4>Questions so far</h4>
             <ul>{displayedQuestions}</ul>
             {questions.length ? <p>{questions.length} questions added so far.</p>: ""}
-            { moduleCode != "" && questions.length > 0 ? <><input type='button' value='Save Exercise To Database' onClick={saveExerciseToServer} /><br /></> : "" }
+            { moduleCode != "" ? <><input type='button' value='Save Exercise To Database' onClick={saveExerciseToServer} /><br /></> : "" }
             </form>
             </div>
 
