@@ -28,14 +28,18 @@ export default class AnswerDao {
     }
 
     hasUserCompletedExercise(uid, eid, allowUnauthorised=false) {
-        const stmt = this.db.prepare(allowUnauthorised ?
-            "SELECT a.authorised,q.id,q.eid FROM questions q INNER JOIN answers a ON q.id=a.qid WHERE q.eid=? AND a.uid=?" :
-            "SELECT a.authorised,q.id,q.eid FROM questions q INNER JOIN answers a ON q.id=a.qid WHERE q.eid=? AND a.uid=? AND a.authorised=1"
-        );
-        const results = stmt.all(eid, uid);
         const stmt2 = this.db.prepare("SELECT COUNT(*) AS count FROM questions q WHERE q.eid=?");
         const results2 = stmt2.get(eid);
-        return results.length == results2.count;
+        if(!results2.count) {
+            return false;
+        } else {
+            const stmt = this.db.prepare(allowUnauthorised ?
+                "SELECT a.authorised,q.id,q.eid FROM questions q INNER JOIN answers a ON q.id=a.qid WHERE q.eid=? AND a.uid=?" :
+                "SELECT a.authorised,q.id,q.eid FROM questions q INNER JOIN answers a ON q.id=a.qid WHERE q.eid=? AND a.uid=? AND a.authorised=1"
+            );
+            const results = stmt.all(eid, uid);
+            return results.length == results2.count;
+        }
     }
 
     authoriseAnswer(id) {
