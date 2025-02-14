@@ -1,28 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
 import AddQuestionComponent from './addquestion.jsx';
+import AddQuestionsComponent from './addquestions.jsx';
 import { useRouteLoaderData } from 'react-router-dom';
 import ModuleChooseComponent from './modulechoose.jsx';
 import ModulesContext from '../context/modulescontext.mjs';
 
 export default function AddExerciseComponent() {
 
-    const [qType, setQType] = useState(0);
-    const [questions, setQuestions] = useState([]);
     const [moduleTopics, setModuleTopics] = useState([]);
     const [moduleCode, setModuleCode] = useState("");
     const modules = useContext(ModulesContext);
 
-    const displayedQuestions = moduleCode != "" ?
-        questions.map ((q,i) =>
-        <li key={i}>{q.question} {q.options ? `[${q.options.join(',')}]` : ""} <input type='button' value='Remove' onClick={() => { 
-            const newQuestions = structuredClone(questions);
-            newQuestions.splice(i,1);
-            setQuestions(newQuestions);
-        }} /></li>) : "";
 
-    return <div>
+    return <><div>
             <h2>Add an Exercise</h2>
-            <form>
             <ModuleChooseComponent modules={modules} onModuleChosen={code => {
                 populateTopics(code);
                 setModuleCode(code);
@@ -36,46 +27,12 @@ export default function AddExerciseComponent() {
             Exercise Introduction:<br />
             <textarea id='intro' style={{width:'50%', height:'100px'}}></textarea>
             { moduleCode != "" ? 
-            <>
-            <h3>Add a question to the exercise</h3>
-            <div style={{
-                backgroundColor: "#e0e0e0", 
-                borderRadius: "8px",
-                padding: "8px",
-                width: "50%",
-                height: "200px",
-                overflow: "auto"}}>
-            Question type:
-            <select id='questionType' onChange={addQuestion} value={qType} defaultValue={qType}>
-            <option value='0'>--Select--</option>
-            <option value='1'>Text</option>
-            <option value='2'>Multiple choice</option>
-            </select>
-            <br />
-            { qType > 0 ?
-            <>
-            <AddQuestionComponent qType={qType} onQuestionAdded={onQuestionAdded}/>
-            </> : "" }
+            <AddQuestionsComponent btnText='Save Exercise To Database' onQuestionsSubmitted={saveExerciseToServer} allowNoQuestions='true' />
+             : "" }
             </div>
-            </> : "" }
-            <h4>Questions so far</h4>
-            <ul>{displayedQuestions}</ul>
-            {questions.length ? <p>{questions.length} questions added so far.</p>: ""}
-            { moduleCode != "" ? <><input type='button' value='Save Exercise To Database' onClick={saveExerciseToServer} /><br /></> : "" }
-            </form>
-            </div>
+            </>;
 
-    function addQuestion() {
-        setQType( parseInt(document.getElementById('questionType').value) );
-    }
 
-    function onQuestionAdded(q) {
-        const qs = structuredClone(questions);
-        qs.push(q);
-        setQuestions(qs);
-        setQType(0);    
-        //document.getElementById('questionType').value = 0;
-    }
 
     async function populateTopics(code) {
         
@@ -93,7 +50,7 @@ export default function AddExerciseComponent() {
         }
     }
 
-    async function saveExerciseToServer() {
+    async function saveExerciseToServer(questions) {
         // each question object has question (and options if applicable)
         try {
             const topic = document.getElementById('topicNumber').value;
@@ -108,12 +65,14 @@ export default function AddExerciseComponent() {
             const json = await response.json();
             if(response.status == 200) {
                 alert('Saved exercise');
-                setQuestions([]);
+                return true;
             } else {
                 alert(json.error);
+                return false;
             }
         } catch(e) {
             alert('Internal error');
+            return false;
         }
     }
 }
