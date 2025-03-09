@@ -9,7 +9,6 @@ const db = new Database('../../lilt.db');
 const answerDao = new AnswerDao(db);
 const userDao = new UserDao(db);
 
-const answerInfo = answerDao.deleteOldAnswers();
 const userInfo = userDao.deleteOldUsercodes();
 
-console.log(`${answerInfo.changes} answers deleted and ${userInfo.changes} user codes deleted.`);
+console.log(`${userInfo.changes} user codes deleted.`);
