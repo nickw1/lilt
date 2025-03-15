@@ -17,7 +17,7 @@ export default function ExerciseComponent({exercise}) {
                         let options = question.options.map ( option =>  {
                             return <option>{option}</option>;
                         });
-                        return <li key={fieldId}><span>{question.question}</span><select id={fieldId}>{options}</select></li>
+                        return <li key={fieldId}><span>{question.question}</span><br /><select id={fieldId}>{options}</select></li>
 
                     } else {
                         return <li key={fieldId}><span>{question.question}</span><br /><textarea style={{width:'50%', height: '50px'}} id={fieldId}></textarea></li>;
