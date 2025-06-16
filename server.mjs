@@ -4,8 +4,7 @@ import expressSession from 'express-session';
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
-import dotenv from 'dotenv';
-dotenv.config();
+import './server/misc/dotenv.mjs';
 import betterSqlite3Session from 'express-session-better-sqlite3';
 import answerRouter from './server/routes/answer.mjs';
 import userRouter from './server/routes/user.mjs';
@@ -14,7 +13,6 @@ import exerciseRouter from './server/routes/exercise.mjs';
 import topicRouter from './server/routes/topic.mjs';
 import moduleRouter from './server/routes/module.mjs';
 import questionRouter from './server/routes/question.mjs';
-
 
 import db from './server/db/db.mjs';
 
