@@ -1,11 +1,14 @@
-import React, { useState, useEffect, Fragment } from 'react';
+"use client"
+import React, { useState, useEffect, Fragment, startTransition } from 'react';
+import { useClient } from "@lazarv/react-server/client";
 
-export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
+export default function LoginComponent({usercode}) {
 
     const [newUserState, setNewUserState] = useState(0);
+    const { navigate } = useClient();
 
     return usercode === null ? 
-         newUserState == 1 ?  <div>
+         (newUserState == 1 ?  <div>
         <p style={{fontSize: '75%'}}><strong>Privacy notice:</strong> Your answers to questions, and progress (which questions you have answered) will be stored on the lilt server and linked to your user code, which is valid for one week. After one week, this information will be deleted. <strong>No personally identifiable information, for example name or email address, will be stored at all. This is a completely anonymous tool; user codes are randomly generated.</strong></p>
         <input type='button' onClick={newUser} value='Click to accept the above.' />
         </div>
@@ -16,7 +19,7 @@ export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
         <br />
         <input type='button' value='Get New User Code' onClick={newUser} />
         <div id='loginError'></div>
-        </Fragment>
+        </Fragment>)
         :
         <Fragment>Your user code: <strong>{usercode==1 ? "admin": usercode}</strong>
         <input type='button' value='Logout' onClick={logout} />
@@ -35,7 +38,7 @@ export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
             });
             const json = await response.json();
             if(response.status == 200) {
-                onLoggedIn(json.usercode);
+                startTransition(async() => navigate("/"));
             } else {
                 document.getElementById('loginError').innerHTML = json.error;
             }
@@ -72,7 +75,7 @@ export default function LoginComponent({usercode, onLoggedIn, onLoggedOut}) {
             });
             const json = await response.json();
             if(response.status == 200) {
-                onLoggedOut();
+                startTransition(async() => navigate("/"));
             } else {
                 alert("Logout error - this probably shouldn't happen!");
             }

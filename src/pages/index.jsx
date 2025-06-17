@@ -1,29 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import LoginComponent from './login.jsx';
-import ModuleChooseComponent from './modulechoose.jsx';
-import LinkModuleChooseComponent from './modulechooselink.jsx';
-import NotesComponent from './notes.jsx';
-import useLoggedIn from '../hooks/login.jsx';
-import useModules from '../hooks/modules.jsx';
-import { useSearchParams } from 'react-router-dom';
+
+import React from 'react';
+import LoginComponent from '../components/LoginComponent.jsx';
+import { useSearchParams, useHttpContext } from '@lazarv/react-server';
+
+import UserDao from '../../server/dao/user.mjs';
+import db from '../../server/db/db.mjs';
+import '../../css/fira.css';
+import "../../css/nwnotes.css";
 
 export default function App() {
-    const [usercode, setUsercode] = useLoggedIn();
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [module, setModule] = useState(searchParams.get('module') || '');
-    const [modules, setModules] = useModules();
+//    const [usercode, setUsercode] = useLoggedIn();
+    const searchParams = useSearchParams();
+    const module = searchParams.module || '';
+    //const [modules, setModules] = useModules();
+
+    const userDao = new UserDao(db);
+    let usercode = null;
+
+    const {
+        platform: { request: req }
+    } = useHttpContext();
+
+    if(req.session?.uid) {
+        usercode = userDao.findUserById(req.session.uid)?.usercode;
+    }
 
     const loginComponent = 
         <LoginComponent 
             style={{display: module ? 'inline' : 'block' }} 
-            usercode={usercode} 
-            onLoggedIn={(usercode)=>setUsercode(usercode)} 
-            onLoggedOut={()=>setUsercode(null)} />;
+            usercode={usercode}  />
 
-    const moduleChooseComponent = 
-        <ModuleChooseComponent modules={modules}
-            style={{display: module ? 'inline': 'block' }} 
-            onModuleChosen={onModuleChosen} />;
+    const moduleChooseComponent =  <div></div>;
+   //     <ModuleChooseComponent modules={modules}
+    //        style={{display: module ? 'inline': 'block' }} 
+     //       onModuleChosen={onModuleChosen} />; 
 
     const login = module ? 
         <div style={{    
@@ -58,10 +68,10 @@ export default function App() {
         <div className='flexContainer'>
         <div className='sidebar'>
         <p><strong>Modules</strong></p>
-        <LinkModuleChooseComponent curModule={module} />
+ //       <LinkModuleChooseComponent curModule={module} />
         </div>
         <div className='notes'>
-        <NotesComponent usercode={usercode} module={module} initTopic={searchParams.get('topic') || 0} />
+  //      <NotesComponent usercode={usercode} module={module} initTopic={searchParams.topic || 0} />
         </div></div> : ""  }
         </div>;
 

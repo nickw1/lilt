@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - bcrypt
+  - better-sqlite3
+  - esbuild
+  - rolldown
