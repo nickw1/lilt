@@ -1,16 +1,29 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import ExerciseComponent from './exercise.jsx';
-import TopicListComponent from './topiclist.jsx';
-import TopicNavComponent from './topicnav.jsx';
-import { Interweave } from 'interweave';
+//import React, { useState, useEffect, Fragment } from 'react';
+import React, { Fragment, cache } from 'react';
+//import ExerciseComponent from './exercise.jsx';
+import TopicListComponent from './TopicListComponent.jsx';
+import TopicNavComponent from './TopicNavComponent.jsx';
+//import { Interweave } from 'interweave';
+import TopicDao from '../../server/dao/topic.mjs';
 
-export default function NotesComponent({usercode, module, initTopic}) {
+import db from '../../server/db/db.mjs';
 
-    const [topicsList, setTopicsList] = useState([]);
-    const [content, setContent] = useState([]);
-    const [topic, setTopic] = useState(initTopic || 0);
-    const [updated, setUpdated] = useState(0);
+const topicDao = new TopicDao(db);
+const getTopicsListCached = cache(topicDao.getAllForModule.bind(topicDao));
 
+export default function NotesComponent({module, initTopic}) {
+
+    //const [topicsList, setTopicsList] = useState([]);
+    //const [content, setContent] = useState([]);
+    //const [topic, setTopic] = useState(initTopic || 0);
+    //const [updated, setUpdated] = useState(0);
+
+    const topicsList = getTopicsListCached(module);    
+    const topic = initTopic || 0;
+    const content = topic ? `Topic ${topic}` : ''; // placeholder
+
+
+    /*
     useEffect( () => {
         if(!module) {
             setContent(<p>Please select a module.</p>);
@@ -22,7 +35,9 @@ export default function NotesComponent({usercode, module, initTopic}) {
                 });
         }}, [module]
     );
+    */
 
+    /* TODO notes. Want to use Markdown for notes
     useEffect( () => { 
         const dependencyMsgStyle = {
             backgroundColor: '#ffc0c0',
@@ -107,9 +122,11 @@ export default function NotesComponent({usercode, module, initTopic}) {
             setContent(<p>Please select a topic.</p>);
         }
     }, [topic, module, usercode, updated]);
+    */
 
     // Poll the server every 10 secs to see if the topic has been updated
     // (due to answer authorisation)
+    /* deal with later 
     useEffect( () => {
         const timer = setInterval( async() => {
             if(topic > 0) {
@@ -120,6 +137,7 @@ export default function NotesComponent({usercode, module, initTopic}) {
         }, 10000);
         return () => clearInterval(timer);    
     }, []);
+    */
 
     const displayedTopics = topic == 0 ? 
         <TopicListComponent module={module} topicsList={topicsList} /> :

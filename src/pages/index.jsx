@@ -1,21 +1,31 @@
 
-import React from 'react';
+import React, { cache } from 'react';
 import LoginComponent from '../components/LoginComponent.jsx';
+import ModuleChooseComponent from '../components/ModuleChooseComponent.jsx';
+import LinkModuleChooseComponent from '../components/LinkModuleChooseComponent.jsx';
+import NotesComponent from '../components/NotesComponent.jsx';
 import { useSearchParams, useHttpContext } from '@lazarv/react-server';
 
 import UserDao from '../../server/dao/user.mjs';
+import ModuleDao from '../../server/dao/module.mjs';
 import db from '../../server/db/db.mjs';
+
+
 import '../../css/fira.css';
 import "../../css/nwnotes.css";
 
+const moduleDao = new ModuleDao(db);
+
+const cachedGetAllModules = cache(moduleDao.getAll.bind(moduleDao));
+
 export default function App() {
-//    const [usercode, setUsercode] = useLoggedIn();
     const searchParams = useSearchParams();
     const module = searchParams.module || '';
-    //const [modules, setModules] = useModules();
-
     const userDao = new UserDao(db);
+
     let usercode = null;
+
+    console.log('rerendering....');
 
     const {
         platform: { request: req }
@@ -25,15 +35,20 @@ export default function App() {
         usercode = userDao.findUserById(req.session.uid)?.usercode;
     }
 
+    //const modules = moduleDao.getAll();
+    const modules = cachedGetAllModules();
+    console.log(modules);
+
     const loginComponent = 
         <LoginComponent 
             style={{display: module ? 'inline' : 'block' }} 
             usercode={usercode}  />
 
-    const moduleChooseComponent =  <div></div>;
-   //     <ModuleChooseComponent modules={modules}
-    //        style={{display: module ? 'inline': 'block' }} 
-     //       onModuleChosen={onModuleChosen} />; 
+
+
+    const moduleChooseComponent =  <ModuleChooseComponent modules={modules} 
+            style={{display: module ? 'inline': 'block' }} 
+             />; 
 
     const login = module ? 
         <div style={{    
@@ -68,15 +83,11 @@ export default function App() {
         <div className='flexContainer'>
         <div className='sidebar'>
         <p><strong>Modules</strong></p>
- //       <LinkModuleChooseComponent curModule={module} />
+        <LinkModuleChooseComponent modules={modules} curModule={module} />
         </div>
         <div className='notes'>
-  //      <NotesComponent usercode={usercode} module={module} initTopic={searchParams.topic || 0} />
+        <NotesComponent module={module} initTopic={searchParams.topic || 0} />
         </div></div> : ""  }
         </div>;
 
-    function onModuleChosen(code) {
-        setModule(code);
-        setSearchParams(`module=${code}`);
-    }
 }

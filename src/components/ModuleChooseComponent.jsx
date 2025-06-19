@@ -1,0 +1,19 @@
+"use client"
+import React, { startTransition } from 'react';
+import { useClient } from '@lazarv/react-server/client';
+
+export default function ModuleChooseComponent ({modules})  {
+
+    const { navigate } = useClient();
+
+    const moduleInfo = modules.map(module => 
+        <option key={module.id} value={module.code}>{module.name}</option>
+    );
+
+    return <>Please choose a module:
+            <select onChange={e=>{
+            startTransition(async() => { navigate(`/?module=${e.target.value}`) } );
+        }}><option value=''>--Please select--</option>{moduleInfo}</select>
+            </>;
+   
+}
