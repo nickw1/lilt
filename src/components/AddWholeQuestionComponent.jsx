@@ -1,4 +1,4 @@
-import AddQuestionComponent from './addquestion';
+import AddQuestionComponent from './AddQuestionComponent.jsx';
 import { useState } from 'react';
 
 
@@ -23,7 +23,7 @@ export default function AddWholeQuestionComponent({onQuestionsSubmitted, btnText
                 height: "200px",
                 overflow: "auto"}}>
             Question type:
-            <select id='questionType' onChange={addQuestion} value={qType} defaultValue={qType}>
+            <select id='questionType' onChange={addQuestion} defaultValue={qType}>
             <option value='0'>--Select--</option>
             <option value='1'>Text</option>
             <option value='2'>Multiple choice</option>

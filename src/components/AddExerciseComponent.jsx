@@ -1,8 +1,9 @@
+"use client"
+
 import React, { useState, useEffect, useContext } from 'react';
-import AddQuestionComponent from './addquestion.jsx';
-import AddQuestionsComponent from './addquestions.jsx';
-import { useRouteLoaderData } from 'react-router-dom';
-import ModuleChooseComponent from './modulechoose.jsx';
+import AddQuestionComponent from './AddQuestionComponent.jsx';
+import AddQuestionsComponent from './AddQuestionsComponent.jsx';
+import ModuleChooseComponent from './ModuleChooseComponent.jsx';
 import ModulesContext from '../context/modulescontext.mjs';
 
 export default function AddExerciseComponent() {
@@ -38,7 +39,7 @@ export default function AddExerciseComponent() {
         
         if(code != "") {
             try {
-                const response = await fetch(`/topic/${code}/all`);
+                const response = await fetch(`/api/topic/${code}/all`);
                 const topics = await response.json();
                 setModuleTopics(topics.map (topic => topic.number));
             } catch(e) {
@@ -55,7 +56,7 @@ export default function AddExerciseComponent() {
         try {
             const topic = document.getElementById('topicNumber').value;
             const intro = document.getElementById('intro').value;
-            const response = await fetch('/exercise/new', {
+            const response = await fetch('/api/exercise/new', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

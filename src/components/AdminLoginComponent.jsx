@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+"use client"
 
-export default function AdminLoginComponent({loggedIn, onLoggedIn, onLoggedOut}) {
+import React, { useState, useEffect, startTransition } from 'react';
+import { useClient } from '@lazarv/react-server/client';
 
+export default function AdminLoginComponent({isAdmin}) {
 
+    const { navigate } = useClient();
+ 
     return <div>
         <form>
-        { !loggedIn ? 
+        { !isAdmin ? 
             <>Username: <br /> <input id='username' /> <br />
             Password: <br /> <input id='password' type='password' /> <br />
             <input type='button' value='Login' onClick={login} /></>
@@ -32,7 +36,7 @@ export default function AdminLoginComponent({loggedIn, onLoggedIn, onLoggedOut})
             });
             const json = await response.json();
             if(response.status == 200) {
-                onLoggedIn();
+                startTransition(async() => navigate('/admin'));
                 document.getElementById('adminLoginError').innerHTML = '';
             } else {
                 document.getElementById('adminLoginError').innerHTML = json.error;
@@ -49,7 +53,7 @@ export default function AdminLoginComponent({loggedIn, onLoggedIn, onLoggedOut})
             });
             const json = await response.json();
             if(response.status == 200) {
-                onLoggedOut();
+                startTransition(async() => navigate('/admin'));
             } else {
                 alert("Logout error - this probably shouldn't happen!");
             }

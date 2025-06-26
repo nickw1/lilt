@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import QOptionsComponent from './qoptions.jsx';
-//optionArray btnText onOptionsChanged
+import QOptionsComponent from './QOptionsComponent.jsx';
 
 export default function EditQuestion({question, onQuestionDeleted}) {
 
@@ -30,7 +29,7 @@ export default function EditQuestion({question, onQuestionDeleted}) {
 
     async function editQuestion() {
         try {
-            const response = await fetch(`/question/${questionDetails.qid}`, {
+            const response = await fetch(`/api/question/${questionDetails.qid}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type' : 'application/json',
@@ -50,7 +49,7 @@ export default function EditQuestion({question, onQuestionDeleted}) {
 
     async function deleteQuestion() {
         try {
-            const response = await fetch(`/question/${questionDetails.qid}`, {
+            const response = await fetch(`/api/question/${questionDetails.qid}`, {
                 method: 'DELETE'
             });
             if(response.status == 200) {

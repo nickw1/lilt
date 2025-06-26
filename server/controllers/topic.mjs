@@ -1,6 +1,7 @@
 import db from '../db/db.mjs'
 import TopicDao from '../dao/topic.mjs';
 import ModuleDao from '../dao/module.mjs';
+import ExerciseDao from '../dao/exercise.mjs';
 import xss from 'xss';
 
 export default class TopicController {
@@ -8,6 +9,7 @@ export default class TopicController {
     constructor() {
         this.dao = new TopicDao(db);
         this.moduleDao = new ModuleDao(db);
+        this.exerciseDao = new ExerciseDao(db);
     }
 
     addTopic(req, res) {
@@ -64,5 +66,10 @@ export default class TopicController {
         } catch(e) {
             res.status(500).json({error: "Internal server error"});
         }
+    }
+
+    getExercisesForTopic(req, res) {
+        const exercises = this.exerciseDao.getExercisesForTopic(req.params.id);
+        res.json(exercises);
     }
 }

@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from 'react';
 
 export default function AdminAnswersComponent({exId, exNum}) { 
@@ -16,7 +17,7 @@ export default function AdminAnswersComponent({exId, exNum}) {
                 indivAnswer =>     
                     <li key={indivAnswer.id}>{indivAnswer.answer}</li>
                 );
-            return <div style={{whiteSpace: 'pre-wrap'}}>
+            return <div style={{whiteSpace: 'pre-wrap'}} key={answer.qid}>
                 <h4>Question ID {answer.qid}</h4>
                 <ul>{answersForQuestion}</ul>
                 {answersForQuestion.length > 0 ? <input type='button' data-id={answer.qid} value='Authorise All' onClick={authoriseAll} /> : ''}
@@ -34,7 +35,7 @@ export default function AdminAnswersComponent({exId, exNum}) {
     async function authorise(e) {
         const answerId = e.target.getAttribute('data-id');
         try {
-            const response = await fetch(`/answer/${answerId}/authorise`, {
+            const response = await fetch(`/api/answer/${answerId}/authorise`, {
                 method: 'POST'
             });
             if(response.status == 200) {
@@ -54,7 +55,7 @@ export default function AdminAnswersComponent({exId, exNum}) {
     async function authoriseAll(e) {
         const questionId = e.target.getAttribute('data-id');
         try {
-            const response = await fetch(`/answer/question/${questionId}/authorise`, {
+            const response = await fetch(`/api/answer/question/${questionId}/authorise`, {
                 method: 'POST'
             });
             if(response.status == 200) {
@@ -67,7 +68,7 @@ export default function AdminAnswersComponent({exId, exNum}) {
     
     function pollServer() {
             const allAnswers = [];
-            fetch(`/answer/exercise/${exId}`)
+            fetch(`/api/answer/exercise/${exId}`)
                 .then(response => response.json())
                 .then(ans => {
                     let currentQuestionId = 0, currentQuestion = null;

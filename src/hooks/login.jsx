@@ -1,17 +1,19 @@
-import { useState, useEffect } from 'react';
+//import { useState, useEffect } from 'react';
+import UserDao from '../../server/dao/user.mjs';
+import db from '../../server/db/db.mjs';
+
+import { useHttpContext } from '@lazarv/react-server';
 
 export default function useLoggedIn() {
-    const [usercode, setUsercode] = useState(null);
-
-    useEffect(() => {
-        try {
-            fetch('/user/login')
-                .then(response => response.json())
-                .then(json => setUsercode(json.usercode));
-        } catch(e){
-            setUsercode(null);
-        }
-    }, []);        
-
-    return [usercode, setUsercode];
+    const userDao = new UserDao(db);
+    const {
+        platform: { request: req } 
+    } = useHttpContext();
+    if(req.session?.uid){
+        return {
+            usercode: req.session.admin ? 1 : userDao.findUserById(req.session.uid)?.usercode,
+            admin: req.session.admin
+        };    
+    }
+    return { usercode: null, admin: false };
 }

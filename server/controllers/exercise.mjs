@@ -86,4 +86,9 @@ export default class ExerciseController {
             res.status(500).json({error: "Internal server error"});
         }
     }
+
+    getFullExercise(req, res) {
+        const exercise = this.exerciseDao.getFullExercise(req.params.id);
+        res.json(exercise);
+    }
 }

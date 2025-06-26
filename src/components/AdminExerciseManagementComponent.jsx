@@ -1,7 +1,8 @@
+"use client"
 import React, { useState, useEffect } from 'react';
 
-import EditExercise from './editexercise.jsx';
-import AdminAnswersComponent from './adminanswers.jsx';
+import EditExerciseComponent from './EditExerciseComponent.jsx';
+import AdminAnswersComponent from './AdminAnswersComponent.jsx';
 
 export default function AdminExerciseManagementComponent() {
 
@@ -10,7 +11,7 @@ export default function AdminExerciseManagementComponent() {
     const [exerciseDetail, setExerciseDetail] = useState([1,1]);
 
     useEffect( () => {
-        fetch('/exercise/all')
+        fetch('/api/exercise/all')
             .then(response => response.json())
             .then(json => {
                 setExercises(json);
@@ -25,7 +26,7 @@ export default function AdminExerciseManagementComponent() {
         }}>
         { exercises.map (exercise => <option key={exercise.id} value={`${exercise.id}:${exercise.publicNumber}`}>{exercise.moduleCode}: T{exercise.topicNumber}: Ex {exercise.publicNumber}</option>) }
         </select>
-        <EditExercise exId={exerciseDetail[0]} exNum={exerciseDetail[1]} />
+        <EditExerciseComponent exId={exerciseDetail[0]} exNum={exerciseDetail[1]} />
         <AdminAnswersComponent exId={exerciseDetail[0]} exNum={exerciseDetail[1]} />
         </div>;
 

@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react';
 
 export default function AdminAddModuleComponent({onModuleAdded}) {
@@ -18,7 +20,7 @@ export default function AdminAddModuleComponent({onModuleAdded}) {
                 name: document.getElementById('moduleName').value
             };
 
-            const response = await fetch('/module/new', {
+            const response = await fetch('/api/module/new', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

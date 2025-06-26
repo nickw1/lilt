@@ -4,45 +4,30 @@ import LoginComponent from '../components/LoginComponent.jsx';
 import ModuleChooseComponent from '../components/ModuleChooseComponent.jsx';
 import LinkModuleChooseComponent from '../components/LinkModuleChooseComponent.jsx';
 import NotesComponent from '../components/NotesComponent.jsx';
-import { useSearchParams, useHttpContext } from '@lazarv/react-server';
+import { useSearchParams } from '@lazarv/react-server';
 
 import UserDao from '../../server/dao/user.mjs';
 import ModuleDao from '../../server/dao/module.mjs';
 import db from '../../server/db/db.mjs';
 
+import useLoggedIn from '../hooks/login.jsx';
+import useModules from '../hooks/modules.jsx';
 
 import '../../css/fira.css';
 import "../../css/nwnotes.css";
 
-const moduleDao = new ModuleDao(db);
-
-const cachedGetAllModules = cache(moduleDao.getAll.bind(moduleDao));
-
 export default function App() {
     const searchParams = useSearchParams();
     const module = searchParams.module || '';
-    const userDao = new UserDao(db);
+    const user = useLoggedIn();
 
-    let usercode = null;
-
-    console.log('rerendering....');
-
-    const {
-        platform: { request: req }
-    } = useHttpContext();
-
-    if(req.session?.uid) {
-        usercode = userDao.findUserById(req.session.uid)?.usercode;
-    }
-
-    //const modules = moduleDao.getAll();
-    const modules = cachedGetAllModules();
-    console.log(modules);
+    
+    const modules = useModules();
 
     const loginComponent = 
         <LoginComponent 
             style={{display: module ? 'inline' : 'block' }} 
-            usercode={usercode}  />
+            usercode={user.usercode}  />
 
 
 

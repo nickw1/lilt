@@ -17,7 +17,7 @@ export default function ExerciseComponent({exercise}) {
                         let options = question.options.map ( option =>  {
                             return <option>{option}</option>;
                         });
-                        return <li key={fieldId}><span>{question.question}</span><br /><select id={fieldId}>{options}</select></li>
+                        return <li key={fieldId}><span>{question.question}</span><br /><select id={fieldId} defaultValue={question.options[0]}>{options}</select></li>
 
                     } else {
                         return <li key={fieldId}><span>{question.question}</span><br /><textarea style={{width:'50%', height: '50px'}} id={fieldId}></textarea></li>;
@@ -42,7 +42,7 @@ export default function ExerciseComponent({exercise}) {
                 return { qid: element.id.substr(1), answer: element.value.trim() == "" ? "No answer" : element.value }
             } );
         try {
-            const response = await fetch('/answer/multiple', {
+            const response = await fetch('/api/answer/multiple', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

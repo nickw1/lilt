@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import EditQuestion from './editquestion.jsx';
-import AddQuestionsComponent from './addquestions.jsx';
+import EditQuestion from './EditQuestionComponent.jsx';
+import AddQuestionComponent from './AddQuestionComponent.jsx';
 
 
-export default function EditExercise({exNum, exId}) {
+export default function EditExerciseComponent({exNum, exId}) {
 
 
     const [exDetails, setExDetails] = useState({
@@ -12,7 +12,7 @@ export default function EditExercise({exNum, exId}) {
     });
 
     useEffect( ()  => {
-            fetch(`/exercise/${exId}`)    
+            fetch(`/api/exercise/${exId}`)    
                 .then(response => response.json())
                 .then(json => {
                     if(json?.intro && json?.questions) {
@@ -50,13 +50,13 @@ export default function EditExercise({exNum, exId}) {
         <button onClick={deleteExercise}>Delete</button>
         {qOutput}
         <h3>Add new questions</h3>
-        <AddQuestionsComponent btnText='Save Questions To Database' onQuestionsSubmitted={saveQuestionsToServer} />
+        <AddQuestionComponent btnText='Save Questions To Database' onQuestionsSubmitted={saveQuestionsToServer} />
         </div>
         </div>;
 
     async function editExercise() {
         try {
-            const response = await fetch(`/exercise/${exId}`, {
+            const response = await fetch(`/api/exercise/${exId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type' : 'application/json',
@@ -71,7 +71,7 @@ export default function EditExercise({exNum, exId}) {
 
     async function deleteExercise() {
         try {
-            const response = await fetch(`/exercise/${exId}`, {
+            const response = await fetch(`/api/exercise/${exId}`, {
                 method: 'DELETE'
             });
             if(response.status == 200) {
@@ -94,7 +94,7 @@ export default function EditExercise({exNum, exId}) {
 
     async function saveQuestionsToServer(questions) {
         try {
-            const response = await fetch(`/exercise/${exId}/questions`, {
+            const response = await fetch(`/api/exercise/${exId}/questions`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

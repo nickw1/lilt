@@ -1,5 +1,7 @@
+"use client"
+
 import React, { useState, useContext } from 'react';
-import ModuleChooseComponent from './modulechoose.jsx';
+import ModuleChooseComponent from './ModuleChooseComponent.jsx';
 import ModulesContext from '../context/modulescontext.mjs';
 
 export default function AdminAddTopicComponent({onTopicAdded}) {
@@ -26,7 +28,7 @@ export default function AdminAddTopicComponent({onTopicAdded}) {
                     number: document.getElementById('topicNumber2').value,
                     title: document.getElementById('topicTitle').value
                 };
-                const response = await fetch('/topic/new', {
+                const response = await fetch('/api/topic/new', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

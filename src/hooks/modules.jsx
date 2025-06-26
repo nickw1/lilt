@@ -1,13 +1,11 @@
-import { useEffect, useState } from 'react';
+import { cache } from 'react';
+import db from '../../server/db/db.mjs';
+import ModuleDao from '../../server/dao/module.mjs';
+
+const moduleDao = new ModuleDao(db);
+console.log('Setting up modules cache');
+const cachedGetAllModules = cache(moduleDao.getAll.bind(moduleDao));
 
 export default function useModules() {
-    const [modules, setModules] = useState([]);
-
-    useEffect(() => {
-        fetch('/module/all')
-        .then(response => response.json())
-        .then(modules => setModules(modules))
-    }, []);
-
-    return [modules, setModules];
+    return cachedGetAllModules();
 }

@@ -1,12 +1,14 @@
+"use client"
+
 import React, { useEffect, useState } from 'react';
-import AdminAddTopicComponent from './adminaddtopic.jsx';
+import AdminAddTopicComponent from './AdminAddTopicComponent.jsx';
 
 export default function AdminTopicComponent() {
 
     const [topics, setTopics] = useState([]);
 
     useEffect(() => {
-        fetch('/topic/all')
+        fetch('/api/topic/all')
             .then(response => response.json())
             .then(json =>  setTopics(json)); 
     }, []);
@@ -32,7 +34,7 @@ export default function AdminTopicComponent() {
     async function makePublic(e) {
         const id = e.target.getAttribute('data-id');
         try {
-            const response = await fetch(`/topic/${id}/makePublic`, {
+            const response = await fetch(`/api/topic/${id}/makePublic`, {
                 method: 'POST'
             });
             if(response.status == 200) {

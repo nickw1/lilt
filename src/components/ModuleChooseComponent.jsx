@@ -2,7 +2,7 @@
 import React, { startTransition } from 'react';
 import { useClient } from '@lazarv/react-server/client';
 
-export default function ModuleChooseComponent ({modules})  {
+export default function ModuleChooseComponent ({modules, onModuleChosen})  {
 
     const { navigate } = useClient();
 
@@ -11,9 +11,14 @@ export default function ModuleChooseComponent ({modules})  {
     );
 
     return <>Please choose a module:
-            <select onChange={e=>{
-            startTransition(async() => { navigate(`/?module=${e.target.value}`) } );
-        }}><option value=''>--Please select--</option>{moduleInfo}</select>
+            <select defaultValue='' onChange={e => {
+                if(onModuleChosen) {
+                    onModuleChosen(e.target.value);
+                } else {
+                    startTransition(async() => { navigate(`/?module=${e.target.value}`) });
+                }
+            }}>
+            <option value=''>--Please select--</option>{moduleInfo}</select>
             </>;
    
 }

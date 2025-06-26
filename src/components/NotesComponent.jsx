@@ -28,7 +28,7 @@ export default function NotesComponent({module, initTopic}) {
         if(!module) {
             setContent(<p>Please select a module.</p>);
         } else { 
-            fetch(`/topic/${module}/all`)
+            fetch(`/api/topic/${module}/all`)
                 .then(response => response.json())
                 .then(json => {
                     setTopicsList(json);
@@ -130,7 +130,7 @@ export default function NotesComponent({module, initTopic}) {
     useEffect( () => {
         const timer = setInterval( async() => {
             if(topic > 0) {
-                const response = await fetch(`/topic/${module}/${topic}.json`);
+                const response = await fetch(`/api/topic/${module}/${topic}.json`);
                 const json = await response.json();
                 setUpdated(json.updated);
             }

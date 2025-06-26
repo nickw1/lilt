@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import QOptionsComponent from './qoptions.jsx';
+import QOptionsComponent from './QOptionsComponent.jsx';
 
 export default function AddQuestionComponent({qType, onQuestionAdded}) {
 
