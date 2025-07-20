@@ -7,7 +7,7 @@
     "express": "^4.21.0",
     "express-session": "^1.18.0",
     "express-session-better-sqlite3": "^1.2.1",
-    "interweave": "^13.1.0",
+    "markdown-to-jsx": "^7.7.12",
     "node-html-parser": "^6.1.13",
     "readline-sync": "^1.4.10",
     "vite-express": "^0.21.1",

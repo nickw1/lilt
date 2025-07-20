@@ -29,9 +29,9 @@ importers:
       express-session-better-sqlite3:
         specifier: ^1.2.1
         version: 1.2.1(@hapi/bourne@3.0.0)(better-sqlite3@11.8.0)
-      interweave:
-        specifier: ^13.1.0
-        version: 13.1.1(react@0.0.0-experimental-56408a5b-20250610)
+      markdown-to-jsx:
+        specifier: ^7.7.12
+        version: 7.7.12(react@0.0.0-experimental-56408a5b-20250610)
       node-html-parser:
         specifier: ^6.1.13
         version: 6.1.13
@@ -1817,11 +1817,6 @@ packages:
   inline-style-parser@0.2.4:
     resolution: {integrity: sha512-0aO8FkhNZlj/ZIbNi7Lxxr12obT7cL1moPfE4tg1LkX7LlLfC6DeX4l2ZEud1ukP9jNQyNnfzQVqwbwmAATY4Q==}
 
-  interweave@13.1.1:
-    resolution: {integrity: sha512-5GdAavzK1i2BeeLTPzj0o6/zJMfLqQZq/2Q4c3ALT8ByEWf1syzl2MlQMTUoWzETy1x1/cAkZjiqOlulaoDRxw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   ipaddr.js@1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
@@ -2008,6 +2003,12 @@ packages:
   markdown-extensions@2.0.0:
     resolution: {integrity: sha512-o5vL7aDWatOTX8LzaS1WMoaoxIiLRQJuIKKe2wAw6IeULDHaqbiqiggmx+pKvZDb1Sj+pE46Sn1T7lCqfFtg1Q==}
     engines: {node: '>=16'}
+
+  markdown-to-jsx@7.7.12:
+    resolution: {integrity: sha512-Y5xNBqoaTooSLkmlg2P0fdbh53gp4MqW7zhvcweGCPUWvWI5BecWRYI8vPlzT8D7OULxsQg2qoRW9EsJlBWasQ==}
+    engines: {node: '>= 10'}
+    peerDependencies:
+      react: '>= 0.14.0'
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
@@ -4022,11 +4023,11 @@ snapshots:
   '@types/eslint-scope@3.7.7':
     dependencies:
       '@types/eslint': 9.6.1
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
 
   '@types/eslint@9.6.1':
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       '@types/json-schema': 7.0.15
 
   '@types/estree-jsx@1.0.5':
@@ -5096,11 +5097,6 @@ snapshots:
 
   inline-style-parser@0.2.4: {}
 
-  interweave@13.1.1(react@0.0.0-experimental-56408a5b-20250610):
-    dependencies:
-      escape-html: 1.0.3
-      react: 0.0.0-experimental-56408a5b-20250610
-
   ipaddr.js@1.9.1: {}
 
   iron-webcrypto@1.2.1: {}
@@ -5232,6 +5228,10 @@ snapshots:
       semver: 6.3.1
 
   markdown-extensions@2.0.0: {}
+
+  markdown-to-jsx@7.7.12(react@0.0.0-experimental-56408a5b-20250610):
+    dependencies:
+      react: 0.0.0-experimental-56408a5b-20250610
 
   math-intrinsics@1.1.0: {}
 
@@ -6497,7 +6497,7 @@ snapshots:
   webpack@5.97.1(esbuild@0.25.5):
     dependencies:
       '@types/eslint-scope': 3.7.7
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       '@webassemblyjs/ast': 1.14.1
       '@webassemblyjs/wasm-edit': 1.14.1
       '@webassemblyjs/wasm-parser': 1.14.1
