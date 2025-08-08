@@ -1,6 +1,8 @@
+"use client"
+
 import { useState, useEffect } from 'react';
 import EditQuestion from './EditQuestionComponent.jsx';
-import AddQuestionComponent from './AddQuestionComponent.jsx';
+import AddWholeQuestionComponent from './AddWholeQuestionComponent.jsx';
 
 
 export default function EditExerciseComponent({exNum, exId}) {
@@ -50,7 +52,7 @@ export default function EditExerciseComponent({exNum, exId}) {
         <button onClick={deleteExercise}>Delete</button>
         {qOutput}
         <h3>Add new questions</h3>
-        <AddQuestionComponent btnText='Save Questions To Database' onQuestionsSubmitted={saveQuestionsToServer} />
+        <AddWholeQuestionComponent btnText='Save Questions To Database' onQuestionsSubmitted={saveQuestionsToServer} />
         </div>
         </div>;
 

@@ -1,3 +1,5 @@
+"use client"
+
 import AddQuestionComponent from './AddQuestionComponent.jsx';
 import { useState } from 'react';
 

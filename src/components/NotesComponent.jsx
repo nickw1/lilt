@@ -1,128 +1,105 @@
-//import React, { useState, useEffect, Fragment } from 'react';
 import React, { Fragment, cache } from 'react';
-//import ExerciseComponent from './exercise.jsx';
+import Markdown, { RuleType } from 'markdown-to-jsx';
+import fs from 'fs/promises';
+import ExerciseComponent from './ExerciseComponent.jsx';
 import TopicListComponent from './TopicListComponent.jsx';
 import TopicNavComponent from './TopicNavComponent.jsx';
-//import { Interweave } from 'interweave';
 import TopicDao from '../../server/dao/topic.mjs';
+import ExerciseDao from '../../server/dao/exercise.mjs';
+import AnswerDao from '../../server/dao/answer.mjs';
+import useLoggedIn from '../hooks/login.mjs';
 
 import db from '../../server/db/db.mjs';
 
 const topicDao = new TopicDao(db);
+const exerciseDao = new ExerciseDao(db);
+const answerDao = new AnswerDao(db);
 const getTopicsListCached = cache(topicDao.getAllForModule.bind(topicDao));
 
-export default function NotesComponent({module, initTopic}) {
 
-    //const [topicsList, setTopicsList] = useState([]);
-    //const [content, setContent] = useState([]);
-    //const [topic, setTopic] = useState(initTopic || 0);
-    //const [updated, setUpdated] = useState(0);
+export default async function NotesComponent({module, initTopic}) {
 
-    const topicsList = getTopicsListCached(module);    
-    const topic = initTopic || 0;
-    const content = topic ? `Topic ${topic}` : ''; // placeholder
+    let contentHiddenCount=0;
 
-
-    /*
-    useEffect( () => {
-        if(!module) {
-            setContent(<p>Please select a module.</p>);
-        } else { 
-            fetch(`/api/topic/${module}/all`)
-                .then(response => response.json())
-                .then(json => {
-                    setTopicsList(json);
-                });
-        }}, [module]
-    );
-    */
-
-    /* TODO notes. Want to use Markdown for notes
-    useEffect( () => { 
-        const dependencyMsgStyle = {
-            backgroundColor: '#ffc0c0',
-            margin: '4px',
-            borderRadius: '4px'
-        };
-
-        if(topic > 0) {
-            const arr = [];
-            const unmets = [];
-            let key=0;
-            fetch(`/notes/${module}/${topic}.json`)
-                .then(response => {
-                    if(response.status == 404) {
-                        throw new Error(`Notes for topic ${topic} for module ${module} do not exist yet.`);
-                    } else {
-                        return response.json();
-                    }
-                })
-                .then(json => {
-
-                     
-                    if(json.error) {
-                        throw(json.error);
-                    }
- 
-                    const parts = [];
-    
-                    if(json.header) {
-                        parts.push(<header key={key++} className='notesHeader'><Interweave content={json.header} /></header>);
-                    }
-
-                    for(let section of json.main) {
-                        switch(section.type) {
-                            case "public":
-                                parts.push(<Interweave key={key++} content={section.content} />);
-                                break;
-    
-                            case "protected":
-                                if(section.discussionForExercise) {
-                                    parts.push(<h2 key={key++}>Discussion on exercise {section.discussionForExercise}</h2>);
-                                }
-                                if(section.status === "unmetDependencies" && unmets.indexOf(section.dependencies) == -1) {
-                                    parts.push(
-                                        <div key={key++}>
-                                        <p style={dependencyMsgStyle}>
-                                        <em>Further content is available, but you need to complete Exercise {section.dependencies} and have your answers authorised by the tutor to view it.</em>
-                                        </p>
-                                        </div>);
-                                    unmets.push(section.dependencies);
-                                } else {
-                                    parts.push(<Interweave key={key++} content={section.content} />);
-                                }
-                                break;
-                    
-                            case "exercise":
-                                parts.push(<h2 key={key++}>Exercise {section.publicNumber}</h2>);
-                                if(section.status === "unmetDependencies") {
-                                    parts.push(
-                                        <p style={dependencyMsgStyle} 
-                                        key={key++}>
-                                        <em>You need to complete Exercise {section.dependencies} first before attempting Exercise {section.publicNumber}.</em>
-                                        </p>);
-                                } else if (section.status === 'notLoggedIn') {
-                                    parts.push(<p key={key++} style={dependencyMsgStyle}><em>You need to be logged in to attempt Exercise {section.publicNumber}.</em></p>);
-                                } else {
-                                     if (section.completed === true) {
-                                        parts.push(
-                                            <p key={key++}><em>You have completed exercise {section.publicNumber}. If you do not see the discussion below the exercise, the tutor may need to authorise your answers.</em></p>
-                                        );
-                                    }
-                                    parts.push(<ExerciseComponent key={key++} exercise={section} />);
-                                }
-                    }
-                }
-                setContent(parts);
-            })
-            .catch(e =>  { 
-                setContent(<p>{e.toString()}</p>); 
-               })
-        } else if (module) {
-            setContent(<p>Please select a topic.</p>);
+    function exerciseHandler(ex, dep) {
+        let exDependencyCompleted = admin || dep === undefined;
+        const { id: topicId } = topicDao.getTopicByModuleCodeAndNumber(module, topic);
+        if(!exDependencyCompleted) {
+            const depExer = exerciseDao.getExerciseByPublicNumber(topicId, dep); 
+            exDependencyCompleted = depExer?.id ? answerDao.hasUserCompletedExercise(uid, depExer.id) : true;
+        } 
+        if(exDependencyCompleted) {
+            // load exercise
+            const exer = exerciseDao.getExerciseByPublicNumber(topicId, ex);
+            if(answerDao.hasUserCompletedExercise(uid, exer.id)) {
+                return <p style={completedStyle} key={`ex-completed-${ex}`}>You have completed exercise {ex}.</p>;
+            } else {
+                const exercise = exerciseDao.getFullExercise(exer.id);
+                return <Fragment key={`ex-${exer.id}`}><h2>Exercise {ex}</h2><ExerciseComponent exercise={exercise} /></Fragment>;
+            }
+         } else {
+            return <p style={unauthorisedStyle} key={`ex-unauthorised-${ex}-${dep}`}>This content is hidden as you need to complete exercise {dep} first.</p>;
         }
-    }, [topic, module, usercode, updated]);
-    */
+    }
+
+    function renderRuleHandler (next, node, renderChildren) {
+        let matches = null, exMatch = null;
+        if(node.type == RuleType.paragraph && node.children[0].type == RuleType.text) {
+
+            matches =  /^@(answer|depends)\((\d+)\)$/.exec(node.children[0].text);
+            exMatch = /^@(ex\d+)(\((\d+)\))?$/.exec(node.children[0].text);
+        }
+        if(matches && !admin) {
+            protectedContent = true;
+            const { id: topicId} = topicDao.getTopicByModuleCodeAndNumber(module, topic);
+            const exer = exerciseDao.getExerciseByPublicNumber(topicId, matches[2]);
+            dependencyCompleted = answerDao.hasUserCompletedExercise(uid, exer.id);
+            if(dependencyCompleted) {
+                  return matches[1] == "answer" ? <h2 key={`answer-title-${matches[2]}`}>Answer to exercise {matches[2]}</h2> : ""; // return nothing for depends, switch to protected content
+            } else {
+                return uid === null ? "" : <p style={unauthorisedStyle} key={`hidden-content-${contentHiddenCount++}`}>This content is hidden as you need to complete exercise {matches[2]} first.</p>;
+            }
+        } else if (node.type == RuleType.text && node.text.startsWith("@public")) {
+            protectedContent = false;
+            dependencyCompleted = false;
+        } else if (exMatch) {
+            const exNum = exMatch[1].substring(2);
+            return uid === null ? 
+                <p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}</p> : exerciseHandler(exNum, exMatch[3]);
+        } else {
+            return protectedContent && node.type == RuleType.text && !dependencyCompleted ? "": next(); 
+
+        }
+    }
+
+    const { admin, uid } = useLoggedIn();
+
+    const topicsList = getTopicsListCached(module);
+    const topic = initTopic || 0;
+
+    const completedStyle = {
+        backgroundColor: '#c0ffc0',
+        margin: '4px',
+        borderRadius: '4px',
+    };
+
+    const unauthorisedStyle = {
+        backgroundColor: '#ffc0c0',
+        margin: '4px',
+        borderRadius: '4px',
+    };
+ 
+    let content = ''; // placeholder
+    let protectedContent = false, dependencyCompleted = false;
+
+    if(topic > 0) {
+        try {
+            const mdstring =  (await fs.readFile(`${process.env.RESOURCES}/${module}/${topic}.md`)).toString();
+
+
+            content = <Markdown options={{
+                renderRule: renderRuleHandler
+            }}>{mdstring}</Markdown>;
 
     // Poll the server every 10 secs to see if the topic has been updated
     // (due to answer authorisation)
@@ -138,10 +115,13 @@ export default function NotesComponent({module, initTopic}) {
         return () => clearInterval(timer);    
     }, []);
     */
-
+        } catch(e) {
+            content = <p>Error loading markdown notes: {e.message}</p>;
+        }
+    }
     const displayedTopics = topic == 0 ? 
-        <TopicListComponent module={module} topicsList={topicsList} /> :
-        <TopicNavComponent module={module} topicsList={topicsList} currentTopic={topic} /> ;
+            <TopicListComponent module={module} topicsList={topicsList} /> :
+            <TopicNavComponent module={module} topicsList={topicsList} currentTopic={topic} /> ;
                
     return <div>
         {displayedTopics}

@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@lazarv/react-server": "0.0.0-experimental-65a95e4-20250610-e35f6014",
+    "@lazarv/react-server": "0.0.0-experimental-349aed0-20250803-4fd22aaf",
     "bcrypt": "^5.1.1",
     "better-sqlite3": "^11.2.1",
     "dotenv": "^16.4.5",

@@ -2,15 +2,15 @@ import { Fragment } from 'react';
 import { Link } from '@lazarv/react-server/navigation';
 import AdminLoginComponent from '../../../components/AdminLoginComponent.jsx';
 import AdminExerciseManagementComponent from '../../../components/AdminExerciseManagementComponent.jsx';
-import useLoggedIn from '../../../hooks/login.jsx';
-import useModules from '../../../hooks/modules.jsx';
+import useLoggedIn from '../../../hooks/login.mjs';
+import useModules from '../../../hooks/modules.mjs';
 
-export default function AdminAnswersPage() {
+export default function AdminExerciseManagementPage() {
 
     const user = useLoggedIn();
     const modules = useModules();
 
-    const isAdmin = user.usercode && user.admin;
+    const isAdmin = user.usercode !== null && user.admin;
     
     return  <div><h1>Admin exercise management page</h1>
         <AdminLoginComponent isAdmin={isAdmin} />

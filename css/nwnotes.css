@@ -163,9 +163,14 @@ blockquote {
     padding: 10px;
 }
 
-.dependencyMsg {
+.unauthorised {
     margin: '4px';
     border-radius: '4px';
     background-color: '#ffc0c0' 
 }
 
+.completed {
+    margin: '4px';
+    border-radius: '4px';
+    background-color: '#c0ffc0' 
+}

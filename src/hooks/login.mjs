@@ -9,11 +9,12 @@ export default function useLoggedIn() {
     const {
         platform: { request: req } 
     } = useHttpContext();
-    if(req.session?.uid){
+    if(req.session?.uid !== undefined){
         return {
-            usercode: req.session.admin ? 1 : userDao.findUserById(req.session.uid)?.usercode,
+            uid: req.session.uid,
+            usercode: req.session.admin ? 0 : userDao.findUserById(req.session.uid)?.usercode,
             admin: req.session.admin
         };    
     }
-    return { usercode: null, admin: false };
+    return { usercode: null, uid: null, admin: false };
 }

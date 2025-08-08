@@ -1,5 +1,6 @@
 import express from 'express';
 import './server/misc/dotenv.mjs';
+//import { reactServer } from '@lazarv/react-server/node';
 import { reactServer } from '@lazarv/react-server/dev';
 import Database from 'better-sqlite3';
 import expressSession from 'express-session';
@@ -33,6 +34,7 @@ app.use(expressSession({
 }));
 
 
+//const server = await reactServer({origin:"http://localhost:3002"});
 const server = await reactServer();
 
 app.use('/user', userRouter);

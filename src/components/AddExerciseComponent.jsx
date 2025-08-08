@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useContext } from 'react';
 import AddQuestionComponent from './AddQuestionComponent.jsx';
-import AddQuestionsComponent from './AddQuestionsComponent.jsx';
+import AddWholeQuestionComponent from './AddWholeQuestionComponent.jsx';
 import ModuleChooseComponent from './ModuleChooseComponent.jsx';
 import ModulesContext from '../context/modulescontext.mjs';
 
@@ -22,13 +22,13 @@ export default function AddExerciseComponent() {
             <br />
             Topic Number: <br />
             <select id='topicNumber'>
-            { moduleTopics.map ( number => <option>{number}</option> ) }
+            { moduleTopics.map ( number => <option key={number}>{number}</option> ) }
             </select>
             <br />
             Exercise Introduction:<br />
             <textarea id='intro' style={{width:'50%', height:'100px'}}></textarea>
             { moduleCode != "" ? 
-            <AddQuestionsComponent btnText='Save Exercise To Database' onQuestionsSubmitted={saveExerciseToServer} allowNoQuestions='true' />
+            <AddWholeQuestionComponent btnText='Save Exercise To Database' onQuestionsSubmitted={saveExerciseToServer} allowNoQuestions='true' />
              : "" }
             </div>
             </>;

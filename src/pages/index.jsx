@@ -10,10 +10,9 @@ import UserDao from '../../server/dao/user.mjs';
 import ModuleDao from '../../server/dao/module.mjs';
 import db from '../../server/db/db.mjs';
 
-import useLoggedIn from '../hooks/login.jsx';
-import useModules from '../hooks/modules.jsx';
+import useLoggedIn from '../hooks/login.mjs';
+import useModules from '../hooks/modules.mjs';
 
-import '../../css/fira.css';
 import "../../css/nwnotes.css";
 
 export default function App() {

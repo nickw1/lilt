@@ -33,7 +33,7 @@ export default class TopicDao {
     }
 
     getAllForModule(moduleCode) {
-        const stmt = this.db.prepare("SELECT * FROM topics t INNER JOIN modules m ON t.moduleid=m.id WHERE m.code=? ORDER BY m.code, t.number");
+        const stmt = this.db.prepare("SELECT t.* FROM topics t INNER JOIN modules m ON t.moduleid=m.id WHERE m.code=? ORDER BY m.code, t.number");
         return stmt.all(moduleCode);
     }
 
@@ -48,7 +48,7 @@ export default class TopicDao {
     }
 
     getTopicByModuleCodeAndNumber(moduleCode, topicNum) {
-        const stmt = this.db.prepare("SELECT * FROM topics t INNER JOIN modules m ON t.moduleid=m.id WHERE m.code=? AND t.number=?");
+        const stmt = this.db.prepare("SELECT t.* FROM topics t INNER JOIN modules m ON t.moduleid=m.id WHERE m.code=? AND t.number=?");
         return stmt.get(moduleCode, topicNum);
     }
 }

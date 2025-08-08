@@ -48,8 +48,8 @@ export default class UserController {
                 res.status(401).json({error: "Cannot find admin user"});
             } else {
                 req.session.admin = true;
-                req.session.uid = 1; // use 1 for admin user
-                res.json({loggedIn: true});
+                req.session.uid = 0; // use 0 for admin user
+                res.json({loggedIn: true, admin: req.session.admin, uid: req.session.uid});
             }
         } else {
             res.status(400).json({error: "No login details provided."});

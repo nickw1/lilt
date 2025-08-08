@@ -30,6 +30,7 @@ export default class ExerciseDao {
         const results0 = stmt0.get(exerciseId);
         if(results0 !== undefined) {
             const ex = {
+                id: exerciseId,
                 intro : results0.exercise,
                 questions: []
             };
