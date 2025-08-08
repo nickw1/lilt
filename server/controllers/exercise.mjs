@@ -47,7 +47,7 @@ export default class ExerciseController {
                 res.status(400).json({error:"Missing or invalid topic, intro and/or questions."});
             }
         } catch(e) {
-            res.status(500).json({error: `Internal server error. Probably a coding bug - please add an issue on GitHub. Details: ${e.toString()}`});
+            res.status(500).json({error: `Internal server error. Probably a coding bug - please add an issue on GitHub. Details: ${e.message}`});
             throw e;
         }
     }
@@ -80,10 +80,12 @@ export default class ExerciseController {
 
     deleteExercise(req, res) {
         try {
+            this.questionDao.deleteQuestionsForExercise(req.params.id); 
             const nUpdated = this.exerciseDao.deleteExercise(req.params.id);
             res.status(nUpdated ? 200 : 404).json({nUpdated});
         } catch(e) {
-            res.status(500).json({error: "Internal server error"});
+    //        res.status(500).json({error: "Internal server error"});
+            throw e;
         }
     }
 

@@ -5,7 +5,7 @@ import EditQuestion from './EditQuestionComponent.jsx';
 import AddWholeQuestionComponent from './AddWholeQuestionComponent.jsx';
 
 
-export default function EditExerciseComponent({exNum, exId}) {
+export default function EditExerciseComponent({exNum, exId, onExerciseDeleted}) {
 
 
     const [exDetails, setExDetails] = useState({
@@ -28,7 +28,7 @@ export default function EditExerciseComponent({exNum, exId}) {
                });
     }, [exId]);
 
-    const qOutput = exDetails.questions.map( question => <EditQuestion key={question.qid} question={question} onQuestionDeleted = { qid => {
+    const qOutput = exDetails?.questions.map( question => <EditQuestion key={question.qid} question={question} onQuestionDeleted = { qid => {
         const newExDetails = {
             intro: exDetails.intro,
             questions : exDetails.questions.filter ( question => question.qid != qid )
@@ -37,7 +37,7 @@ export default function EditExerciseComponent({exNum, exId}) {
     }}/> );
 
     
-    return <div>
+    return exDetails === null ? "" : <div>
         <h3>Exercise {exNum} (ID {exId})</h3>
         <div>
         <textarea style={{width:"40%", height: "200px"}} 
@@ -78,7 +78,8 @@ export default function EditExerciseComponent({exNum, exId}) {
             });
             if(response.status == 200) {
                 alert('Successfully deleted.');
-                setExDetails({intro: "", questions: []}); 
+                setExDetails(null);
+                onExerciseDeleted(exId);
             } else {
                 alert(`Error deleting, code ${response.status}.`);
             }

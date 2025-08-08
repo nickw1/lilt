@@ -81,8 +81,6 @@ export default class ExerciseDao {
     }
 
     deleteExercise(id) {
-        const stmt0 = this.db.prepare("DELETE FROM questions WHERE eid=?");
-        stmt0.run(id);
         const stmt = this.db.prepare("DELETE FROM exercises WHERE id=?");
         const info = stmt.run(id);
         return info.changes; 

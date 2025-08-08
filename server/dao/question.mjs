@@ -56,4 +56,16 @@ export default class QuestionDao {
         const info = stmt2.run(id);
         return info.changes; 
     }
+
+    deleteQuestionsForExercise(eid) {
+        const deleted = [];
+        const stmt = this.db.prepare("SELECT * FROM questions WHERE eid=?");
+        const rows = stmt.all(eid);
+        for(const {id} of rows) {
+            if(this.deleteQuestion(id) == 1) {
+                deleted.push(id);
+            }
+        }
+        return deleted;
+    }
 }

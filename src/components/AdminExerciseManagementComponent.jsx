@@ -26,7 +26,11 @@ export default function AdminExerciseManagementComponent() {
         }}>
         { exercises.map (exercise => <option key={exercise.id} value={`${exercise.id}:${exercise.publicNumber}`}>{exercise.moduleCode}: T{exercise.topicNumber}: Ex {exercise.publicNumber}</option>) }
         </select>
-        <EditExerciseComponent exId={exerciseDetail[0]} exNum={exerciseDetail[1]} />
+        <EditExerciseComponent exId={exerciseDetail[0]} exNum={exerciseDetail[1]} onExerciseDeleted={ exId => {
+            const newExercises = structuredClone(exercises).filter ( exercise => exercise.id != exId );
+            setExercises(newExercises);
+            setExerciseDetail(newExercises.length > 0 ? [newExercises[0].id, newExercises[0].publicNumber] : [1,1]);
+        }}/>
         <AdminAnswersComponent exId={exerciseDetail[0]} exNum={exerciseDetail[1]} />
         </div>;
 
