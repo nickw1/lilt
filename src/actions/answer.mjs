@@ -1,0 +1,67 @@
+"use server"
+
+import db from '../../server/db/db.mjs';
+import AnswerDao from '../../server/dao/answer.mjs';
+import UserDao from '../../server/dao/user.mjs';
+import QuestionDao from '../../server/dao/question.mjs';
+import TopicDao from '../../server/dao/topic.mjs';
+import useLoggedIn from '../hooks/login.mjs';
+import xss from 'xss';
+
+
+export function answerQuestions(prevState, formData) {
+    const answerDao = new AnswerDao(db);
+    const { uid } = useLoggedIn(); 
+    const answered = [];
+    if(uid !== null) {
+        const status = [];
+        let nAnswered = 0;
+        for(let [key, answer] of formData) {
+            const qid = key.substr(1);
+            if(qid && answer && qid.match("^\\d+$")) {
+                const info = answerDao.addAnswer(xss(uid), xss(qid), xss(answer));
+                if(info === null) {
+                    status.push(`Question ${qid} already answered, ignoring.`);
+                } else if (info.changes) {
+                    answered.push(qid);
+                }
+            }
+        }
+        return {
+            status: status.length > 0 ? status: "Answered all questions", 
+            answered
+        };
+    } else {
+        return {"error": "Not logged in / invalid user"};
+    }
+}
+
+/*
+    export function authoriseAnswer(req, res) {
+        if(req.params.id) {
+            if(answerDao.findAnswer(req.params.id)) {
+                const authorised = answerDao.authoriseAnswer(req.params.id);
+                if(authorised) {
+                    topicDao.updateTopicOnAuthorisation(req.params.id);
+                }
+                res.status(authorised ? 200:500).json({authorised});
+            } else {
+                res.status(404).json({error: "Answer ID not found."});
+            }
+        } else {
+            res.status(400).json({error: "Answer ID not supplied."});
+        } 
+    }
+
+    export function authoriseQuestionAnswers(req, res) {
+        if(req.params.qid) {
+            const authorised = answerDao.authoriseQuestionAnswers(req.params.qid);
+            if(authorised) {
+                topicDao.updateTopicOnAuthorisationByQuestion(req.params.qid);
+            }
+            res.status(authorised ? 200:404).json({authorised});
+        } else {
+            res.status(400).json({error: "Question ID not supplied."});
+        } 
+    }
+*/
