@@ -18,7 +18,7 @@ const getTopicsListCached = cache(topicDao.getAllForModule.bind(topicDao));
 
 
 export default async function NotesComponent({module, initTopic}) {
-
+    console.log('refreshing NotesComponent...');
     let contentHiddenCount=0;
 
     function exerciseHandler(ex, dep) {

@@ -3,6 +3,7 @@ import React, { cache } from 'react';
 import LoginComponent from '../components/LoginComponent.jsx';
 import ModuleChooseComponent from '../components/ModuleChooseComponent.jsx';
 import LinkModuleChooseComponent from '../components/LinkModuleChooseComponent.jsx';
+import NotesHolder from '../components/NotesHolder.jsx';
 import NotesComponent from '../components/NotesComponent.jsx';
 import { useSearchParams } from '@lazarv/react-server';
 
@@ -69,9 +70,9 @@ export default function App() {
         <p><strong>Modules</strong></p>
         <LinkModuleChooseComponent modules={modules} curModule={module} />
         </div>
-        <div className='notes'>
+        <NotesHolder>
         <NotesComponent module={module} initTopic={searchParams.topic || 0} />
-        </div></div> : ""  }
+        </NotesHolder></div> : ""  }
         </div>;
 
 }
