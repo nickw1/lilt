@@ -101,20 +101,6 @@ export default async function NotesComponent({module, initTopic}) {
                 renderRule: renderRuleHandler
             }}>{mdstring}</Markdown>;
 
-    // Poll the server every 10 secs to see if the topic has been updated
-    // (due to answer authorisation)
-    /* deal with later 
-    useEffect( () => {
-        const timer = setInterval( async() => {
-            if(topic > 0) {
-                const response = await fetch(`/api/topic/${module}/${topic}.json`);
-                const json = await response.json();
-                setUpdated(json.updated);
-            }
-        }, 10000);
-        return () => clearInterval(timer);    
-    }, []);
-    */
         } catch(e) {
             content = <p>Error loading markdown notes: {e.message}</p>;
         }

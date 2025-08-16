@@ -5,45 +5,44 @@ import TopicDao from '../../server/dao/topic.mjs';
 import ModuleDao from '../../server/dao/module.mjs';
 import xss from 'xss';
 
-export function addOrModifyTopic(prevState, formData) {
+export function makePublic(id) {
+    const topicDao = new TopicDao(db);
+    if(id) {
+        const info = topicDao.makePublic(id);
+        return info.changes > 0 ? { nUpdated: info.changes } : { error: "Could not find topic with that ID." };
+    } else {
+        return { error: "No ID supplied." };
+    }
+}
+
+export function addTopic(moduleCode, number, title) {
     const topicDao = new TopicDao(db), moduleDao = new ModuleDao(db);
-    const operation = formData.get("operation"), moduleCode = formData.get("moduleCode"), number = formData.get("topicNumber2"), title = formData.get("topicTitle");
-    switch(operation) {
-        case "addTopic":
-            if(moduleCode && number && title && number.match("^\\d+$")) {
-                const moduleInfo = moduleDao.getModuleByCode(xss(moduleCode));
-                if(moduleInfo) {
-                    const id = topicDao.addTopic(moduleInfo.id, xss(number), xss(title));
-                    prevState.topics.push({id, number, title, moduleCode, unlocked: false});
-                    return {
-                        topics: prevState.topics,
-                        error: ""
-                    };
-                } else {
-                    return{
-                        topics: prevState.topics,
-                        error: "Cannot find that module."
-                    };
-                }
+    if(moduleCode && number && title && number.match("^\\d+$")) {
+        const moduleInfo = moduleDao.getModuleByCode(xss(moduleCode));
+        if(moduleInfo) {
+            const id = topicDao.addTopic(moduleInfo.id, xss(number), xss(title));
+            if(id > 0) {
+                return { topic: { id, number, title, moduleCode, unlocked: false } };
             } else {
-                return{
-                    topics: prevState.topics,
-                    error: "Topic number and title not supplied."
+                return {
+                    error: "Unable to add topic."
                 };
             }
-            break;
-        case "makePublic":
-            const id = formData.get("id");
-            if(id) {
-                const info = topicDao.makePublic(id);
-                if(info.changes > 0) {
-                    prevState.topics.find ( topic => topic.id == id ).unlocked = true;
-                    return {
-                        topics: prevState.topics,
-                        error: ""
-                    };
-                }
-            }
-            break;
+        } else {
+            return{
+                error: "Cannot find that module."
+            };
+        }
+    } else {
+        return{
+            error: "Topic number and title not supplied."
+        };
     }
+}
+
+export function getTopics(moduleCode) {
+    const topicDao = new TopicDao(db);
+    const res = topicDao.getAllForModule(moduleCode);
+    console.log(res);
+    return res;
 }

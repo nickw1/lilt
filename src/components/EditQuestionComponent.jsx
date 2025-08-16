@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import QOptionsComponent from './QOptionsComponent.jsx';
+import { editQuestion, deleteQuestion } from '../actions/question.mjs';
 
 export default function EditQuestion({question, onQuestionDeleted}) {
 
     const [questionDetails, setQuestionDetails] = useState(question);
     const [options, setOptions] = useState('');
+    const [status, setStatus] = useState('');
 
     return <div>
         <h4>Question with ID {questionDetails.qid}</h4>
@@ -25,43 +27,27 @@ export default function EditQuestion({question, onQuestionDeleted}) {
                 onOptionsChanged={ opts => setOptions(opts) }
             /> : "" }
         </div>
-        <button onClick={editQuestion}>Edit</button>
-        <button onClick={deleteQuestion}>Delete</button>
+        <button onClick={edit}>Edit</button>
+        <button onClick={del}>Delete</button>
+        <p>Edit Question Status: {status}</p>
         </div>;
 
-    async function editQuestion() {
+    async function edit() {
         try {
-            const response = await fetch(`/api/question/${questionDetails.qid}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type' : 'application/json',
-                },
-                body: JSON.stringify({
-                    question: questionDetails.question, 
-                    options: options.length ? 
-                        options.split('*').splice(1).map(opt => opt.trim()) 
-                        : []
-                })
-            });
-            alert(response.status == 200 ? 'Successfully updated' : `Error updating, code ${response.status}.`);
+            const results = await editQuestion(questionDetails.qid, questionDetails.question, options ? options.split('*').splice(1).map(opt => opt.trim()) : []);
+            setStatus(results.error || "Successfully edited.");
         } catch(e) {
-            alert(`Error: ${e.message}`);
+            setStatus(e.message);
         }
     }
 
-    async function deleteQuestion() {
+    async function del() {
         try {
-            const response = await fetch(`/api/question/${questionDetails.qid}`, {
-                method: 'DELETE'
-            });
-            if(response.status == 200) {
-                alert('Successfully deleted.');
-                onQuestionDeleted(questionDetails.qid);
-            } else {
-                alert(`Error deleting, code ${response.status}.`);
-            }
+            const results = await deleteQuestion(questionDetails.qid);
+            onQuestionDeleted(questionDetails.qid);
+            setStatus(results.error || "Successfully edited.");
         } catch(e) {
-            alert(`Error: ${e.message}`);
+            setStatus(e.message);
         }
     }
 }

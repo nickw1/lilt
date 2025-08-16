@@ -2,36 +2,40 @@
 import React, { useState, useEffect } from 'react';
 
 import EditExerciseComponent from './EditExerciseComponent.jsx';
-import AdminAnswersComponent from './AdminAnswersComponent.jsx';
+import AdminAnswersHolder from './AdminAnswersHolder.jsx';
+import { getFullExercise } from '../actions/exercise.mjs';
 
-export default function AdminExerciseManagementComponent() {
+export default function AdminExerciseManagementComponent({allExercises}) {
 
-    const [answers, setAnswers] = useState([]);
-    const [exercises, setExercises] = useState([]);
-    const [exerciseDetail, setExerciseDetail] = useState([1,1]);
-
-    useEffect( () => {
-        fetch('/api/exercise/all')
-            .then(response => response.json())
-            .then(json => {
-                setExercises(json);
-            })
-    }, []);
+    const [exercises, setExercises] = useState(allExercises);
+    const [curExercise, setCurExercise] = useState(null);
 
 
     return <div>
         Choose an exercise:
-        <select onChange={(e) => {
-            setExerciseDetail(e.target.value.split(':'));
+        <select onChange={async(e) => {
+            console.log(e.target.value);
+            const [ exid ] = e.target.value.split(':');
+            console.log(`Exid is ${exid}`);
+            const exer = exercises.find(ex => ex.id == exid)||{};
+            const { questions, intro }  = await getFullExercise(exid);
+            exer.questions = questions;
+            exer.intro = intro;
+            setCurExercise(exer);
         }}>
         { exercises.map (exercise => <option key={exercise.id} value={`${exercise.id}:${exercise.publicNumber}`}>{exercise.moduleCode}: T{exercise.topicNumber}: Ex {exercise.publicNumber}</option>) }
         </select>
-        <EditExerciseComponent exId={exerciseDetail[0]} exNum={exerciseDetail[1]} onExerciseDeleted={ exId => {
+        { curExercise ? 
+        <>
+        <EditExerciseComponent exercise={curExercise} onExerciseDeleted={ exId => {
             const newExercises = structuredClone(exercises).filter ( exercise => exercise.id != exId );
+			console.log(JSON.stringify(newExercises));
             setExercises(newExercises);
-            setExerciseDetail(newExercises.length > 0 ? [newExercises[0].id, newExercises[0].publicNumber] : [1,1]);
-        }}/>
-        <AdminAnswersComponent exId={exerciseDetail[0]} exNum={exerciseDetail[1]} />
+            setCurExercise(null);
+        }} /> 
+        <h2>Answers</h2>
+        <h3>Answers for exercise {curExercise?.publicNumber}</h3>
+        <AdminAnswersHolder exid={curExercise?.id} />
+         </>: "" }
         </div>;
-
 } 

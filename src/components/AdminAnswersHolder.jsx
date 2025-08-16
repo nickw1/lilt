@@ -1,0 +1,38 @@
+"use client"
+import React, { useState, useEffect } from 'react';
+import { getAnswersForExercise }  from '../actions/answer.mjs';
+import AdminAnswersListComponent from './AdminAnswersListComponent.jsx';
+
+export default function AdminAnswersHolder({exid}) { 
+
+    const [answers, setAnswers] = useState([]);
+    const [status, setStatus] = useState("");
+
+    // id, qid, uid, answer, authorised
+    useEffect( () => {
+        const timerHandle = setInterval(async() => {
+            const allAnswers = [];
+            const ans = await getAnswersForExercise(exid);
+            let currentQuestionId = 0, currentQuestion = null;
+            for(let answer of ans) {
+                if(answer.qid != currentQuestionId) {
+                    if(currentQuestion != null) {
+                        allAnswers.push(currentQuestion);
+                    }
+                    currentQuestion = {
+                        qid: answer.qid,
+                        answers: []
+                    };
+                    currentQuestionId = answer.qid;
+                }
+                currentQuestion.answers.push(answer);
+            }
+            if(currentQuestion != null) {
+                allAnswers.push(currentQuestion);
+            }
+            setAnswers(allAnswers);
+        },  2000);
+        return () => clearInterval(timerHandle);
+    }, []);
+    return <AdminAnswersListComponent answers={answers} />;
+}

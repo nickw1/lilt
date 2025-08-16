@@ -1,42 +1,13 @@
 "use client"
 
-import React, { useState } from 'react';
+export default function AdminAddModuleComponent({onModuleSubmitted}) {
 
-export default function AdminAddModuleComponent({onModuleAdded}) {
-
-    return <div>
+    return <form action={onModuleSubmitted}>
         <h3>Add Module</h3>
         Module code: <br />
-        <input id='moduleCodeAddModule' type='text' /><br />
+        <input id='moduleCode' name='moduleCode' type='text' /><br />
         Module name: <br />
-        <input id='moduleName' type='text' style={{width:"400px"}}/><br />
-        <input type='button' value='Go!' onClick={addModule} />
-        </div>;
-
-    async function addModule() {
-        try {
-            const module = {
-                code: document.getElementById('moduleCodeAddModule').value,
-                name: document.getElementById('moduleName').value
-            };
-
-            const response = await fetch('/api/module/new', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(module)
-            });
-            const json = await response.json();
-            if(response.status == 200) {
-                alert(`ID in database: ${json.id}`);
-                module.id = json.id;
-                onModuleAdded(module);
-            } else {
-                alert(json.error);
-            }
-        } catch(e) {    
-            alert(e);
-        }
-    }
+        <input id='moduleName' name='moduleName' type='text' style={{width:"400px"}}/><br />
+        <input type='submit' value='Go!' />
+        </form>;
 }

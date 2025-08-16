@@ -1,27 +1,32 @@
 "use client"
 
-import React, { useState, useContext } from 'react';
-import ModuleChooseComponent from './ModuleChooseComponent.jsx';
-import ModulesContext from '../context/modulescontext.mjs';
+import { useState } from 'react';
+import { addTopic } from '../actions/topic.mjs';
 
-export default function AdminAddTopicComponent({action}) {
+export default function AdminAddTopicComponent({moduleCode, onTopicAdded}) {
 
-    const [moduleCode, setModuleCode] = useState("");
-    const modules = useContext(ModulesContext);
+    const [status, setStatus] = useState("");
+
     return <div>
         <h3>Add Topic</h3>
-		<form action={action}>
-        <ModuleChooseComponent modules={modules} onModuleChosen={code=>{
-            setModuleCode(code);
-        } } /><br />
-		<input type='hidden' name='operation' value='addTopic' />
-		<input type='hidden' name='moduleCode' value={moduleCode} />
         Topic number: <br />
         <input id='topicNumber2' name='topicNumber2' type='number' /><br />
         Topic title: <br />
         <input id='topicTitle' name='topicTitle' type='text' style={{width:"400px"}}/><br />
-        <input type='submit' value='Go!'/>
-        </form>
+        <button onClick={async() => {
+            const result = await addTopic(
+                moduleCode,
+                document.getElementById('topicNumber2').value,
+                document.getElementById('topicTitle').value
+            );
+            if(result.topic) {
+                setStatus("Added topic successfully.");
+                onTopicAdded(result.topic);
+            } else {
+                setStatus(result.error);
+            } 
+        }}>Go!</button>
+        Add topic status: {status}
         </div>;
 
 }

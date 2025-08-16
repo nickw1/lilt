@@ -3,42 +3,32 @@
 import { useState, useEffect } from 'react';
 import EditQuestion from './EditQuestionComponent.jsx';
 import AddWholeQuestionComponent from './AddWholeQuestionComponent.jsx';
+import { editExercise, deleteExercise, addQuestionsToExercise } from '../actions/exercise.mjs';
 
 
-export default function EditExerciseComponent({exNum, exId, onExerciseDeleted}) {
+export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
+    const [exDetails, setExDetails] = useState({});
 
+    const [status, setStatus] = useState("");
 
-    const [exDetails, setExDetails] = useState({
-        intro: "",
-        questions: []
-    });
-
-    useEffect( ()  => {
-            fetch(`/api/exercise/${exId}`)    
-                .then(response => response.json())
-                .then(json => {
-                    if(json?.intro && json?.questions) {
-                        setExDetails(json);
-                    } else {
-                        setExDetails({intro: "", questions: []});
-                    }
-                })
-               .catch(e => {
-                   alert(`Error fetching exercise from the server: ${e.message}`);
-               });
-    }, [exId]);
-
-    const qOutput = exDetails?.questions.map( question => <EditQuestion key={question.qid} question={question} onQuestionDeleted = { qid => {
+    useEffect(() => {
+        setExDetails(exercise);
+        console.log("Exercise:");
+        console.log(JSON.stringify(exercise));
+    }, [exercise]);
+    
+    const qOutput = exDetails.questions?.map( question => <EditQuestion key={question.qid} question={question} onQuestionDeleted = { qid => {
         const newExDetails = {
             intro: exDetails.intro,
             questions : exDetails.questions.filter ( question => question.qid != qid )
         };
         setExDetails(newExDetails);
     }}/> );
+    
 
     
-    return exDetails === null ? "" : <div>
-        <h3>Exercise {exNum} (ID {exId})</h3>
+    return exDetails.questions === undefined ? "" : <div>
+        <h3>Exercise {exDetails.publicNumber} (ID {exDetails.id})</h3>
         <div>
         <textarea style={{width:"40%", height: "200px"}} 
             onChange={ e => {
@@ -48,43 +38,33 @@ export default function EditExerciseComponent({exNum, exId, onExerciseDeleted}) 
             }
         } value={exDetails.intro} />
         <br />
-        <button onClick={editExercise}>Edit</button>
-        <button onClick={deleteExercise}>Delete</button>
+        <button onClick={edit}>Edit</button>
+        <button onClick={del}>Delete</button>
         {qOutput}
+        <p>Edit Exercise Status: {status}</p>
         <h3>Add new questions</h3>
-        <AddWholeQuestionComponent btnText='Save Questions To Database' onQuestionsSubmitted={saveQuestionsToServer} />
+        <AddWholeQuestionComponent btnText='Save Questions To Database' onQuestionsSubmitted={(questions) => {
+            return saveQuestionsToServer(exDetails.id, questions);
+        }} />
         </div>
         </div>;
 
-    async function editExercise() {
+    async function edit() {
         try {
-            const response = await fetch(`/api/exercise/${exId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type' : 'application/json',
-                },
-                body: JSON.stringify({exercise: exDetails.intro})
-            });
-            alert(response.status == 200 ? 'Successfully updated' : `Error updating, code ${response.status}.`);
+            const results = await editExercise(exDetails.id, exDetails.intro);
+            setStatus(results.error || "Successfully updated.");
         } catch(e) {
-            alert(`Error: ${e.message}`);
+            setStatus(e.message);
         }
     }
 
-    async function deleteExercise() {
+    async function del() {
         try {
-            const response = await fetch(`/api/exercise/${exId}`, {
-                method: 'DELETE'
-            });
-            if(response.status == 200) {
-                alert('Successfully deleted.');
-                setExDetails(null);
-                onExerciseDeleted(exId);
-            } else {
-                alert(`Error deleting, code ${response.status}.`);
-            }
+            const results = await deleteExercise(exDetails.id);
+            setStatus(results.error || "Successfully deleted.");
+            onExerciseDeleted(exDetails.id);
         } catch(e) {
-            alert(`Error: ${e.message}`);
+            setStatus(e.message);
         }
     }
 
@@ -95,31 +75,24 @@ export default function EditExerciseComponent({exNum, exId, onExerciseDeleted}) 
         //document.getElementById('questionType').value = 0;
     }
 
-    async function saveQuestionsToServer(questions) {
+    async function saveQuestionsToServer(id, questions) {
         try {
-            const response = await fetch(`/api/exercise/${exId}/questions`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({questions})
-            });
-            const json = await response.json();
-            if(response.status == 200) {
-                alert('Added questions to exercise');
+            const results = await addQuestionsToExercise(id, questions);
+            if(results.qids) {
                 const ed = structuredClone(exDetails);
                 questions.forEach ( (q,i) => {
-                    q.qid = json.qids[i];
+                    q.qid = results.qids[i];
                 });
                 ed.questions.push(...questions);
                 setExDetails(ed);
+                setStatus("Questions added successfully");
                 return true;
             } else {
-                alert(json.error);
+                setStatus(results.error);
                 return false;
             }
         } catch(e) {
-            alert('Internal error');
+            setStatus(e.message);
             return false;
         }
     }

@@ -36,32 +36,22 @@ export function answerQuestions(prevState, formData) {
     }
 }
 
-/*
-    export function authoriseAnswer(req, res) {
-        if(req.params.id) {
-            if(answerDao.findAnswer(req.params.id)) {
-                const authorised = answerDao.authoriseAnswer(req.params.id);
-                if(authorised) {
-                    topicDao.updateTopicOnAuthorisation(req.params.id);
-                }
-                res.status(authorised ? 200:500).json({authorised});
-            } else {
-                res.status(404).json({error: "Answer ID not found."});
-            }
-        } else {
-            res.status(400).json({error: "Answer ID not supplied."});
-        } 
+export function authoriseQuestionAnswers(prevState, formData) {
+    const answerDao = new AnswerDao(db), topicDao = new TopicDao(db);
+    const qid = parseInt(formData.get("qid"));
+    if(qid) {
+        const authorised = answerDao.authoriseQuestionAnswers(qid);
+        if(authorised) {
+            topicDao.updateTopicOnAuthorisationByQuestion(qid);
+            const newState = structuredClone(prevState);
+            newState.push(qid);
+            return newState;
+        }
     }
+    return prevState;
+}
 
-    export function authoriseQuestionAnswers(req, res) {
-        if(req.params.qid) {
-            const authorised = answerDao.authoriseQuestionAnswers(req.params.qid);
-            if(authorised) {
-                topicDao.updateTopicOnAuthorisationByQuestion(req.params.qid);
-            }
-            res.status(authorised ? 200:404).json({authorised});
-        } else {
-            res.status(400).json({error: "Question ID not supplied."});
-        } 
-    }
-*/
+export function getAnswersForExercise(id) {
+    const answerDao = new AnswerDao(db);
+    return answerDao.getAnswersForExercise(id);
+}

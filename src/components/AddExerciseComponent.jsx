@@ -1,79 +1,38 @@
 "use client"
 
-import React, { useState, useEffect, useContext } from 'react';
-import AddQuestionComponent from './AddQuestionComponent.jsx';
+import React, { useState, useContext } from 'react';
 import AddWholeQuestionComponent from './AddWholeQuestionComponent.jsx';
-import ModuleChooseComponent from './ModuleChooseComponent.jsx';
-import ModulesContext from '../context/modulescontext.mjs';
+import { addExercise } from '../actions/exercise.mjs';
+import ModuleContext from '../context/module.mjs';
 
 export default function AddExerciseComponent() {
 
-    const [moduleTopics, setModuleTopics] = useState([]);
-    const [moduleCode, setModuleCode] = useState("");
-    const modules = useContext(ModulesContext);
-
-
+    const moduleInfo = useContext(ModuleContext);
+    const [addExerciseState, setAddExerciseState] = useState("");
     return <><div>
             <h2>Add an Exercise</h2>
-            <ModuleChooseComponent modules={modules} onModuleChosen={code => {
-                populateTopics(code);
-                setModuleCode(code);
-            }} />
             <br />
             Topic Number: <br />
             <select id='topicNumber'>
-            { moduleTopics.map ( number => <option key={number}>{number}</option> ) }
+            { moduleInfo.topics.map ( topic => <option key={topic.id}>{topic.number}</option> ) }
+
             </select>
             <br />
             Exercise Introduction:<br />
             <textarea id='intro' style={{width:'50%', height:'100px'}}></textarea>
-            { moduleCode != "" ? 
-            <AddWholeQuestionComponent btnText='Save Exercise To Database' onQuestionsSubmitted={saveExerciseToServer} allowNoQuestions='true' />
+            { moduleInfo.moduleCode != "" ? 
+            <AddWholeQuestionComponent btnText='Save Exercise To Database' onQuestionsSubmitted={async(questions) => {
+                const results = await addExercise({
+                    topic: document.getElementById('topicNumber').value,
+                    intro: document.getElementById('intro').value,
+                    questions,
+                    moduleCode: moduleInfo.moduleCode
+                });
+                setAddExerciseState(results.eid ? `Added exercise with ID ${results.eid}`: (results.error || ""));
+            }} allowNoQuestions='true' />
              : "" }
+            <p>{addExerciseState}</p>
             </div>
             </>;
 
-
-
-    async function populateTopics(code) {
-        
-        if(code != "") {
-            try {
-                const response = await fetch(`/api/topic/${code}/all`);
-                const topics = await response.json();
-                setModuleTopics(topics.map (topic => topic.number));
-            } catch(e) {
-                alert(e.toString());
-            }
-        } else {
-            setModuleTopics([]);
-            setCompletedModuleDetails(false);
-        }
-    }
-
-    async function saveExerciseToServer(questions) {
-        // each question object has question (and options if applicable)
-        try {
-            const topic = document.getElementById('topicNumber').value;
-            const intro = document.getElementById('intro').value;
-            const response = await fetch('/api/exercise/new', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({topic, intro, questions, moduleCode})
-            });
-            const json = await response.json();
-            if(response.status == 200) {
-                alert('Saved exercise');
-                return true;
-            } else {
-                alert(json.error);
-                return false;
-            }
-        } catch(e) {
-            alert('Internal error');
-            return false;
-        }
-    }
 }

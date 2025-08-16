@@ -1,94 +1,31 @@
-"use client"
-import React, { useState, useEffect } from 'react';
+/*
+import { getAnswers } from '../actions/answer.mjs';
 
-export default function AdminAnswersComponent({exId, exNum}) { 
+export default function AdminAnswersComponent({exercise}) { 
 
-    const [answers, setAnswers] = useState([]);
+    const answers = getAnswersFromServer(exercise.id);
+    return <AdminAnswersListComponent answers={answers} />;
 
-    // id, qid, uid, answer, authorised
-    useEffect( () => {
-        const timerHandle= setInterval( pollServer,  10000);
-        pollServer();
-        return () => clearInterval(timerHandle);
-    }, [exId]);
-
-    const output = answers.map( (answer,i) => {
-            const answersForQuestion = answer.answers.map ( 
-                indivAnswer =>     
-                    <li key={indivAnswer.id}>{indivAnswer.answer}</li>
-                );
-            return <div style={{whiteSpace: 'pre-wrap'}} key={answer.qid}>
-                <h4>Question ID {answer.qid}</h4>
-                <ul>{answersForQuestion}</ul>
-                {answersForQuestion.length > 0 ? <input type='button' data-id={answer.qid} value='Authorise All' onClick={authoriseAll} /> : ''}
-            </div>;
-    });
-
-    return <div>
-        <h2>Answers</h2>
-        <h3>Answers for exercise {exNum}</h3>
-        {output.length > 0 ? output: "No answers."}
-        </div>;
-
-
-    
-    async function authorise(e) {
-        const answerId = e.target.getAttribute('data-id');
-        try {
-            const response = await fetch(`/api/answer/${answerId}/authorise`, {
-                method: 'POST'
-            });
-            if(response.status == 200) {
-                const newAnswers = [];
-                answers.forEach ( question => {
-                    newAnswers.push({
-                        qid: question.qid,
-                        answers: question.answers.filter ( answer => answer.id != answerId )
-                    });
-                });
-                setAnswers(newAnswers);
+    function getAnswersFromServer(exId) {
+        const ans = getAnswers(exId);
+        let currentQuestionId = 0, currentQuestion = null;
+        for(let answer of ans) {
+            if(answer.qid != currentQuestionId) {
+                if(currentQuestion != null) {
+                    allAnswers.push(currentQuestion);
+                }
+                currentQuestion = {
+                    qid: answer.qid,
+                    answers: []
+                };
+                currentQuestionId = answer.qid;
             }
-        } catch(e) {
+            currentQuestion.answers.push(answer);
         }
-    }
-
-    async function authoriseAll(e) {
-        const questionId = e.target.getAttribute('data-id');
-        try {
-            const response = await fetch(`/api/answer/question/${questionId}/authorise`, {
-                method: 'POST'
-            });
-            if(response.status == 200) {
-                const newAnswers = answers.filter( q => q.qid != questionId );
-                setAnswers(newAnswers);
-            }
-        } catch(e) {
+        if(currentQuestion != null) {
+            allAnswers.push(currentQuestion);
         }
-    }
-    
-    function pollServer() {
-            const allAnswers = [];
-            fetch(`/api/answer/exercise/${exId}`)
-                .then(response => response.json())
-                .then(ans => {
-                    let currentQuestionId = 0, currentQuestion = null;
-                    for(let answer of ans) {
-                        if(answer.qid != currentQuestionId) {
-                            if(currentQuestion != null) {
-                                allAnswers.push(currentQuestion);
-                            }
-                            currentQuestion = {
-                                qid: answer.qid,
-                                answers: []
-                            };
-                            currentQuestionId = answer.qid;
-                        }
-                        currentQuestion.answers.push(answer);
-                    }
-                    if(currentQuestion != null) {
-                        allAnswers.push(currentQuestion);
-                    }
-                    setAnswers(allAnswers);
-                });
+        return allAnswers;
     }
 }
+*/

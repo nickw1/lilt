@@ -1,40 +1,37 @@
-//"use client"
+"use client"
 
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Link } from '@lazarv/react-server/navigation';
 import AdminLoginComponent from './AdminLoginComponent.jsx';
 import AddExerciseComponent from './AddExerciseComponent.jsx';
-import AdminAnswersComponent from './AdminAnswersComponent.jsx';
-import AdminTopicComponent0 from './AdminTopicComponent0.jsx';
-import AdminModuleComponent from './AdminModuleComponent.jsx';
+import AdminTopicComponent from './AdminTopicComponent.jsx';
 import AdminAddModuleComponent from './AdminAddModuleComponent.jsx';
-//import ModulesContext from '../context/modulescontext.mjs';
-import useModules from '../hooks/modules.mjs';
+import ModuleChooseComponent from './ModuleChooseComponent.jsx';
+import ModulesComponent from './ModulesComponent.jsx';
+import ModulesContext from '../context/module.mjs';
+import { getTopics } from '../actions/topic.mjs';
 
 export default function AdminComponent({modules}) {
-//    const [moduleList, setModuleList] = useState(modules);
-	const moduleList = useModules();
 
+	const [moduleInfo, setModuleInfo] = useState({
+		moduleCode: "",
+		topics: []
+	});
     return <Fragment>
         <p><Link to='/admin/exercises'>Exercises and answers</Link> | 
         <Link to='/'>Course notes</Link></p>
+        <ModuleChooseComponent modules={modules} onModuleChosen={async(module) => {
+			const topics = await getTopics(module);
+			setModuleInfo({
+				moduleCode: module,
+				topics
+			});
+		}} />
+        <ModulesContext.Provider value={moduleInfo}>
         <AddExerciseComponent />
-        <AdminTopicComponent0 />
-        <AdminModuleComponent />
+		<AdminTopicComponent />
+		</ModulesContext.Provider>
+ 
+        <ModulesComponent modules={modules} />
         </Fragment>;
 }
-/*
-    return <Fragment>
-        <p><Link to='/admin/exercises'>Exercises and answers</Link> | 
-        <Link to='/'>Course notes</Link></p>
-        <ModulesContext.Provider value={moduleList}>
-        <AddExerciseComponent />
-        <AdminTopicComponent0 />
-        <AdminAddModuleComponent onModuleAdded={module => {
-            const newModules = structuredClone(moduleList);
-            newModules.push(module);
-            setModuleList(newModules);
-        }} />
-        </ModulesContext.Provider>
-        </Fragment>;
-*/
