@@ -43,6 +43,5 @@ export function addTopic(moduleCode, number, title) {
 export function getTopics(moduleCode) {
     const topicDao = new TopicDao(db);
     const res = topicDao.getAllForModule(moduleCode);
-    console.log(res);
     return res;
 }

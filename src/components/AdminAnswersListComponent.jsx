@@ -26,6 +26,6 @@ export default function AdminAnswersListComponent({answers}) {
     return <div>
         {output.length > 0 ? output: "No answers."}
         Status: {status}<br />
-		Authorised questions: {JSON.stringify(authorisedQuestions)}<br />
+        Authorised questions: {JSON.stringify(authorisedQuestions)}<br />
         </div>;
 }

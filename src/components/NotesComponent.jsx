@@ -22,7 +22,7 @@ export default async function NotesComponent({module, initTopic}) {
     let contentHiddenCount=0;
 
     function exerciseHandler(ex, dep) {
-        let exDependencyCompleted = admin || dep === undefined;
+        let exDependencyCompleted = isAdmin || dep === undefined;
         const { id: topicId } = topicDao.getTopicByModuleCodeAndNumber(module, topic);
         if(!exDependencyCompleted) {
             const depExer = exerciseDao.getExerciseByPublicNumber(topicId, dep); 
@@ -49,7 +49,7 @@ export default async function NotesComponent({module, initTopic}) {
             matches =  /^@(answer|depends)\((\d+)\)$/.exec(node.children[0].text);
             exMatch = /^@(ex\d+)(\((\d+)\))?$/.exec(node.children[0].text);
         }
-        if(matches && !admin) {
+        if(matches && !isAdmin) {
             protectedContent = true;
             const { id: topicId} = topicDao.getTopicByModuleCodeAndNumber(module, topic);
             const exer = exerciseDao.getExerciseByPublicNumber(topicId, matches[2]);
@@ -72,7 +72,7 @@ export default async function NotesComponent({module, initTopic}) {
         }
     }
 
-    const { admin, uid } = useLoggedIn();
+    const { isAdmin, uid } = useLoggedIn();
 
     const topicsList = getTopicsListCached(module);
     const topic = initTopic || 0;

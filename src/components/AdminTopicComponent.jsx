@@ -6,14 +6,14 @@ import { makePublic } from '../actions/topic.mjs';
 import ModulesContext from '../context/module.mjs';
 
 export default function AdminTopicComponent() {
-	const moduleInfo = useContext(ModulesContext);
+    const moduleInfo = useContext(ModulesContext);
 
     const [topicsState, setTopicsState] = useState(moduleInfo.topics);
     const [status, setStatus] = useState("");
 
-	useEffect(() => {
-		setTopicsState(moduleInfo.topics);
-	}, [moduleInfo]);
+    useEffect(() => {
+        setTopicsState(moduleInfo.topics);
+    }, [moduleInfo]);
 
     const tops = topicsState
         .map((topic) => <li key={topic.id}>

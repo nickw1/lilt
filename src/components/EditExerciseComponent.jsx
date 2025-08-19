@@ -13,8 +13,6 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
 
     useEffect(() => {
         setExDetails(exercise);
-        console.log("Exercise:");
-        console.log(JSON.stringify(exercise));
     }, [exercise]);
     
     const qOutput = exDetails.questions?.map( question => <EditQuestion key={question.qid} question={question} onQuestionDeleted = { qid => {

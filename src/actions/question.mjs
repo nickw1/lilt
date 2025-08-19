@@ -5,9 +5,6 @@ import db from '../../server/db/db.mjs';
 
 
 export function editQuestion(id, question, options) {
-    console.log(`editQuestion:`); 
-	console.log(JSON.stringify(question));
-	console.log(JSON.stringify(options));
     const questionDao = new QuestionDao(db);
     try {
         if(question) {

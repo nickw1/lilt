@@ -77,5 +77,5 @@ export function deleteExercise(id) {
 export function getFullExercise(id) {
     const exerciseDao = new ExerciseDao(db); 
     const ex = exerciseDao.getFullExercise(id);
-	return ex;
+    return ex;
 }

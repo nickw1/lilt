@@ -14,9 +14,7 @@ export default function AdminExerciseManagementComponent({allExercises}) {
     return <div>
         Choose an exercise:
         <select onChange={async(e) => {
-            console.log(e.target.value);
             const [ exid ] = e.target.value.split(':');
-            console.log(`Exid is ${exid}`);
             const exer = exercises.find(ex => ex.id == exid)||{};
             const { questions, intro }  = await getFullExercise(exid);
             exer.questions = questions;
@@ -29,7 +27,6 @@ export default function AdminExerciseManagementComponent({allExercises}) {
         <>
         <EditExerciseComponent exercise={curExercise} onExerciseDeleted={ exId => {
             const newExercises = structuredClone(exercises).filter ( exercise => exercise.id != exId );
-			console.log(JSON.stringify(newExercises));
             setExercises(newExercises);
             setCurExercise(null);
         }} /> 

@@ -8,7 +8,7 @@ export default function ExerciseComponent({exercise}) {
     const formId = `ex${exercise.id}`; 
     const content = [];
     let options;
-	const [ answerState, answerQuestionsWithState ] = useActionState(answerQuestions, { status: "", error: null, answered: [] });
+    const [ answerState, answerQuestionsWithState ] = useActionState(answerQuestions, { status: "", error: null, answered: [] });
     const q = exercise.questions.map (question => {
         const fieldId = `q${question.qid}`;
         if(question.options) {
@@ -26,7 +26,7 @@ export default function ExerciseComponent({exercise}) {
         { !exercise.completed || !exercise.showInputs ? <input type='submit' value='Answer Questions' onClick={answerQuestions} /> : <em>Submission disabled now you have completed or the notes have been made public.</em> } </form>);
   
     return <div>
-		{content}
-		<p style={{backgroundColor: '#ffffc0'}}>{answerState.status || ""}</p>
-		{ answerState.error ? <p style={{backgroundColor: '#ffc0c0'}}>Error: {answerState.error}</p> : ""}</div>;
+        {content}
+        <p style={{backgroundColor: '#ffffc0'}}>{answerState.status || ""}</p>
+        { answerState.error ? <p style={{backgroundColor: '#ffc0c0'}}>Error: {answerState.error}</p> : ""}</div>;
 }

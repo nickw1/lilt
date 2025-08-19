@@ -13,24 +13,24 @@ import { getTopics } from '../actions/topic.mjs';
 
 export default function AdminComponent({modules}) {
 
-	const [moduleInfo, setModuleInfo] = useState({
-		moduleCode: "",
-		topics: []
-	});
+    const [moduleInfo, setModuleInfo] = useState({
+        moduleCode: "",
+        topics: []
+    });
     return <Fragment>
         <p><Link to='/admin/exercises'>Exercises and answers</Link> | 
         <Link to='/'>Course notes</Link></p>
         <ModuleChooseComponent modules={modules} onModuleChosen={async(module) => {
-			const topics = await getTopics(module);
-			setModuleInfo({
-				moduleCode: module,
-				topics
-			});
-		}} />
+            const topics = await getTopics(module);
+            setModuleInfo({
+                moduleCode: module,
+                topics
+            });
+        }} />
         <ModulesContext.Provider value={moduleInfo}>
         <AddExerciseComponent />
-		<AdminTopicComponent />
-		</ModulesContext.Provider>
+        <AdminTopicComponent />
+        </ModulesContext.Provider>
  
         <ModulesComponent modules={modules} />
         </Fragment>;

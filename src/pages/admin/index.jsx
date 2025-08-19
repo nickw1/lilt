@@ -2,12 +2,13 @@ import useLoggedIn from '../../hooks/login.mjs';
 import useModules from '../../hooks/modules.mjs';
 import AdminComponent from '../../components/AdminComponent.jsx';
 import AdminLoginComponent from '../../components/AdminLoginComponent.jsx';
+import '../../../server/misc/dotenv.mjs';
 
 
-export default function AdminPage() {
+export default async function AdminPage() {
 
-    const user = useLoggedIn();
-    const isAdmin = user.admin;
+    const { isAdmin } = await useLoggedIn();
+    console.log(`isAdmin ${isAdmin}`);
     const modules = useModules();
 
     return  <div><h1>Admin page</h1>

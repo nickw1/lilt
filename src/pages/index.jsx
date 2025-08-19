@@ -1,5 +1,5 @@
 
-import React, { cache } from 'react';
+import React from 'react';
 import LoginComponent from '../components/LoginComponent.jsx';
 import ModuleChooseComponent from '../components/ModuleChooseComponent.jsx';
 import LinkModuleChooseComponent from '../components/LinkModuleChooseComponent.jsx';
@@ -14,12 +14,18 @@ import db from '../../server/db/db.mjs';
 import useLoggedIn from '../hooks/login.mjs';
 import useModules from '../hooks/modules.mjs';
 
+import '../../server/misc/dotenv.mjs';
+
 import "../../css/nwnotes.css";
 
-export default function App() {
+export default async function App() {
+    console.log("env (NOTES_DB)...");
+    console.log(process.env.NOTES_DB);
     const searchParams = useSearchParams();
     const module = searchParams.module || '';
-    const user = useLoggedIn();
+    const user = await useLoggedIn();
+    console.log('user info is...');
+    console.log(user);
 
     
     const modules = useModules();
