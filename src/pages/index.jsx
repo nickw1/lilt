@@ -1,4 +1,4 @@
-
+import '../../server/misc/dotenv.mjs';
 import React from 'react';
 import LoginComponent from '../components/LoginComponent.jsx';
 import ModuleChooseComponent from '../components/ModuleChooseComponent.jsx';
@@ -14,7 +14,6 @@ import db from '../../server/db/db.mjs';
 import useLoggedIn from '../hooks/login.mjs';
 import useModules from '../hooks/modules.mjs';
 
-import '../../server/misc/dotenv.mjs';
 
 import "../../css/nwnotes.css";
 
