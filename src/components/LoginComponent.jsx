@@ -7,7 +7,7 @@ export default function LoginComponent({usercode}) {
 
     const [newUserState, newUserWithState] = useActionState(newUser, null);
     const [newUserStage, setNewUserStage] = useState(0);
-    const [loginError, setLoginError] = useState("");
+    const [loginState, loginWithState] = useActionState(login, null);
      
     const { navigate } = useClient();
 
@@ -18,25 +18,16 @@ export default function LoginComponent({usercode}) {
         </form>
         :
         <>
-        <div>
+        <form action={loginWithState} key='formLogin'>
         <div id='newUserStatus' style={{fontSize: "60%", fontWeight: "bold"}}>{newUserState?.usercode ? `Your user code is ${newUserState.usercode} and is valid for one week, please login` : (newUserState?.error || "")}</div>
         User code: <input id='usercode' name='usercode' />
-        <input type='button' value='Login' onClick={ async() => {
-            const loginResult = await login(
-                document.getElementById('usercode').value
-            );
-            if(loginResult.error) {
-                setLoginError(loginResult.error);
-            } else {
-                navigate('/');
-            }
-        }} />
-        <div id='loginError'>{loginError}</div>
-        </div>
+        <input type='submit' value='Login'  />
+        <div id='loginError'>{loginState?.error || ""}</div>
+        </form>
         <input type='button' value='Get New User Code' onClick={ () => setNewUserStage(1) } />
         </>)
         :
-        <form action={logout}>Your user code: <strong>{usercode==1 ? "admin": usercode}</strong>
+        <form action={logout} key='formLogout'>Your user code: <strong>{usercode==1 ? "admin": usercode}</strong>
         <input type='submit' value='Logout' />
         </form>
 }

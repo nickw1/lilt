@@ -19,8 +19,6 @@ import '../../server/misc/dotenv.mjs';
 import "../../css/nwnotes.css";
 
 export default async function App() {
-    console.log("env (NOTES_DB)...");
-    console.log(process.env.NOTES_DB);
     const searchParams = useSearchParams();
     const module = searchParams.module || '';
     const user = await useLoggedIn();

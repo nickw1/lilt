@@ -7,8 +7,9 @@ import Cookies from '../misc/cookies.mjs';
 import UserDao from '../../server/dao/user.mjs';
 import db from '../../server/db/db.mjs';
 
-export async function login(usercode) {
+export async function login(prevState, formData) {
     const userDao = new UserDao(db);
+    const usercode = formData.get("usercode");
     if(usercode && usercode.match("^\\d+$")) {
         const user = userDao.findUserByCode(usercode);
         if(user) {
@@ -17,7 +18,7 @@ export async function login(usercode) {
             } );
             session.uid = user.id;
             await session.save();
-            return { usercode };
+            redirect('/');
         } else {
             return { error: "Cannot find that user code." };
         }
@@ -30,7 +31,7 @@ export async function logout() {
     const session = await getIronSession(new Cookies(), { 
         cookieName, password
     } );
-    delete session.usercode;
+    delete session.uid;
     session.destroy();
     redirect('/');
 }
@@ -41,8 +42,9 @@ export async function newUser(prevState, formData) {
     return usercode > 0 ? { success: true, usercode } : { error: "Unable to create new user." };
 }
 
-export async function adminLogin(username, pass) {
+export async function adminLogin(prevState, formData) {
     const userDao = new UserDao(db);
+    const username = formData.get("username"), pass = formData.get("pass");
     if(username && pass) {
         const user = await userDao.findAdmin(username, pass);
         if(user === null) {
@@ -54,9 +56,9 @@ export async function adminLogin(username, pass) {
             session.admin = true; 
             session.uid = 0; // use 0 for admin user
             await session.save();
-            return { loggedIn: true, admin: session.admin, uid: session.uid };
+            redirect('/admin'); 
         } 
     } else {
-        return { error: "User code missing or in an invalid format." };
+        return { error: "Login details missing or in an invalid format." };
     }
 }
