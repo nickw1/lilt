@@ -38,8 +38,9 @@ export async function answerQuestions(prevState, formData) {
 
 export function authoriseQuestionAnswers(prevState, formData) {
     const answerDao = new AnswerDao(db), topicDao = new TopicDao(db);
-    const qid = parseInt(formData.get("qid"));
+    let qid = formData.get("qid");
     if(qid && qid.match("^\\d+$")) {
+        qid = parseInt(qid);
         const authorised = answerDao.authoriseQuestionAnswers(qid);
         if(authorised) {
             topicDao.updateTopicOnAuthorisationByQuestion(qid);
