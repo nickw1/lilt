@@ -5,6 +5,7 @@ import AdminExerciseManagementComponent from '../../../components/AdminExerciseM
 import useLoggedIn from '../../../hooks/login.mjs';
 import useModules from '../../../hooks/modules.mjs';
 import ExerciseDao from '../../../../server/dao/exercise.mjs';
+import TopicDao from '../../../../server/dao/topic.mjs';
 import '../../../../server/misc/dotenv.mjs';
 import db from '../../../../server/db/db.mjs';
 
@@ -16,7 +17,12 @@ export default async function AdminExerciseManagementPage() {
     const isAdmin = user.usercode !== null && user.isAdmin;
 
     const exerciseDao = new ExerciseDao(db);
+    const topicDao = new TopicDao(db);
     const allExercises = exerciseDao.getAll();
+    allExercises.forEach ( ex => {
+        const topic = topicDao.getTopicById(ex.topic);
+        ex.topicNumber = topic.number;
+    });
     
     return  <div><h1>Admin exercise management page</h1>
         <AdminLoginComponent isAdmin={isAdmin} />
