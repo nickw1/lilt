@@ -16,9 +16,13 @@ export async function login(prevState, formData) {
             const session = await getIronSession(new Cookies(), { 
                 cookieName, password
             } );
-            session.uid = user.id;
-            await session.save();
-            redirect('/');
+            if(userDao.setLoggedIn(user.id, true)) {
+                session.uid = user.id;
+                await session.save();
+                redirect('/');
+            } else {
+                return { error: "Failed to log in user." };
+            }
         } else {
             return { error: "Cannot find that user code." };
         }
@@ -28,12 +32,17 @@ export async function login(prevState, formData) {
 }
 
 export async function logout() {
+    const userDao = new UserDao(db);
     const session = await getIronSession(new Cookies(), { 
         cookieName, password
     } );
-    delete session.uid;
-    session.destroy();
-    redirect('/');
+    if(userDao.setLoggedIn(session.uid, false)) {
+        delete session.uid;
+        session.destroy();
+        redirect('/');
+    } else {
+        return { error: "Failed to log out user." };
+    }
 }
 
 export async function newUser(prevState, formData) {

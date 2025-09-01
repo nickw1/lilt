@@ -33,6 +33,21 @@ export default class UserDao {
         return results;
     }
 
+    setLoggedIn(id, status) {
+        const stmt = this.db.prepare("UPDATE usercodes SET loggedin=? WHERE id=?");
+        const info = stmt.run(status ? 1:0, id);
+        return info.changes ? true : false;
+    }
+
+    isLoggedIn(id) {
+        const stmt = this.db.prepare("SELECT loggedin FROM usercodes WHERE id=?");
+        const results = stmt.get(id);
+        if(results) {
+            return results.loggedin ? true: false;
+        }
+        return false;
+    }
+
     deleteUser(id) {
         const stmt = this.db.prepare("DELETE FROM answers WHERE uid=?");
         stmt.run(id);

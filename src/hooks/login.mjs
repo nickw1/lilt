@@ -9,7 +9,8 @@ export default async function useLoggedIn() {
         cookieName, password
     } );
     const userDao = new UserDao(db);
-    if(session?.uid !== undefined){
+    if(session?.uid !== undefined && userDao.isLoggedIn(session.uid)){
+        
         return {
             uid: session.uid,
             usercode: session.admin ? 0 : userDao.findUserById(session.uid)?.usercode,
