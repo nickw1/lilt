@@ -11,11 +11,11 @@ import xss from 'xss';
 export function addQuestionsToExercise(id, questions) {
     const exerciseDao = new ExerciseDao(db), questionDao = new QuestionDao(db);
 
-    if(exerciseDao.getFullExercise(id)) {
-       const qids = questionDao.addQuestions(xss(id), questions);
+    if(id.toString().match("^\\d+$") && exerciseDao.getFullExercise(id)) {
+       const qids = questionDao.addQuestions(id, questions);
        return({qids});
     } else {
-       return({error: `Exercise with ID ${id} not found.`});
+       return({error: `Exercise with ID ${id} not found or invalid ID.`});
     }
 }
 
@@ -52,7 +52,7 @@ export function addExercise(exData) {
 export function editExercise(id, exercise) {
     const exerciseDao = new ExerciseDao(db);
     try {
-        if(exercise) {
+        if(exercise && id.toString().match("^\\d+$")) {
             const nUpdated = exerciseDao.editExercise(id, exercise);
             return({nUpdated});
         } else {
@@ -64,18 +64,26 @@ export function editExercise(id, exercise) {
 }
 
 export function deleteExercise(id) {
-    const exerciseDao = new ExerciseDao(db), questionDao = new QuestionDao(db);
-    try {
-        questionDao.deleteQuestionsForExercise(id); 
-        const nUpdated = exerciseDao.deleteExercise(id);
-        return{nUpdated};
-    } catch(e) {
-        return({error: e.message});
+    if(id.toString().match("^\\d+$")) {
+        const exerciseDao = new ExerciseDao(db), questionDao = new QuestionDao(db);
+        try {
+            questionDao.deleteQuestionsForExercise(id); 
+            const nUpdated = exerciseDao.deleteExercise(id);
+            return{nUpdated};
+        } catch(e) {
+            return({error: e.message});
+        }
+    } else {
+        return { error: "Invalid format for ID." };
     }
 }
 
 export function getFullExercise(id) {
-    const exerciseDao = new ExerciseDao(db); 
-    const ex = exerciseDao.getFullExercise(id);
-    return ex;
+    if(id.toString().match("^\\d+$")) {
+        const exerciseDao = new ExerciseDao(db); 
+        const ex = exerciseDao.getFullExercise(id);
+        return ex;
+    } else {
+        return { error: "Invalid format for ID." };
+    }
 }

@@ -9,12 +9,13 @@ export default async function useLoggedIn() {
         cookieName, password
     } );
     const userDao = new UserDao(db);
-    if(session?.uid !== undefined && userDao.isLoggedIn(session.uid)){
+    if(session?.uid !== undefined) {
+        const isLoggedIn = (session.admin && userDao.isAdminLoggedIn(session.admin)) || (session.uid && userDao.isLoggedIn(session.uid));
         
         return {
             uid: session.uid,
             usercode: session.admin ? 0 : userDao.findUserById(session.uid)?.usercode,
-            isAdmin: session.admin
+            isAdmin: session.admin ? true: false
         };    
     }
     return { usercode: null, uid: null, isAdmin: false };

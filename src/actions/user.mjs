@@ -36,11 +36,24 @@ export async function logout() {
     const session = await getIronSession(new Cookies(), { 
         cookieName, password
     } );
-    if(userDao.setLoggedIn(session.uid, false)) {
-        delete session.uid;
-        session.destroy();
-        redirect('/');
+    let success = false;
+    if(session.admin) {
+        if(userDao.setAdminLoggedIn(session.admin, false)) {
+            success = true;
+            delete session.admin;
+            delete session.uid;
+            session.destroy();
+            redirect('/');
+        }
     } else {
+        success = true;
+        if(userDao.setLoggedIn(session.uid, false)) {
+            delete session.uid;
+            session.destroy();
+            redirect('/');
+        }
+    }
+    if(!success) {
         return { error: "Failed to log out user." };
     }
 }
@@ -62,7 +75,7 @@ export async function adminLogin(prevState, formData) {
             const session = await getIronSession(new Cookies(), { 
                 cookieName, password
             } );
-            session.admin = true; 
+            session.admin = username; 
             session.uid = 0; // use 0 for admin user
             await session.save();
             redirect('/admin'); 

@@ -34,8 +34,6 @@ export default class QuestionDao {
     }
 
     editQuestion(id, question, options) {
-		console.log(`edtiing question ${id} to`);
-		console.log(JSON.stringify(question));
         if(options.length) {
             const stmt0 = this.db.prepare("DELETE FROM qoptions WHERE qid=?");
             stmt0.run(id);

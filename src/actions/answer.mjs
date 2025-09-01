@@ -9,9 +9,9 @@ import useLoggedIn from '../hooks/login.mjs';
 import xss from 'xss';
 
 
-export function answerQuestions(prevState, formData) {
+export async function answerQuestions(prevState, formData) {
     const answerDao = new AnswerDao(db);
-    const { uid } = useLoggedIn(); 
+    const { uid } = await useLoggedIn(); 
     const answered = [];
     if(uid !== null) {
         const status = [];
@@ -39,7 +39,7 @@ export function answerQuestions(prevState, formData) {
 export function authoriseQuestionAnswers(prevState, formData) {
     const answerDao = new AnswerDao(db), topicDao = new TopicDao(db);
     const qid = parseInt(formData.get("qid"));
-    if(qid) {
+    if(qid && qid.match("^\\d+$")) {
         const authorised = answerDao.authoriseQuestionAnswers(qid);
         if(authorised) {
             topicDao.updateTopicOnAuthorisationByQuestion(qid);

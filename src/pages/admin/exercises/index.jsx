@@ -8,9 +8,9 @@ import ExerciseDao from '../../../../server/dao/exercise.mjs';
 import '../../../../server/misc/dotenv.mjs';
 import db from '../../../../server/db/db.mjs';
 
-export default function AdminExerciseManagementPage() {
+export default async function AdminExerciseManagementPage() {
 
-    const user = useLoggedIn();
+    const user = await useLoggedIn();
     const modules = useModules();
 
     const isAdmin = user.usercode !== null && user.isAdmin;

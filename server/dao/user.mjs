@@ -39,9 +39,24 @@ export default class UserDao {
         return info.changes ? true : false;
     }
 
+    setAdminLoggedIn(username, status) {
+        const stmt = this.db.prepare("UPDATE admins SET loggedin=? WHERE username=?");
+        const info = stmt.run(status ? 1:0, username);
+        return info.changes ? true : false;
+    }
+
     isLoggedIn(id) {
         const stmt = this.db.prepare("SELECT loggedin FROM usercodes WHERE id=?");
         const results = stmt.get(id);
+        if(results) {
+            return results.loggedin ? true: false;
+        }
+        return false;
+    }
+
+    isAdminLoggedIn(username) {
+        const stmt = this.db.prepare("SELECT loggedin FROM admins WHERE username=?");
+        const results = stmt.get(username);
         if(results) {
             return results.loggedin ? true: false;
         }

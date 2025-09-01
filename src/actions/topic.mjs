@@ -7,7 +7,7 @@ import xss from 'xss';
 
 export function makePublic(id) {
     const topicDao = new TopicDao(db);
-    if(id) {
+    if(id && id.toString().match("^\\d+$")) {
         const info = topicDao.makePublic(id);
         return info.changes > 0 ? { nUpdated: info.changes } : { error: "Could not find topic with that ID." };
     } else {

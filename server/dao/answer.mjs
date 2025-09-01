@@ -6,6 +6,7 @@ export default class AnswerDao {
     }
 
     addAnswer(uid, qid, answer) {
+		console.log(`addAnswer uid ${uid} qid ${qid} ${answer}`);
         if(!this.hasUserAnsweredQuestion(uid, qid)) {
             const stmt = this.db.prepare("INSERT INTO answers(uid, qid, answer, authorised,submitted) VALUES (?,?,?,?,?)");
             const info = stmt.run(uid, qid, answer, 0, Math.round(Date.now() / 1000));
