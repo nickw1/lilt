@@ -9,7 +9,7 @@ import { editExercise, deleteExercise, addQuestionsToExercise } from '../actions
 export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
     const [exDetails, setExDetails] = useState({});
 
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState({message: ""});
 
     useEffect(() => {
         setExDetails(exercise);
@@ -38,8 +38,8 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
         <br />
         <button onClick={edit}>Edit</button>
         <button onClick={del}>Delete</button>
+        <p style={{backgroundColor: status.error ? '#ffc0c0' : '#c0ffc0'}}>{status.error || status.message}</p>
         {qOutput}
-        <p>Edit Exercise Status: {status}</p>
         <h3>Add new questions</h3>
         <AddWholeQuestionComponent btnText='Save Questions To Database' onQuestionsSubmitted={(questions) => {
             return saveQuestionsToServer(exDetails.id, questions);
@@ -50,19 +50,19 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
     async function edit() {
         try {
             const results = await editExercise(exDetails.id, exDetails.intro);
-            setStatus(results.error || "Successfully updated.");
+            setStatus(results.error ? {error: results.error} : {message: "Successfully updated."});
         } catch(e) {
-            setStatus(e.message);
+            setStatus({error: e.message});
         }
     }
 
     async function del() {
         try {
             const results = await deleteExercise(exDetails.id);
-            setStatus(results.error || "Successfully deleted.");
+            setStatus(results.error ? {error: results.error} : {message: "Successfully deleted."});
             onExerciseDeleted(exDetails.id);
         } catch(e) {
-            setStatus(e.message);
+            setStatus({error: e.message});
         }
     }
 
@@ -77,20 +77,20 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
         try {
             const results = await addQuestionsToExercise(id, questions);
             if(results.qids) {
-                const ed = structuredClone(exDetails);
+                const newExDetails = structuredClone(exDetails);
                 questions.forEach ( (q,i) => {
                     q.qid = results.qids[i];
                 });
-                ed.questions.push(...questions);
-                setExDetails(ed);
-                setStatus("Questions added successfully");
+                newExDetails.questions.push(...questions);
+                setExDetails(newExDetails);
+                setStatus({message: "Questions added successfully"});
                 return true;
             } else {
-                setStatus(results.error);
+                setStatus({error: results.error});
                 return false;
             }
         } catch(e) {
-            setStatus(e.message);
+            setStatus({error: e.message});
             return false;
         }
     }

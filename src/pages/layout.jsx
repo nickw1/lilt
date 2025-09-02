@@ -3,6 +3,7 @@ export default function Layout({children}) {
     <html>
     <head>
     <title>LILT - Lightweight Interactive Learning Tool</title>
+    <link rel='stylesheet' type='text/css' href='/css/Fira-4.202/fira.css' />
     <link rel='stylesheet' type='text/css' href='/css/nwnotes.css' />
     </head>
     <body>

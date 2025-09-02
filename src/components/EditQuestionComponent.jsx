@@ -8,7 +8,7 @@ export default function EditQuestion({question, onQuestionDeleted}) {
 
     const [questionDetails, setQuestionDetails] = useState(question);
     const [options, setOptions] = useState('');
-    const [status, setStatus] = useState('');
+    const [status, setStatus] = useState({message: ''});
 
     return <div>
         <h4>Question with ID {questionDetails.qid}</h4>
@@ -29,15 +29,15 @@ export default function EditQuestion({question, onQuestionDeleted}) {
         </div>
         <button onClick={edit}>Edit</button>
         <button onClick={del}>Delete</button>
-        <p>Edit Question Status: {status}</p>
+        <p style={{backgroundColor: status.error ? '#ffc0c0': '#c0ffc0'}}>{status.error || status.message}</p>
         </div>;
 
     async function edit() {
         try {
             const results = await editQuestion(questionDetails.qid, questionDetails.question, options ? options.split('*').splice(1).map(opt => opt.trim()) : []);
-            setStatus(results.error || "Successfully edited.");
+            setStatus(results.error ? {error: results.error} : {message: "Successfully edited."});
         } catch(e) {
-            setStatus(e.message);
+            setStatus({error: e.message});
         }
     }
 
@@ -45,9 +45,9 @@ export default function EditQuestion({question, onQuestionDeleted}) {
         try {
             const results = await deleteQuestion(questionDetails.qid);
             onQuestionDeleted(questionDetails.qid);
-            setStatus(results.error || "Successfully edited.");
+            setStatus(results.error ? {error: results.error} : {message: "Successfully edited."});
         } catch(e) {
-            setStatus(e.message);
+            setStatus({error: e.message});
         }
     }
 }

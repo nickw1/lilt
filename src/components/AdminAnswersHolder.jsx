@@ -6,7 +6,6 @@ import AdminAnswersListComponent from './AdminAnswersListComponent.jsx';
 export default function AdminAnswersHolder({exid}) { 
 
     const [answers, setAnswers] = useState([]);
-    const [status, setStatus] = useState("");
 
     // id, qid, uid, answer, authorised
     useEffect( () => {

@@ -4,7 +4,6 @@ import { authoriseQuestionAnswers }  from '../actions/answer.mjs';
 
 export default function AdminAnswersListComponent({answers}) { 
 
-    const [status, setStatus] = useState("");
     const [authorisedQuestions, authoriseAnswersWithState] = useActionState(authoriseQuestionAnswers, []);
 
     const output = answers.filter(q => authorisedQuestions?.indexOf(q.qid) == -1).map( (answer,i) => {
@@ -25,7 +24,5 @@ export default function AdminAnswersListComponent({answers}) {
 
     return <div>
         {output.length > 0 ? output: "No answers."}
-        Status: {status}<br />
-        Authorised questions: {JSON.stringify(authorisedQuestions)}<br />
         </div>;
 }

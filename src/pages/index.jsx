@@ -14,9 +14,6 @@ import db from '../db/db.mjs';
 import useLoggedIn from '../hooks/login.mjs';
 import useModules from '../hooks/modules.mjs';
 
-
-import "../../css/nwnotes.css";
-
 export default async function App() {
     const searchParams = useSearchParams();
     const module = searchParams.module || '';

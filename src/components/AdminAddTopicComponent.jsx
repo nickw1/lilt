@@ -5,7 +5,7 @@ import { addTopic } from '../actions/topic.mjs';
 
 export default function AdminAddTopicComponent({moduleCode, onTopicAdded}) {
 
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState({message: ""});
 
     return <div>
         <h3>Add Topic</h3>
@@ -20,13 +20,13 @@ export default function AdminAddTopicComponent({moduleCode, onTopicAdded}) {
                 document.getElementById('topicTitle').value
             );
             if(result.topic) {
-                setStatus("Added topic successfully.");
+                setStatus({message: "Added topic successfully."});
                 onTopicAdded(result.topic);
             } else {
-                setStatus(result.error);
+                setStatus({error: result.error});
             } 
         }}>Go!</button>
-        Add topic status: {status}
+        <p style={{backgroundColor: status.error ? "#ffc0c0" : "#c0ffc0"}}>{status.error || status.message}</p>
         </div>;
 
 }

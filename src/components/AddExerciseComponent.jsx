@@ -9,6 +9,7 @@ export default function AddExerciseComponent() {
 
     const moduleInfo = useContext(ModuleContext);
     const [addExerciseState, setAddExerciseState] = useState("");
+    let results = null;
     return <><div>
             <h2>Add an Exercise</h2>
             <br />
@@ -22,7 +23,7 @@ export default function AddExerciseComponent() {
             <textarea id='intro' style={{width:'50%', height:'100px'}}></textarea>
             { moduleInfo.moduleCode != "" ? 
             <AddWholeQuestionComponent btnText='Save Exercise To Database' onQuestionsSubmitted={async(questions) => {
-                const results = await addExercise({
+                results = await addExercise({
                     topic: document.getElementById('topicNumber').value,
                     intro: document.getElementById('intro').value,
                     questions,
@@ -31,7 +32,7 @@ export default function AddExerciseComponent() {
                 setAddExerciseState(results.eid ? `Added exercise with ID ${results.eid}`: (results.error || ""));
             }} allowNoQuestions='true' />
              : "" }
-            <p>{addExerciseState}</p>
+            <p style={{backgroundColor: results?.error ? '#ffc0c0' : '#c0ffc0'}} >{addExerciseState}</p>
             </div>
             </>;
 

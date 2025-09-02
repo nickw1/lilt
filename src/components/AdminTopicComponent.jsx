@@ -9,7 +9,7 @@ export default function AdminTopicComponent() {
     const moduleInfo = useContext(ModulesContext);
 
     const [topicsState, setTopicsState] = useState(moduleInfo.topics);
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState({error : ""});
 
     useEffect(() => {
         setTopicsState(moduleInfo.topics);
@@ -22,7 +22,7 @@ export default function AdminTopicComponent() {
                 <button onClick={async() => {
                     const result = await makePublic(topic.id);
                     if(result.error) {
-                        setState(result.error);
+                        setStatus({error: result.error});
                     } else {
                         const newState = structuredClone(topicsState);
                         newState.find(topic2 => topic2.id == topic.id).unlocked = true;
@@ -34,7 +34,7 @@ export default function AdminTopicComponent() {
     return <div>
         <h2>Topics</h2>
         <ul>{tops.length > 0 ? tops: "No topics."}</ul>
-        {status}
+        <p style={{backgroundColor: '#ffc0c0'}}>{status.error || ""}</p>
         <AdminAddTopicComponent moduleCode={moduleInfo.moduleCode} onTopicAdded={ topic => {
         const newState = structuredClone(topicsState);
         newState.push(topic);
