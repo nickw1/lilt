@@ -1,10 +1,10 @@
 "use server"
 
-import ExerciseDao from '../../server/dao/exercise.mjs';
-import QuestionDao from '../../server/dao/question.mjs';
-import ModuleDao from '../../server/dao/module.mjs';
-import TopicDao from '../../server/dao/topic.mjs';
-import db from '../../server/db/db.mjs';
+import ExerciseDao from '../dao/exercise.mjs';
+import QuestionDao from '../dao/question.mjs';
+import ModuleDao from '../dao/module.mjs';
+import TopicDao from '../dao/topic.mjs';
+import db from '../db/db.mjs';
 import xss from 'xss';
 
 

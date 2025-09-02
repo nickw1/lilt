@@ -1,7 +1,7 @@
 "use server"
 
-import QuestionDao from '../../server/dao/question.mjs';
-import db from '../../server/db/db.mjs';
+import QuestionDao from '../dao/question.mjs';
+import db from '../db/db.mjs';
 
 
 export function editQuestion(id, question, options) {

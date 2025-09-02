@@ -4,10 +4,10 @@ import AdminLoginComponent from '../../../components/AdminLoginComponent.jsx';
 import AdminExerciseManagementComponent from '../../../components/AdminExerciseManagementComponent.jsx';
 import useLoggedIn from '../../../hooks/login.mjs';
 import useModules from '../../../hooks/modules.mjs';
-import ExerciseDao from '../../../../server/dao/exercise.mjs';
-import TopicDao from '../../../../server/dao/topic.mjs';
-import '../../../../server/misc/dotenv.mjs';
-import db from '../../../../server/db/db.mjs';
+import ExerciseDao from '../../../dao/exercise.mjs';
+import TopicDao from '../../../dao/topic.mjs';
+import '../../../misc/dotenv.mjs';
+import db from '../../../db/db.mjs';
 
 export default async function AdminExerciseManagementPage() {
 

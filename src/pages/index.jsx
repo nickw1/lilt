@@ -1,4 +1,4 @@
-import '../../server/misc/dotenv.mjs';
+import '../misc/dotenv.mjs';
 import React from 'react';
 import LoginComponent from '../components/LoginComponent.jsx';
 import ModuleChooseComponent from '../components/ModuleChooseComponent.jsx';
@@ -7,9 +7,9 @@ import NotesHolder from '../components/NotesHolder.jsx';
 import NotesComponent from '../components/NotesComponent.jsx';
 import { useSearchParams } from '@lazarv/react-server';
 
-import UserDao from '../../server/dao/user.mjs';
-import ModuleDao from '../../server/dao/module.mjs';
-import db from '../../server/db/db.mjs';
+import UserDao from '../dao/user.mjs';
+import ModuleDao from '../dao/module.mjs';
+import db from '../db/db.mjs';
 
 import useLoggedIn from '../hooks/login.mjs';
 import useModules from '../hooks/modules.mjs';

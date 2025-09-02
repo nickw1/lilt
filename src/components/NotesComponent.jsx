@@ -4,12 +4,12 @@ import fs from 'fs/promises';
 import ExerciseComponent from './ExerciseComponent.jsx';
 import TopicListComponent from './TopicListComponent.jsx';
 import TopicNavComponent from './TopicNavComponent.jsx';
-import TopicDao from '../../server/dao/topic.mjs';
-import ExerciseDao from '../../server/dao/exercise.mjs';
-import AnswerDao from '../../server/dao/answer.mjs';
+import TopicDao from '../dao/topic.mjs';
+import ExerciseDao from '../dao/exercise.mjs';
+import AnswerDao from '../dao/answer.mjs';
 import useLoggedIn from '../hooks/login.mjs';
 
-import db from '../../server/db/db.mjs';
+import db from '../db/db.mjs';
 
 const topicDao = new TopicDao(db);
 const exerciseDao = new ExerciseDao(db);

@@ -1,8 +1,8 @@
 "use server"
 
-import db from '../../server/db/db.mjs'
-import TopicDao from '../../server/dao/topic.mjs';
-import ModuleDao from '../../server/dao/module.mjs';
+import db from '../db/db.mjs'
+import TopicDao from '../dao/topic.mjs';
+import ModuleDao from '../dao/module.mjs';
 import xss from 'xss';
 
 export function makePublic(id) {

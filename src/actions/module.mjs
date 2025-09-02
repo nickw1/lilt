@@ -1,7 +1,7 @@
 "use server"
 
-import ModuleDao from '../../server/dao/module.mjs';
-import db from '../../server/db/db.mjs';
+import ModuleDao from '../dao/module.mjs';
+import db from '../db/db.mjs';
 import xss from 'xss';
 
 export function addModule(prevState, formData) {
