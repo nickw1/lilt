@@ -46,8 +46,12 @@ To start:
 pnpm react-server start
 ```
 
-`lilt` will run on port 3002 by default.
- 
+To run on a particular port:
+
+```
+pnpm react-server start --port PORT
+```
+
 ### Setup an admin user
 
 A `lilt` server should have one or more admin users. These are setup by means of a utility script in `server/utils`, `addAdmin.mjs`. Run this, to add an admin user to the database. 
