@@ -1,4 +1,4 @@
-import '../misc/dotenv.mjs';
+import { loadEnvFile } from 'node:process';
 import React from 'react';
 import LoginComponent from '../components/LoginComponent.jsx';
 import ModuleChooseComponent from '../components/ModuleChooseComponent.jsx';
@@ -13,6 +13,8 @@ import db from '../db/db.mjs';
 
 import useLoggedIn from '../hooks/login.mjs';
 import useModules from '../hooks/modules.mjs';
+
+loadEnvFile();
 
 export default async function App() {
     const searchParams = useSearchParams();

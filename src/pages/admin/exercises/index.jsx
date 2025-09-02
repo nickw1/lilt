@@ -6,8 +6,10 @@ import useLoggedIn from '../../../hooks/login.mjs';
 import useModules from '../../../hooks/modules.mjs';
 import ExerciseDao from '../../../dao/exercise.mjs';
 import TopicDao from '../../../dao/topic.mjs';
-import '../../../misc/dotenv.mjs';
+import { loadEnvFile } from 'node:process';
 import db from '../../../db/db.mjs';
+
+loadEnvFile();
 
 export default async function AdminExerciseManagementPage() {
 
