@@ -2,8 +2,6 @@ import useLoggedIn from '../../hooks/login.mjs';
 import useModules from '../../hooks/modules.mjs';
 import AdminComponent from '../../components/AdminComponent.jsx';
 import AdminLoginComponent from '../../components/AdminLoginComponent.jsx';
-import { loadEnvFile } from 'node:process';
-loadEnvFile();
 
 export default async function AdminPage() {
 
