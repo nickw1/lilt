@@ -21,6 +21,8 @@ export default async function NotesComponent({module, initTopic}) {
     console.log('refreshing NotesComponent...');
     let contentHiddenCount=0;
 
+    const { isAdmin, uid } = await useLoggedIn();
+
     function exerciseHandler(ex, dep) {
         let exDependencyCompleted = isAdmin || dep === undefined;
         const { id: topicId } = topicDao.getTopicByModuleCodeAndNumber(module, topic);
@@ -65,14 +67,13 @@ export default async function NotesComponent({module, initTopic}) {
         } else if (exMatch) {
             const exNum = exMatch[1].substring(2);
             return uid === null ? 
-                <p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}</p> : exerciseHandler(exNum, exMatch[3]);
+                <p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}</p> : <>uid is {uid}{exerciseHandler(exNum, exMatch[3])}</>;
         } else {
             return protectedContent && node.type == RuleType.text && !dependencyCompleted ? "": next(); 
 
         }
     }
 
-    const { isAdmin, uid } = useLoggedIn();
 
     const topicsList = getTopicsListCached(module);
     const topic = initTopic || 0;
