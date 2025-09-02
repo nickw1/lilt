@@ -3,7 +3,6 @@
     "@lazarv/react-server": "0.0.0-experimental-349aed0-20250803-4fd22aaf",
     "bcrypt": "^5.1.1",
     "better-sqlite3": "^11.2.1",
-    "dotenv": "^16.4.5",
     "iron-session": "^8.0.4",
     "markdown-to-jsx": "^7.7.12",
     "node-html-parser": "^6.1.13",
