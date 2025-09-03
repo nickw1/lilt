@@ -1,4 +1,4 @@
-import '/css/Fira-4.202/fira.css';
+//import '/css/Fira-4.202/fira.css';
 import '/css/nwnotes.css';
 
 export default function Layout({children}) {
