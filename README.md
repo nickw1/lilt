@@ -34,23 +34,13 @@ Once installed do:
 pnpm install
 ```
 
-Then build:
+Then run in dev mode: 
 
 ```
-pnpm react-server build
+pnpm react-server
 ```
 
-To start:
-
-```
-pnpm react-server start
-```
-
-To run on a particular port:
-
-```
-pnpm react-server start --port PORT
-```
+Port 3002 is used by default. Unfortunately production mode is not working as yet: this is being investigated.
 
 ### Setup an admin user
 
