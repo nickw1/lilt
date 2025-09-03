@@ -7,6 +7,7 @@
     "markdown-to-jsx": "^7.7.12",
     "node-html-parser": "^6.1.13",
     "readline-sync": "^1.4.10",
+    "tmp": "^0.2.4",
     "xss": "^1.0.15"
   },
   "devDependencies": {

@@ -12,23 +12,14 @@ import db from '../db/db.mjs';
 
 import useLoggedIn from '../hooks/login.mjs';
 import useModules from '../hooks/modules.mjs';
-console.log("done");
 
 
 export default async function App() {
-	console.log("App() entry:");
     const searchParams = useSearchParams();
     const module = searchParams.module || '';
     const user = await useLoggedIn();
-    console.log('user info is...');
-    console.log(user);
 
-    
-
-	console.log("running useModules");
-	console.log(process.env.NOTES_DB);
     const modules = useModules();
-	console.log("done");
 
     const loginComponent = 
         <LoginComponent 

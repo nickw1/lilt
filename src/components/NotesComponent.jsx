@@ -22,6 +22,7 @@ export default async function NotesComponent({module, initTopic}) {
     let contentHiddenCount=0;
 
     const { isAdmin, uid } = await useLoggedIn();
+    const hiddenExercises = [];
 
     function exerciseHandler(ex, dep) {
         let exDependencyCompleted = isAdmin || dep === undefined;
@@ -40,8 +41,9 @@ export default async function NotesComponent({module, initTopic}) {
                 return <Fragment key={`ex-${exer.id}`}><h2>Exercise {ex}</h2><ExerciseComponent exercise={exercise} /></Fragment>;
             }
          } else {
-            return <p style={unauthorisedStyle} key={`ex-unauthorised-${ex}-${dep}`}>This content is hidden as you need to complete exercise {dep} first.</p>;
-        }
+            hiddenExercises.push(parseInt(ex));
+            return uid !== null && hiddenExercises.indexOf(dep) == -1 ? <p style={unauthorisedStyle} key={`ex-unauthorised-${ex}-${dep}`}>This content is hidden as you need to complete exercise {dep} first.</p>: "";
+         }
     }
 
     function renderRuleHandler (next, node, renderChildren) {
@@ -59,7 +61,8 @@ export default async function NotesComponent({module, initTopic}) {
             if(dependencyCompleted) {
                   return matches[1] == "answer" ? <h2 key={`answer-title-${matches[2]}`}>Answer to exercise {matches[2]}</h2> : ""; // return nothing for depends, switch to protected content
             } else {
-                return uid === null ? "" : <p style={unauthorisedStyle} key={`hidden-content-${contentHiddenCount++}`}>This content is hidden as you need to complete exercise {matches[2]} first.</p>;
+                const dependency = parseInt(matches[2]);
+                return uid === null || hiddenExercises.indexOf(dependency) != -1 ? "" : <p style={unauthorisedStyle} key={`hidden-content-${contentHiddenCount++}`}>This content is hidden as you need to complete exercise {dependency} first.</p>;
             }
         } else if (node.type == RuleType.text && node.text.startsWith("@public")) {
             protectedContent = false;
@@ -67,7 +70,7 @@ export default async function NotesComponent({module, initTopic}) {
         } else if (exMatch) {
             const exNum = exMatch[1].substring(2);
             return uid === null ? 
-                <p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}</p> : <>uid is {uid}{exerciseHandler(exNum, exMatch[3])}</>;
+                <p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}</p> : exerciseHandler(exNum, parseInt(exMatch[3]));
         } else {
             return protectedContent && node.type == RuleType.text && !dependencyCompleted ? "": next(); 
 
