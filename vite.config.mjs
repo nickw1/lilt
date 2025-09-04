@@ -5,5 +5,5 @@ export default defineConfig({
     // base: '/lilt/', // uncomment if you have a non-default base dir e.g. https://hikar.org/lilt
     plugins: [react()],
     port: 3002,
-    resolve: { external: ["cookie"] }
+    resolve: { external: ["iron-session"] }
 });
