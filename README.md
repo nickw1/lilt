@@ -26,6 +26,8 @@ sqlite3 < setupdb.sql
 
 ### Install dependencies and build
 
+You need [Node.js](https://nodejs.org) - at least version 20 - installed on your system.
+
 `lilt` uses [@lazarv/react-server](https://react-server.dev) as its web development framework. You should install the package management tool  [pnpm](https://pnpm.io).
 
 Once installed do:
@@ -34,40 +36,113 @@ Once installed do:
 pnpm install
 ```
 
-Then run in dev mode: 
+Then build and run: 
 
 ```
-pnpm react-server
+pnpm react-server build
+pnpm react-server start --port YOUR_CHOSEN_PORT
 ```
 
-Port 3002 is used by default. Unfortunately production mode is not working as yet: this is being investigated.
+Port is 3000 by default.
+
+### Setup a .env file
+
+You will need to setup a `.env` file to hold `lilt`'s settings. There are two settings:
+
+- NOTES_DB: the location of your SQLite database.
+- RESOURCES: the top-level directory holding your Markdown notes. (This directory will have one subdirectory for each module, see below).
+
+An example is given with the `.env-example` file given in the distribution.
 
 ### Setup an admin user
 
-A `lilt` server should have one or more admin users. These are setup by means of a utility script in `server/utils`, `addAdmin.mjs`. Run this, to add an admin user to the database. 
+A `lilt` server should have one or more admin users. These are setup by means of a utility script in `utils`, `addAdmin.mjs`. Run this with
 
+```
+node utils/addAdmin.mjs
+```
+to add an admin user to the database. 
+
+
+### Setup topics and exercises
+
+When the server is running you can access the admin section with
+
+```
+http://localhost:YOUR_CHOSEN_PORT/admin
+```
+
+You need to setup your modules, topics and exercises within the admin section of the application.
+
+A number of options are available to setup modules, topics and exercises. These will be described in more detail in a later revision of this `README`.
 
 ### Write your notes
 
 #### Where to save your notes
 
-- Notes should be placed in the directory specified by the `RESOURCES` environment variable (you can, for example, place this in a `.env` file). 
+- Notes should be placed in the directory specified by the `RESOURCES` environment variable within your `.env` (see above).
 - Within this directory you should create separate subdirectories for each module, using the module code you specify when adding a module as an admin user as the directory name.
-- Then, you create numbered directories within the module directory corresponding to each topic, and save your HTML for a given module as `index.html` within the appropriate module directory.
+- Then, you create numbered Markdown (`.md`) files within the module directory corresponding to each topic. The numbers correspond with the topic number, so topic 1 would be `1.md`, topic 2, `2.md` and so on. These numbers must correspond with the topic numbers you specified when you created them in the database.
 
 #### How to write your notes
 
-Explanation of how to use custom Markdown extensions to embed exercises and create hidden content will appear here.
-
-### Setup exercises
-
-When the server is running you can access the admin section with
+You write your notes in Markdown, with custom extensions for specifying exercises and hidden content. [markdown-to-jsx](https://github.com/quantizor/markdown-to-jsx) is used. Here is some example Markdown with custom extensions (all of which are indicated using the symbol `@`). Note how the content of the Markdown explains the extensions.
 
 ```
-http://localhost:3002/admin
+# Topic 1
+
+Welcome to Web Application Development, topic 1. The @ex1 extension below will 
+insert Exercise 1 into the document at this position.
+
+@ex1
+
+@answer(1)
+
+This is the answer to Exercise 1. It will only be visible when a student has 
+answered Exercise 1 (note how the parameter to the @answer extension is 1) and 
+an admin user has verified their answers.
+
+@public
+
+This paragraph is public and does not require completion of any exercises. 
+The @public extension ends a previous protected block of content (a block which 
+depends on exercise completion) and results in the following content being 
+public.
+
+@depends(1)
+
+The @depends extension works in a similar way to @answer. Content below it will 
+be only visible if the specified exercise has been completed (1 in this case).
+ However, unlike @answer content, this content will not be marked on the 
+rendered document as the answer to the given exercise. 
+
+@ex2(1)
+
+The @ex2 extension inserts exercise 2. Note however the parameter `(1)`. 
+This means that exercise 2 depends on exercise 1: Exercise 1 must be completed 
+in order for exercise 2 to be visible.
+
+@answer(2)
+
+Similar to `@answer(1)` above, this is the answer to exercise 2 and requires 
+completion of exercise 2 to view.
+
+@depends(2)
+
+Some content which depends on exercise 2.
+
+@public
+
+Yet more public content.
 ```
 
-A number of options are available to setup modules, topics and exercises. These will be described in more detail in a later revision of this `README`.
+So in summary:
+
+- `@exN` : inserts exercise N.
+- `@exN(M)` : inserts exercise N, where N depends on completion of M.
+- `@answer(N)` : include the answer to exercise N. It will only be visible if exercise N has been completed.
+- `@depends(N)` : include other content which depends on exercise N.
+- `@public` : end protected content. Subsequent content will be public, and visible even if the user has not completed any exercises.
 
 ## Users/students
 
