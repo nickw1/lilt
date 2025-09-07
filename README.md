@@ -16,13 +16,18 @@ First of all, a quick word on what `lilt` is not. It is not, and does not aim to
 
 It's also geared at tutors who are happy using Markdown to write their notes. It does not yet support PowerPoint slides for example and may not for some considerable time.
 
-## How to setup a lilt server
+## Configuring and managing lilt
 
-As `lilt` servers are expected to be small-scale, servicing just one class at a time, SQLite is used. An SQL setup file `setupdb.sql` is provided. Import this with the `sqlite3` client, for example:
+There are two roles involved in managing `lilt`:
 
-```
-sqlite3 < setupdb.sql
-```
+- The sysadmin, who will install and configure `lilt` and add admin users via command-line tools;
+- Tutors, who will login to `lilt` as an admin to manage modules, topics, exercises and questions via the web interface.
+
+Tutors may be able to perform the sysadmin tasks themselves, if they have direct access to the intended `lilt` server hardware. If not, please ask the appropriate ICT staff to set up `lilt`.
+
+As `lilt` servers are expected to be small-scale, servicing just one class at a time, SQLite is used. 
+
+## How to setup a lilt server (sysadmin)
 
 ### Install dependencies and build
 
@@ -45,26 +50,25 @@ pnpm react-server start --port YOUR_CHOSEN_PORT
 
 Port is 3000 by default.
 
-### Setup a .env file
+### Setup lilt 
 
-You will need to setup a `.env` file to hold `lilt`'s settings. There are two settings:
+Provided is a Node script `setup.mjs` in the `utils` directory. This takes care of setting up `lilt`, including specifying the location of the database and of the notes, and adding admin users.
 
-- NOTES_DB: the location of your SQLite database.
-- RESOURCES: the top-level directory holding your Markdown notes. (This directory will have one subdirectory for each module, see below).
+If you run it, e.g.
 
-An example is given with the `.env-example` file given in the distribution.
+```
+node utils/setup.mjs
+```
+it will first ask you for the directory you wish to store the SQLite database (`lilt.db`) and the directory you wish to store the notes (which will be a subdirectory called `notes`). 
+
+Please enter those directories. The setup tool will then exit. You will notice that in the main lilt directory, a file called `.env` has been created, storing the location of the database and the notes.
+
 
 ### Setup an admin user
 
-A `lilt` server should have one or more admin users. These are setup by means of a utility script in `utils`, `addAdmin.mjs`. Run this with
+A `lilt` server should have one or more admin users. To add an admin user, run the setup script again. If the `.env` file has been created, it will allow you to add one or more admin users.
 
-```
-node utils/addAdmin.mjs
-```
-to add an admin user to the database. 
-
-
-### Setup topics and exercises
+## Setup topics and exercises (tutors)
 
 When the server is running you can access the admin section with
 
@@ -76,15 +80,15 @@ You need to setup your modules, topics and exercises within the admin section of
 
 A number of options are available to setup modules, topics and exercises. These will be described in more detail in a later revision of this `README`.
 
-### Write your notes
+## Write your notes (tutors)
 
-#### Where to save your notes
+### Where to save your notes
 
 - Notes should be placed in the directory specified by the `RESOURCES` environment variable within your `.env` (see above).
 - Within this directory you should create separate subdirectories for each module, using the module code you specify when adding a module as an admin user as the directory name.
 - Then, you create numbered Markdown (`.md`) files within the module directory corresponding to each topic. The numbers correspond with the topic number, so topic 1 would be `1.md`, topic 2, `2.md` and so on. These numbers must correspond with the topic numbers you specified when you created them in the database.
 
-#### How to write your notes
+### How to write your notes
 
 You write your notes in Markdown, with custom extensions for specifying exercises and hidden content. [markdown-to-jsx](https://github.com/quantizor/markdown-to-jsx) is used. Here is some example Markdown with custom extensions (all of which are indicated using the symbol `@`). Note how the content of the Markdown explains the extensions.
 
