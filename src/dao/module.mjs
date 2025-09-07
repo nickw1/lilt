@@ -21,6 +21,11 @@ export default class ModuleDao {
         return stmt.get(code);
     }
 
+    getModuleById(id) {
+        const stmt = this.db.prepare("SELECT * FROM modules WHERE id=?");
+        return stmt.get(id);
+    }
+
     getTopicsForModule(moduleId) {
         const stmt = this.db.prepare("SELECT * FROM topics WHERE moduleid=?");
         return stmt.all(moduleId);

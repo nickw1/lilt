@@ -13,7 +13,7 @@ export default function ModulesComponent({modules}) {
         <ConfirmDeleteComponent color='red' onDeleteConfirmed={async()=>{
             const result = await deleteModule(module.id);
             if(result.errors && result.errors.length > 0) {
-                setDeleteState({errors: resultErrors});
+                setDeleteState({errors: result.errors});
             } else {
                 const newDeletedModules = structuredClone(deletedModules);
                 newDeletedModules.push(module.id);
