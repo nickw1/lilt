@@ -51,5 +51,10 @@ export default class TopicDao {
         const stmt = this.db.prepare("SELECT t.* FROM topics t INNER JOIN modules m ON t.moduleid=m.id WHERE m.code=? AND t.number=?");
         return stmt.get(moduleCode, topicNum);
     }
+
+    deleteTopic(topicId) {
+        const stmt = this.db.prepare("DELETE FROM topics WHERE id=?");
+        return stmt.run(topicId);
+    }
 }
         

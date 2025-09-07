@@ -1,11 +1,26 @@
 import AdminAddModuleComponent from './AdminAddModuleComponent.jsx';
-import { useActionState } from 'react';
-import { addModule } from '../actions/module.mjs';
+import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
+import { useActionState, useState } from 'react';
+import { addModule, deleteModule } from '../actions/module.mjs';
 export default function ModulesComponent({modules}) {
 
     const [modulesState, addModuleWithState] = useActionState(addModule, modules);
+    const [deleteState, setDeleteState] = useState({message: ""});
+    const [deletedModules, setDeletedModules] = useState([]);
     return <><h2>Modules</h2>
-        <ul>{ modulesState.map ( module => <li key={module.id}>{module.code} : {module.name}</li> ) }</ul>
+        <ul>{ modulesState.map ( module => deletedModules.indexOf(module.id) != -1 ? "" : <li key={module.id}>{module.code} : {module.name}
+
+        <ConfirmDeleteComponent color='red' onDeleteConfirmed={async()=>{
+            const result = await deleteModule(module.id);
+            if(result.errors && result.errors.length > 0) {
+                setDeleteState({errors: resultErrors});
+            } else {
+                const newDeletedModules = structuredClone(deletedModules);
+                newDeletedModules.push(module.id);
+                setDeletedModules(newDeletedModules);
+            }
+        }} /></li> ) }</ul>
+        <div style={{backgroundColor: deleteState.errors ? '#ffc0c0': '#c0ffc0'}}>{deleteState.errors ? <ul>{deleteState.errors.map(error => <li>{error}</li>)}</ul> : deleteState.message || ""}</div>
         <AdminAddModuleComponent onModuleSubmitted={addModuleWithState} />
         </>;
 }

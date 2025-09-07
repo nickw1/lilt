@@ -17,6 +17,9 @@ importers:
       better-sqlite3:
         specifier: ^11.2.1
         version: 11.10.0
+      chalk:
+        specifier: ^5.6.0
+        version: 5.6.0
       iron-session:
         specifier: ^8.0.4
         version: 8.0.4
@@ -26,6 +29,12 @@ importers:
       node-html-parser:
         specifier: ^6.1.13
         version: 6.1.13
+      react-feather:
+        specifier: ^2.0.10
+        version: 2.0.10(react@0.0.0-experimental-bdb4a96f-20250801)
+      react-modal:
+        specifier: ^3.16.3
+        version: 3.16.3(react-dom@0.0.0-experimental-bdb4a96f-20250801(react@0.0.0-experimental-bdb4a96f-20250801))(react@0.0.0-experimental-bdb4a96f-20250801)
       readline-sync:
         specifier: ^1.4.10
         version: 1.4.10
@@ -1211,6 +1220,10 @@ packages:
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
 
+  chalk@5.6.0:
+    resolution: {integrity: sha512-46QrSQFyVSEyYAgQ22hQ+zDa60YHA4fBstHmtSApj1Y5vKtG27fWowW03jCk5KcbXEWPZUIR894aARCA/G1kfQ==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
   character-entities-html4@2.1.0:
     resolution: {integrity: sha512-1v7fgQRj6hnSwFpq1Eu0ynr/CDEw0rXo2B61qXrLNdHZmPKgb7fqS1a2JwF0rISo9q77jDI8VMEHoApn8qDoZA==}
 
@@ -1576,6 +1589,9 @@ packages:
   execa@7.2.0:
     resolution: {integrity: sha512-UduyVP7TLB5IcAQl+OzLyLcS/l32W/GLg+AhHJ+ow40FOk2U3SAllPwR44v4vmdFwIWqpdwxxpQbF1n5ta9seA==}
     engines: {node: ^14.18.0 || ^16.14.0 || >=18.0.0}
+
+  exenv@1.2.2:
+    resolution: {integrity: sha512-Z+ktTxTwv9ILfgKCk32OX3n/doe+OcLTRtqK9pcL+JsP3J1/VW8Uvl4ZjLlKqeW4rzK4oesDOGMEMRIZqtP4Iw==}
 
   expand-template@2.0.3:
     resolution: {integrity: sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==}
@@ -1973,6 +1989,10 @@ packages:
 
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
+
+  loose-envify@1.4.0:
+    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
@@ -2389,6 +2409,9 @@ packages:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
 
+  prop-types@15.8.1:
+    resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
+
   property-information@7.1.0:
     resolution: {integrity: sha512-TwEZ+X+yCJmYfL7TPUOcvBZ4QfoT5YenQiJuX//0th53DE6w0xxLEtfK3iyryQFddXuvkIk51EEgrJQ0WJkOmQ==}
 
@@ -2436,8 +2459,25 @@ packages:
     peerDependencies:
       react: 0.0.0-experimental-bdb4a96f-20250801
 
+  react-feather@2.0.10:
+    resolution: {integrity: sha512-BLhukwJ+Z92Nmdcs+EMw6dy1Z/VLiJTzEQACDUEnWMClhYnFykJCGWQx+NmwP/qQHGX/5CzQ+TGi8ofg2+HzVQ==}
+    peerDependencies:
+      react: '>=16.8.6'
+
   react-is@0.0.0-experimental-bdb4a96f-20250801:
     resolution: {integrity: sha512-jCrn7i1U/jg98knudGlvvOIwtu+cUwggia4oPqlenSVKLDcdh172vFiomfIuHZV5j3e2V9Ms/JOi4Xd9oauvrA==}
+
+  react-is@16.13.1:
+    resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+
+  react-lifecycles-compat@3.0.4:
+    resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
+
+  react-modal@3.16.3:
+    resolution: {integrity: sha512-yCYRJB5YkeQDQlTt17WGAgFJ7jr2QYcWa1SHqZ3PluDmnKJ/7+tVU+E6uKyZ0nODaeEj+xCpK4LcSnKXLMC0Nw==}
+    peerDependencies:
+      react: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18 || ^19
+      react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18 || ^19
 
   react-property@2.0.2:
     resolution: {integrity: sha512-+PbtI3VuDV0l6CleQMsx2gtK0JZbZKbpdu5ynr+lbsuvtmgbNcS3VM0tuY2QjFNOcWxvXeHjDpy42RO+4U2rug==}
@@ -3011,6 +3051,9 @@ packages:
         optional: true
       yaml:
         optional: true
+
+  warning@4.0.3:
+    resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
 
   watchpack@2.4.4:
     resolution: {integrity: sha512-c5EGNOiyxxV5qmTtAB7rbiXxi1ooX1pQKMLX/MIabJjRA0SJBQOjKF+KSVfHkr9U1cADPon0mRiVe/riyaiDUA==}
@@ -4348,6 +4391,8 @@ snapshots:
 
   ccount@2.0.1: {}
 
+  chalk@5.6.0: {}
+
   character-entities-html4@2.1.0: {}
 
   character-entities-legacy@3.0.0: {}
@@ -4731,6 +4776,8 @@ snapshots:
       onetime: 6.0.0
       signal-exit: 3.0.7
       strip-final-newline: 3.0.0
+
+  exenv@1.2.2: {}
 
   expand-template@2.0.3: {}
 
@@ -5137,6 +5184,10 @@ snapshots:
   loader-runner@4.3.0: {}
 
   longest-streak@3.1.0: {}
+
+  loose-envify@1.4.0:
+    dependencies:
+      js-tokens: 4.0.0
 
   lru-cache@10.4.3: {}
 
@@ -5732,6 +5783,12 @@ snapshots:
 
   process@0.11.10: {}
 
+  prop-types@15.8.1:
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      react-is: 16.13.1
+
   property-information@7.1.0: {}
 
   proxy-addr@2.0.7:
@@ -5781,7 +5838,25 @@ snapshots:
       react: 0.0.0-experimental-bdb4a96f-20250801
       scheduler: 0.0.0-experimental-bdb4a96f-20250801
 
+  react-feather@2.0.10(react@0.0.0-experimental-bdb4a96f-20250801):
+    dependencies:
+      prop-types: 15.8.1
+      react: 0.0.0-experimental-bdb4a96f-20250801
+
   react-is@0.0.0-experimental-bdb4a96f-20250801: {}
+
+  react-is@16.13.1: {}
+
+  react-lifecycles-compat@3.0.4: {}
+
+  react-modal@3.16.3(react-dom@0.0.0-experimental-bdb4a96f-20250801(react@0.0.0-experimental-bdb4a96f-20250801))(react@0.0.0-experimental-bdb4a96f-20250801):
+    dependencies:
+      exenv: 1.2.2
+      prop-types: 15.8.1
+      react: 0.0.0-experimental-bdb4a96f-20250801
+      react-dom: 0.0.0-experimental-bdb4a96f-20250801(react@0.0.0-experimental-bdb4a96f-20250801)
+      react-lifecycles-compat: 3.0.4
+      warning: 4.0.3
 
   react-property@2.0.2: {}
 
@@ -6391,6 +6466,10 @@ snapshots:
       sass: 1.89.2
       terser: 5.43.1
       yaml: 2.8.0
+
+  warning@4.0.3:
+    dependencies:
+      loose-envify: 1.4.0
 
   watchpack@2.4.4:
     dependencies:

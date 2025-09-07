@@ -4,6 +4,7 @@ import ExerciseDao from '../dao/exercise.mjs';
 import QuestionDao from '../dao/question.mjs';
 import ModuleDao from '../dao/module.mjs';
 import TopicDao from '../dao/topic.mjs';
+import Controller from '../controllers/controller.mjs';
 import db from '../db/db.mjs';
 import xss from 'xss';
 
@@ -64,18 +65,8 @@ export function editExercise(id, exercise) {
 }
 
 export function deleteExercise(id) {
-    if(id.toString().match("^\\d+$")) {
-        const exerciseDao = new ExerciseDao(db), questionDao = new QuestionDao(db);
-        try {
-            questionDao.deleteQuestionsForExercise(id); 
-            const nUpdated = exerciseDao.deleteExercise(id);
-            return{nUpdated};
-        } catch(e) {
-            return({error: e.message});
-        }
-    } else {
-        return { error: "Invalid format for ID." };
-    }
+    const controller = new Controller(db);
+    return controller.deleteExercise(id);
 }
 
 export function getFullExercise(id) {

@@ -3,6 +3,7 @@
 import db from '../db/db.mjs'
 import TopicDao from '../dao/topic.mjs';
 import ModuleDao from '../dao/module.mjs';
+import Controller from '../controllers/controller.mjs';
 import xss from 'xss';
 
 export function makePublic(id) {
@@ -44,4 +45,9 @@ export function getTopics(moduleCode) {
     const topicDao = new TopicDao(db);
     const res = topicDao.getAllForModule(moduleCode);
     return res;
+}
+
+export function deleteTopic(id) {
+    const controller = new Controller(db);
+    return controller.deleteTopic(id);
 }

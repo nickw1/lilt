@@ -20,5 +20,15 @@ export default class ModuleDao {
         const stmt = this.db.prepare("SELECT * FROM modules WHERE code=?");
         return stmt.get(code);
     }
+
+    getTopicsForModule(moduleId) {
+        const stmt = this.db.prepare("SELECT * FROM topics WHERE moduleid=?");
+        return stmt.all(moduleId);
+    }
+
+    deleteModule(moduleId) {
+        const stmt = this.db.prepare("DELETE FROM modules WHERE id=?");
+        return stmt.run(moduleId);
+    }
 }
         

@@ -15,7 +15,7 @@ export default class ExerciseDao {
     }
 
     getExercisesForTopic(topicId) {
-        const stmt = this.db.prepare("SELECT * FROM exercises WHERE topic=? AND moduleid=?");
+        const stmt = this.db.prepare("SELECT * FROM exercises WHERE topic=?");
         const results = stmt.all(topicId);
         return results;        
     }

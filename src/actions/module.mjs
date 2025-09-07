@@ -1,6 +1,7 @@
 "use server"
 
 import ModuleDao from '../dao/module.mjs';
+import Controller from '../controllers/controller.mjs';
 import db from '../db/db.mjs';
 import xss from 'xss';
 
@@ -14,4 +15,9 @@ export function addModule(prevState, formData) {
         return newState;
     }
     return prevState;
+}
+
+export function deleteModule(id) {
+    const controller = new Controller(db);
+    return controller.deleteModule(id);
 }

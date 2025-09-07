@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import EditQuestion from './EditQuestionComponent.jsx';
 import AddWholeQuestionComponent from './AddWholeQuestionComponent.jsx';
+import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
 import { editExercise, deleteExercise, addQuestionsToExercise } from '../actions/exercise.mjs';
 
 
@@ -26,7 +27,9 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
 
     
     return exDetails.questions === undefined ? "" : <div>
-        <h3>Exercise {exDetails.publicNumber} (ID {exDetails.id})</h3>
+        <div style={{marginTop: '10px'}}><h3 style={{display: 'inline'}}>Exercise {exDetails.publicNumber} (ID {exDetails.id})</h3>
+        <span title='Delete exercise'><ConfirmDeleteComponent color='red' onDeleteConfirmed={del} /></span>
+        </div>
         <div>
         <textarea style={{width:"40%", height: "200px"}} 
             onChange={ e => {
@@ -36,8 +39,7 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
             }
         } value={exDetails.intro} />
         <br />
-        <button onClick={edit}>Edit</button>
-        <button onClick={del}>Delete</button>
+        <button onClick={edit}>Save</button>
         <p style={{backgroundColor: status.error ? '#ffc0c0' : '#c0ffc0'}}>{status.error || status.message}</p>
         {qOutput}
         <h3>Add new questions</h3>

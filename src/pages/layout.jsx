@@ -8,7 +8,9 @@ export default function Layout({children}) {
     <title>LILT - Lightweight Interactive Learning Tool</title>
     </head>
     <body>
+    <div id="root">
     {children}
+    </div>
     </body>
     </html>
     );

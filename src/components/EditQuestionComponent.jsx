@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import QOptionsComponent from './QOptionsComponent.jsx';
+import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
 import { editQuestion, deleteQuestion } from '../actions/question.mjs';
 
 export default function EditQuestion({question, onQuestionDeleted}) {
@@ -11,8 +12,11 @@ export default function EditQuestion({question, onQuestionDeleted}) {
     const [status, setStatus] = useState({message: ''});
 
     return <div>
-        <h4>Question with ID {questionDetails.qid}</h4>
-        <div> Question text: <br />
+        <div style={{marginTop: '10px'}}>
+        <h4 style={{display: 'inline'}}>Question with ID {questionDetails.qid}</h4>
+        <span title='Delete Question'><ConfirmDeleteComponent color='red' onDeleteConfirmed={del} /></span>
+        </div>
+        <div> 
             <input type='text' onChange={ e => {
             const newQDetails = structuredClone(questionDetails);
             newQDetails.question = e.target.value;
@@ -27,15 +31,14 @@ export default function EditQuestion({question, onQuestionDeleted}) {
                 onOptionsChanged={ opts => setOptions(opts) }
             /> : "" }
         </div>
-        <button onClick={edit}>Edit</button>
-        <button onClick={del}>Delete</button>
+        <button onClick={edit}>Save</button>
         <p style={{backgroundColor: status.error ? '#ffc0c0': '#c0ffc0'}}>{status.error || status.message}</p>
         </div>;
 
     async function edit() {
         try {
             const results = await editQuestion(questionDetails.qid, questionDetails.question, options ? options.split('*').splice(1).map(opt => opt.trim()) : []);
-            setStatus(results.error ? {error: results.error} : {message: "Successfully edited."});
+            setStatus(results.error ? {error: results.error} : {message: "Successfully updated."});
         } catch(e) {
             setStatus({error: e.message});
         }
@@ -45,7 +48,7 @@ export default function EditQuestion({question, onQuestionDeleted}) {
         try {
             const results = await deleteQuestion(questionDetails.qid);
             onQuestionDeleted(questionDetails.qid);
-            setStatus(results.error ? {error: results.error} : {message: "Successfully edited."});
+            setStatus(results.error ? {error: results.error} : {message: "Successfully deleted."});
         } catch(e) {
             setStatus({error: e.message});
         }

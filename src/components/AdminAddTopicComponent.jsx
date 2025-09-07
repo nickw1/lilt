@@ -6,6 +6,7 @@ import { addTopic } from '../actions/topic.mjs';
 export default function AdminAddTopicComponent({moduleCode, onTopicAdded}) {
 
     const [status, setStatus] = useState({message: ""});
+    const [content, setContent] = useState("");
 
     return <div>
         <h3>Add Topic</h3>
