@@ -13,8 +13,8 @@ export default class UserDao {
             attempts++;
         }
         if(attempts < 10) {
-            const stmt = this.db.prepare("INSERT INTO usercodes(usercode, created) VALUES(?,?)");
-            const info = stmt.run(code, Math.round(Date.now() / 1000));
+            const stmt = this.db.prepare("INSERT INTO usercodes(usercode, created) VALUES(?,julianday())");
+            const info = stmt.run(code);
             return info.changes ? code : 0;
         } else {
             return 0;
@@ -34,7 +34,7 @@ export default class UserDao {
     }
 
     setLoggedIn(id, status) {
-        const stmt = this.db.prepare("UPDATE usercodes SET loggedin=? WHERE id=?");
+        const stmt = this.db.prepare("UPDATE usercodes SET loggedin=? WHERE id=? AND (julianday() - created < 7)");
         const info = stmt.run(status ? 1:0, id);
         return info.changes ? true : false;
     }
@@ -88,8 +88,8 @@ export default class UserDao {
     }
 
     deleteOldUsercodes() {
-        const stmt = this.db.prepare("DELETE FROM usercodes WHERE ?-created > 604800");
-        const info = stmt.run(Date.now() / 1000);
+        const stmt = this.db.prepare("DELETE FROM usercodes WHERE julianday()-created > 7");
+        const info = stmt.run();
         return info;
     }
 }

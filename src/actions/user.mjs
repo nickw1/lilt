@@ -21,7 +21,7 @@ export async function login(prevState, formData) {
                 await session.save();
                 redirect('/');
             } else {
-                return { error: "Failed to log in user." };
+                return { error: "Failed to log in user. It's likely the user code has expired - they are valid for one week." };
             }
         } else {
             return { error: "Cannot find that user code." };

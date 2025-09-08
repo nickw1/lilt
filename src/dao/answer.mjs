@@ -6,7 +6,7 @@ export default class AnswerDao {
     }
 
     addAnswer(uid, qid, answer) {
-		console.log(`addAnswer uid ${uid} qid ${qid} ${answer}`);
+        console.log(`addAnswer uid ${uid} qid ${qid} ${answer}`);
         if(!this.hasUserAnsweredQuestion(uid, qid)) {
             const stmt = this.db.prepare("INSERT INTO answers(uid, qid, answer, authorised,submitted) VALUES (?,?,?,?,?)");
             const info = stmt.run(uid, qid, answer, 0, Math.round(Date.now() / 1000));
@@ -77,4 +77,10 @@ export default class AnswerDao {
         const info = stmt.run(Math.round(Date.now() / 1000));
         return info;
     }
+
+    deleteExpiredUserAnswers() {
+        const stmt = this.db.prepare("DELETE FROM answers WHERE (select julianday()-created FROM usercodes WHERE usercodes.id=answers.uid) > 7");
+        return stmt.run();
+    }
 }
+

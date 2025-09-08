@@ -68,9 +68,13 @@ Please enter those directories. The setup tool will then exit. You will notice t
 
 A `lilt` server should have one or more admin users. To add an admin user, run the setup script again. If the `.env` file has been created, it will allow you to add one or more admin users.
 
+### IMPORTANT - Run the cleanup script daily
+
+In the `utils` directory is a script named `cleanup.mjs`. This will delete old usercodes, older than a week, and answers made by these old usercodes. Please setup your system to run this daily, using a tool such as `cron` on Linux or the equivalent on Windows.  **You must ensure you do this for privacy reasons as users are advised that this will be done when they sign up for a user code.**
+
 ## Setup topics and exercises (tutors)
 
-When the server is running you can access the admin section with
+When the server is running you can access the admin section with the following RURL:
 
 ```
 http://localhost:YOUR_CHOSEN_PORT/admin
