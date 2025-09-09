@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@lazarv/react-server": "0.0.0-experimental-cf28312-20250827-822bd17c",
+    "@uiw/react-md-editor": "^4.0.8",
     "bcrypt": "^5.1.1",
     "better-sqlite3": "^11.2.1",
     "chalk": "^5.6.0",
@@ -30,7 +31,12 @@
       "react": "0.0.0-experimental-bdb4a96f-20250801"
     },
     "react-modal": {
-      "react": "0.0.0-experimental-bdb4a96f-20250801"
+      "react": "0.0.0-experimental-bdb4a96f-20250801",
+      "react-dom": "0.0.0-experimental-bdb4a96f-20250801"
+    },
+    "@uiw/react-md-editor": {
+      "react": "0.0.0-experimental-bdb4a96f-20250801",
+      "react-dom": "0.0.0-experimental-bdb4a96f-20250801"
     }
   }
 }

@@ -1,6 +1,9 @@
 "use client"
+import { useState } from 'react';
 
 export default function AdminAddModuleComponent({onModuleSubmitted}) {
+
+    const [markdown, setMarkdown] = useState("");
 
     return <form action={onModuleSubmitted}>
         <h3>Add Module</h3>

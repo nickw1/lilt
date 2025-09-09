@@ -1,0 +1,16 @@
+"use server"
+
+import fs from "node:fs/promises";
+
+export async function saveNotes(module, topicNum, notes) {
+    if(topicNum.match("^\\d+$")) {
+        try {
+            await fs.writeFile(`${process.env.RESOURCES}/${module}/${topicNum}.md`, notes);
+            return { message: "Saved successfully." };
+        } catch(e) {
+            return { error: e.message };
+        }
+    } else {
+        return { error: "Invalid topic number." };
+    }
+}
