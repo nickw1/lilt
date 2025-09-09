@@ -1,7 +1,10 @@
 "use client"
 
 import { useState } from 'react';
-//import MDEditor, { commands } from '@uiw/react-md-editor';
+import MDEditor, { commands } from '@uiw/react-md-editor';
+//import '@uiw/react-md-editor/dist/mdeditor.css'; 
+// manual import seems to fix css issue - the dist file however doesn't work correctly
+import '@uiw/react-md-editor/markdown-editor.css';
 import Markdown from 'markdown-to-jsx';
 import { saveNotes } from '../actions/notes.mjs';
 
@@ -15,23 +18,6 @@ export default function WriteNotesComponent({notes, module, topicNum}) {
 
     return <><h1>Write your notes for {module}, topic {topicNum}</h1>
         <div>
-        <textarea style={{width: "100%", height: "400px"}} onChange={ e => {
-            setMarkdown(e.target.value);
-        }} value={markdown} />
-        <br />
-        <button onClick={async() => {
-            const result = await saveNotes(module, topicNum, markdown);
-            setStatus(result);
-        }}>Save Notes</button>
-        </div>
-        <div style={{backgroundColor: status.error ? '#ffc0c0' : '#c0ffc0'}}>
-        {status.error || status.message}
-        </div>
-        <hr />
-        <Markdown>{markdown}</Markdown>
-        </>;
-}
-/*
         <MDEditor value={markdown} 
             onChange={setMarkdown} 
             extraCommands={[commands.group([
@@ -46,5 +32,16 @@ export default function WriteNotesComponent({notes, module, topicNum}) {
                 groupName: 'headings', 
                 buttonProps: { 'aria-label': 'Insert heading' }
            })]} />
-        <MDEditor.Markdown source={markdown} />
-*/
+        <br />
+        <button onClick={async() => {
+            const result = await saveNotes(module, topicNum, markdown);
+            setStatus(result);
+        }}>Save Notes</button>
+        </div>
+        <div style={{backgroundColor: status.error ? '#ffc0c0' : '#c0ffc0'}}>
+        {status.error || status.message}
+        </div>
+        <hr />
+        <Markdown>{markdown}</Markdown>
+        </>;
+}

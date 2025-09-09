@@ -12,7 +12,7 @@ export default async function WriteNotesPage() {
     const { isAdmin } = await useLoggedIn();
 
     loadEnvFile();
-    
+ 
     if(isAdmin) {
         const { module, topicNum } = searchParams;
         let content = "";
