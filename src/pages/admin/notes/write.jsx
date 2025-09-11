@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import { useSearchParams } from '@lazarv/react-server';
+import { Link } from '@lazarv/react-server/navigation';
 import useLoggedIn from '../../../hooks/login.mjs';
 import useModules from '../../../hooks/modules.mjs';
 import WriteNotesComponent from '../../../components/WriteNotesComponent.jsx';
@@ -29,8 +30,8 @@ export default async function WriteNotesPage() {
         } else {
             content = <div>Module and topic number missing or in an invalid forrmat.</div>;
         }
-        return <div>{content}<a href='/admin'>Back to admin page</a></div>;
+        return <div>{content}<Link to='/admin'>Back to admin page</Link></div>;
     } else {
-        return <div>Only admins can access this page.</div>;    
+        return <div>Only admins can access this page.</div>;
     }
 }

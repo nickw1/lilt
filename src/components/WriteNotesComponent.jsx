@@ -19,6 +19,7 @@ export default function WriteNotesComponent({notes, module, topicNum}) {
     return <><h1>Write your notes for {module}, topic {topicNum}</h1>
         <div>
         <MDEditor value={markdown} 
+            height="80%"
             onChange={setMarkdown} 
             extraCommands={[commands.group([
                 commands.title1,
@@ -41,7 +42,5 @@ export default function WriteNotesComponent({notes, module, topicNum}) {
         <div style={{backgroundColor: status.error ? '#ffc0c0' : '#c0ffc0'}}>
         {status.error || status.message}
         </div>
-        <hr />
-        <Markdown>{markdown}</Markdown>
         </>;
 }
