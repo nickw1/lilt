@@ -1,5 +1,6 @@
 import React from 'react';
 import LoginComponent from '../components/LoginComponent.jsx';
+import LoggedInComponent from '../components/LoggedInComponent.jsx';
 import ModuleChooseComponent from '../components/ModuleChooseComponent.jsx';
 import LinkModuleChooseComponent from '../components/LinkModuleChooseComponent.jsx';
 import NotesHolder from '../components/NotesHolder.jsx';
@@ -7,6 +8,8 @@ import NotesComponent from '../components/NotesComponent.jsx';
 import { useSearchParams } from '@lazarv/react-server';
 
 import UserDao from '../dao/user.mjs';
+import { Link } from '@lazarv/react-server/navigation';
+
 import ModuleDao from '../dao/module.mjs';
 import db from '../db/db.mjs';
 
@@ -21,7 +24,8 @@ export default async function App() {
 
     const modules = useModules();
 
-    const loginComponent = 
+    const loginComponent = module ? 
+		(user.usercode === null ? <Link to='/'>Login</Link> : <LoggedInComponent usercode={user.usercode}/>) : 
         <LoginComponent 
             style={{display: module ? 'inline' : 'block' }} 
             usercode={user.usercode}  />

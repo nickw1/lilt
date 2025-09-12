@@ -1,7 +1,8 @@
 "use client"
 import React, { useState, useActionState } from 'react';
 import { useClient } from "@lazarv/react-server/client";
-import { login, logout, newUser } from '../actions/user.mjs';
+import { login, newUser } from '../actions/user.mjs';
+import LoggedInComponent from './LoggedInComponent.jsx';
 
 export default function LoginComponent({usercode}) {
 
@@ -26,8 +27,5 @@ export default function LoginComponent({usercode}) {
         </form>
         <input type='button' value='Get New User Code' onClick={ () => setNewUserStage(1) } />
         </>)
-        :
-        <form action={logout} key='formLogout'>Your user code: <strong>{usercode==1 ? "admin": usercode}</strong>
-        <input type='submit' value='Logout' />
-        </form>
+        : <LoggedInComponent usercode={usercode}/>;
 }
