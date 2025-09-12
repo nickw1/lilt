@@ -40,12 +40,12 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
         } value={exDetails.intro} />
         <br />
         <button onClick={edit}>Save</button>
-        <p style={{backgroundColor: status.error ? '#ffc0c0' : '#c0ffc0'}}>{status.error || status.message}</p>
         {qOutput}
         <h3>Add new questions</h3>
         <AddWholeQuestionComponent btnText='Save Questions To Database' onQuestionsSubmitted={(questions) => {
             return saveQuestionsToServer(exDetails.id, questions);
         }} />
+        <p style={{backgroundColor: status.error ? '#ffc0c0' : '#c0ffc0'}}>{status.error || status.message}</p>
         </div>
         </div>;
 

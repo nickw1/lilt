@@ -10,7 +10,7 @@ export default function ModuleChooseComponent ({modules, onModuleChosen})  {
         <option key={module.id} value={module.code}>{module.name}</option>
     );
 
-    return <>Please choose a module:
+    return <>Please choose a module to edit:
             <select defaultValue='' onChange={e => {
                 if(onModuleChosen) {
                     onModuleChosen(e.target.value);

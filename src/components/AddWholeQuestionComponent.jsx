@@ -22,7 +22,7 @@ export default function AddWholeQuestionComponent({onQuestionsSubmitted, btnText
                 borderRadius: "8px",
                 padding: "8px",
                 width: "50%",
-                height: "200px",
+                height: "300px",
                 overflow: "auto"}}>
             Question type:
             <select id='questionType' onChange={addQuestion} defaultValue={qType}>
@@ -36,7 +36,7 @@ export default function AddWholeQuestionComponent({onQuestionsSubmitted, btnText
             <AddQuestionComponent qType={qType} onQuestionAdded={onQuestionAdded}/>
             </> : "" }
             </div>
-            <div>
+            <div style={{backgroundColor: '#f0f0f0'}}>
             { displayedQuestions.length ? 
             <><h4>Questions so far</h4>
             <ul>{displayedQuestions}</ul></> : "" }
