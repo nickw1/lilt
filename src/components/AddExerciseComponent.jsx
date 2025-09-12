@@ -11,7 +11,7 @@ export default function AddExerciseComponent() {
     const [addExerciseState, setAddExerciseState] = useState("");
     let results = null;
     return <><div>
-            <h2>Add an Exercise</h2>
+            <h3>Add an Exercise</h3>
             <br />
             Topic Number: <br />
             <select id='topicNumber'>

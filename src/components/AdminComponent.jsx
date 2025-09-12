@@ -27,11 +27,16 @@ export default function AdminComponent({modules}) {
                 topics
             });
         }} />
+        { moduleInfo.moduleCode ? 
+        <>
+        <hr />
+        <h2>Module {moduleInfo.moduleCode}</h2>
         <ModulesContext.Provider value={moduleInfo}>
         <AddExerciseComponent />
         <AdminTopicComponent />
-        </ModulesContext.Provider>
- 
+        </ModulesContext.Provider> 
+        </> : "" }
+        <hr /> 
         <ModulesComponent modules={modules} />
         </Fragment>;
 }

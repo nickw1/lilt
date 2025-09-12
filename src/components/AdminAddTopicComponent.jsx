@@ -9,7 +9,7 @@ export default function AdminAddTopicComponent({moduleCode, onTopicAdded}) {
     const [content, setContent] = useState("");
 
     return <div>
-        <h3>Add Topic</h3>
+        <h4>Add Topic</h4>
         Topic number: <br />
         <input id='topicNumber2' name='topicNumber2' type='number' /><br />
         Topic title: <br />

@@ -50,7 +50,7 @@ export default function AdminTopicComponent() {
             }} /></li>)
 
     return <div>
-        <h2>Topics</h2>
+        <h3>Topics</h3>
         <ul>{tops.length > 0 ? tops: "No topics."}</ul>
         <div style={{backgroundColor: status.errors ? '#ffc0c0': '#c0ffc0'}}>{status.errors ? <ul>{status.errors.map(error => <li>{error}</li>)}</ul> : status.message || ""}</div>
         <AdminAddTopicComponent moduleCode={moduleInfo.moduleCode} onTopicAdded={ topic => {
