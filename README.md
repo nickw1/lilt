@@ -8,13 +8,13 @@
 
 `lilt` also allows tutors to hide sections of the notes until particular exercises have been answered. This allows students to think through problems themselves and suggest their own ideas before the problem is discussed through the notes.
 
-With `lilt` 2, tutors now write code in Markdown with custom extensions to support exercises and hidden content.
+With `lilt` 2, tutors now write code in [Markdown](https://markdownguide.org) with custom extensions to support exercises and hidden content. There is now an included WYSIWYG (what-you-see-is-what-you-get) notes editor allowing tutors to write their notes via a graphical interface without necessarily knowing Markdown.
 
 ## What lilt is not
 
 First of all, a quick word on what `lilt` is not. It is not, and does not aim to be, a full Virtual Learning Environment (VLE). Students do not provide their personal details at all, providing a private and anonymous environment. `lilt` does not aim to assess students over the period of a whole module, but just aims to check their understanding of the current topic.
 
-It's also geared at tutors who are happy using Markdown to write their notes. It does not yet support PowerPoint slides for example and may not for some considerable time.
+It's also geared at tutors who are happy using Markdown to write their notes, or using a graphical editor which generates Markdown. It does not yet support PowerPoint slides for example and may not for some considerable time.
 
 ## Configuring and managing lilt
 
@@ -23,9 +23,9 @@ There are two roles involved in managing `lilt`:
 - The sysadmin, who will install and configure `lilt` and add admin users via command-line tools;
 - Tutors, who will login to `lilt` as an admin to manage modules, topics, exercises and questions via the web interface.
 
-Tutors may be able to perform the sysadmin tasks themselves, if they have direct access to the intended `lilt` server hardware. If not, please ask the appropriate ICT staff to set up `lilt`.
+Tutors may be able to perform the sysadmin tasks themselves, if they have direct access to the intended hardware upon which `lilt` will be installed. If not, please ask the appropriate ICT staff to set up `lilt`.
 
-As `lilt` servers are expected to be small-scale, servicing just one class at a time, SQLite is used. 
+As `lilt` servers are expected to be small-scale, servicing just a small number of classes of students at a time within a single institution, SQLite is used. 
 
 ## How to setup a lilt server (sysadmin)
 
@@ -33,22 +33,22 @@ As `lilt` servers are expected to be small-scale, servicing just one class at a 
 
 You need [Node.js](https://nodejs.org) - at least version 20 - installed on your system.
 
-`lilt` uses [@lazarv/react-server](https://react-server.dev) as its web development framework. You should install the package management tool  [pnpm](https://pnpm.io).
+`lilt` uses [@lazarv/react-server](https://react-server.dev) as its web development framework. You an optionally install the package management tool  [pnpm](https://pnpm.io).
 
 Once installed do:
 
 ```
-pnpm install
+npm install
 ```
 
-Then build and run: 
+Then build:
 
 ```
-pnpm react-server build
-pnpm react-server start --port YOUR_CHOSEN_PORT
+npm react-server build
 ```
 
-Port is 3000 by default.
+You can alternatively use `pnpm` rather than `npm`.
+
 
 ### Setup lilt 
 
@@ -72,6 +72,15 @@ A `lilt` server should have one or more admin users. To add an admin user, run t
 
 In the `utils` directory is a script named `cleanup.mjs`. This will delete old usercodes, older than a week, and answers made by these old usercodes. Please setup your system to run this daily, using a tool such as `cron` on Linux or the equivalent on Windows.  **You must ensure you do this for privacy reasons as users are advised that this will be done when they sign up for a user code.**
 
+### Start the server
+
+Start the server with:
+```
+npx react-server start --port YOUR_CHOSEN_PORT
+```
+Port is 3000 by default.
+Alternatively you can use `pnpm` rather than `npx`.
+
 ## Setup topics and exercises (tutors)
 
 When the server is running you can access the admin section with the following RURL:
@@ -86,7 +95,16 @@ A number of options are available to setup modules, topics and exercises. These 
 
 ## Write your notes (tutors)
 
-### Where to save your notes
+There are two methods to write your notes, via the *inbuilt graphical editor* or *manually*.
+
+### Using the inbuilt graphical editor
+
+This is accessible via logging in as an administrator - more details will appear
+. Notes will automatically be saved in the correct directory.
+
+### Manually 
+
+Alternatively you can write and save your notes manually - for example you might have a favourite third-party Markdown editor. If you do this please make sure they are saved in the correct place, so `lilt` can find them.
 
 - Notes should be placed in the directory specified by the `RESOURCES` environment variable within your `.env` (see above).
 - Within this directory you should create separate subdirectories for each module, using the module code you specify when adding a module as an admin user as the directory name.
@@ -94,8 +112,19 @@ A number of options are available to setup modules, topics and exercises. These 
 
 ### How to write your notes
 
-You write your notes in Markdown, with custom extensions for specifying exercises and hidden content. [markdown-to-jsx](https://github.com/quantizor/markdown-to-jsx) is used. Here is some example Markdown with custom extensions (all of which are indicated using the symbol `@`). Note how the content of the Markdown explains the extensions.
+You write your notes in Markdown, with custom extensions for specifying exercises and hidden content. [markdown-to-jsx](https://github.com/quantizor/markdown-to-jsx) is used. As stated above you can use the inbuilt graphical editor which will save you having to write the Markdown manually.
 
+However, the custom extensions you will have to write manually yourself, even if using the graphical editor or a third-party Markdown editor. Here is some example Markdown with custom extensions (all of which are indicated using the symbol `@`). 
+
+The extensions are as follows:
+
+- `@exN` : inserts exercise N by loading it from the database.
+- `@exN(M)` : inserts exercise N from the database, where attempting N depends on completion of exercise M. If exercise M hasn't been completed, exercise N will not be visible.
+- `@answer(N)` : the content below the extension will be treated as the answer to exercise N. It will only be visible if exercise N has been completed.
+- `@depends(N)` : the content below the extension will only be visible if exercise N has been completed, but is not treated as the answer to exercise N.
+- `@public` : ends protected (`@answer` or `@depends`) content. Subsequent content will be public, and visible even if the user has not completed any exercises.
+
+Here is some example Markdown which includes the extensions. Now the content of the Markdown explains their use.
 ```
 # Topic 1
 
@@ -115,7 +144,7 @@ an admin user has verified their answers.
 This paragraph is public and does not require completion of any exercises. 
 The @public extension ends a previous protected block of content (a block which 
 depends on exercise completion) and results in the following content being 
-public.
+visible to all users.
 
 @depends(1)
 
@@ -144,18 +173,10 @@ Some content which depends on exercise 2.
 Yet more public content.
 ```
 
-So in summary:
-
-- `@exN` : inserts exercise N.
-- `@exN(M)` : inserts exercise N, where N depends on completion of M.
-- `@answer(N)` : include the answer to exercise N. It will only be visible if exercise N has been completed.
-- `@depends(N)` : include other content which depends on exercise N.
-- `@public` : end protected content. Subsequent content will be public, and visible even if the user has not completed any exercises.
-
 ## Users/students
 
 On the main page, students can signup for a random and anonymous 6-digit **user code**. This identifies them as a user and allows `lilt` to determine if they have answered exercises and whether the tutor has authorised their answers.
 
-These user codes are intended to be only usable for one week (i.e they are for the current topic only); in the `utils` directory within `server` there is a cleanup script which will delete answers and users older than a week.
+These user codes are intended to be only usable for one week (i.e they are for the current topic only); in the `utils` directory, as stated above, there is a cleanup script which will delete answers and users older than a week **which you must set up to run daily** as discussed above.
 
 Again the main interface will be described in a later revision of this `README`.
