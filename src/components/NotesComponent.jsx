@@ -53,11 +53,11 @@ export default async function NotesComponent({module, initTopic}) {
             matches =  /^@(answer|depends)\((\d+)\)$/.exec(node.children[0].text);
             exMatch = /^@(ex\d+)(\((\d+)\))?$/.exec(node.children[0].text);
         }
-        if(matches && !isAdmin) {
+        if(matches) {
             protectedContent = true;
             const { id: topicId} = topicDao.getTopicByModuleCodeAndNumber(module, topic);
             const exer = exerciseDao.getExerciseByPublicNumber(topicId, matches[2]);
-            dependencyCompleted = answerDao.hasUserCompletedExercise(uid, exer.id);
+            dependencyCompleted = isAdmin || answerDao.hasUserCompletedExercise(uid, exer.id);
             if(dependencyCompleted) {
                   return matches[1] == "answer" ? <h2 key={`answer-title-${matches[2]}`}>Answer to exercise {matches[2]}</h2> : ""; // return nothing for depends, switch to protected content
             } else {
@@ -70,7 +70,7 @@ export default async function NotesComponent({module, initTopic}) {
         } else if (exMatch) {
             const exNum = exMatch[1].substring(2);
             return uid === null ? 
-                <p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}</p> : exerciseHandler(exNum, parseInt(exMatch[3]));
+                <p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}.</p> : exerciseHandler(exNum, parseInt(exMatch[3]));
         } else {
             return protectedContent && node.type == RuleType.text && !dependencyCompleted ? "": next(); 
 
