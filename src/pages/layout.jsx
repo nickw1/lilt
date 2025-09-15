@@ -1,4 +1,3 @@
-//import '/css/Fira-4.202/fira.css';
 import '/css/nwnotes.css';
 
 export default function Layout({children}) {
@@ -15,4 +14,4 @@ export default function Layout({children}) {
     </html>
     );
 }
-    //<link rel='stylesheet' type='text/css' href='https://code.cdn.mozilla.net/fonts/fira.css' />
+// <link rel='stylesheet' type='text/css' href='https://code.cdn.mozilla.net/fonts/fira.css' />

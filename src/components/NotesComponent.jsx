@@ -79,7 +79,7 @@ export default async function NotesComponent({module, initTopic}) {
 
 
     const topicsList = getTopicsListCached(module);
-    const topic = initTopic || 0;
+    const topic = (initTopic && `${initTopic}`.match("^\\d+$")) ? initTopic : 0;
 
     const completedStyle = {
         backgroundColor: '#c0ffc0',
@@ -100,11 +100,9 @@ export default async function NotesComponent({module, initTopic}) {
         try {
             const mdstring =  (await fs.readFile(`${process.env.RESOURCES}/${module}/${topic}.md`)).toString();
 
-
             content = <Markdown options={{
                 renderRule: renderRuleHandler
             }}>{mdstring}</Markdown>;
-
         } catch(e) {
             content = <p>Error loading markdown notes: {e.message}</p>;
         }

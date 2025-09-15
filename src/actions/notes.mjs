@@ -3,7 +3,7 @@
 import fs from "node:fs/promises";
 
 export async function saveNotes(module, topicNum, notes) {
-    if(topicNum.match("^\\d+$")) {
+    if(topicNum.match("^\\d+$") && module.match("^\\w+$")) {
         try {
             await fs.writeFile(`${process.env.RESOURCES}/${module}/${topicNum}.md`, notes);
             return { message: "Saved successfully." };
@@ -11,6 +11,6 @@ export async function saveNotes(module, topicNum, notes) {
             return { error: e.message };
         }
     } else {
-        return { error: "Invalid topic number." };
+        return { error: "Invalid topic number and/or module code." };
     }
 }

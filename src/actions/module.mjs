@@ -8,7 +8,7 @@ import fs from 'node:fs/promises';
 
 export async function addModule(prevState, formData) {
     const code = formData.get("moduleCode"), name = formData.get("moduleName");
-    if(code && name) {
+    if(code && name && code.match("^\\w+$")) {
         const moduleDao = new ModuleDao(db);
         const id = moduleDao.addModule(xss(code), xss(name));
         let warning = "";
@@ -24,8 +24,9 @@ export async function addModule(prevState, formData) {
         const newState = structuredClone(prevState);
         newState.push({id, code, name, warning});
         return newState;
-     }
-        
+    } else {
+        console.error("Server function addModule(): Name and code missing and/or invalid format for module code.");
+    }
         
     return prevState;
 }
