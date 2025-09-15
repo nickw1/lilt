@@ -6,7 +6,9 @@
 
 `lilt` is a tool to allow students to actively participate in learning sessions by means of interactive exercises. When tutors are delivering learning material via a lecture or a talk, there is always a question as to whether the students are actually understanding the content. `lilt` allows tutors to check students' understanding by integrating lecture material with interactive exercises which students can answer in class. The tutor can then view submitted answers and the submitted answers can be discussed in class, to address common misunderstandings.
 
-`lilt` also allows tutors to hide sections of the notes until particular exercises have been answered. This allows students to think through problems themselves and suggest their own ideas before the problem is discussed through the notes.
+`lilt` allows tutors to hide sections of the notes until particular exercises have been answered. This allows students to think through problems themselves and suggest their own ideas (which can be discussed with the tutor as explained above) rather than just reading what the notes say.
+
+Then, once the class discussion has taken place for a given exercise, the tutors can make notes available which depend on the concepts discussed in that exercise. 
 
 With `lilt` 2, tutors now write code in [Markdown](https://markdownguide.org) with custom extensions to support exercises and hidden content. There is now an included WYSIWYG (what-you-see-is-what-you-get) notes editor allowing tutors to write their notes via a graphical interface without necessarily knowing Markdown.
 
@@ -33,7 +35,7 @@ As `lilt` servers are expected to be small-scale, servicing just a small number 
 
 You need [Node.js](https://nodejs.org) - at least version 20 - installed on your system.
 
-`lilt` uses [@lazarv/react-server](https://react-server.dev) as its web development framework. You an optionally install the package management tool  [pnpm](https://pnpm.io).
+`lilt` uses [@lazarv/react-server](https://react-server.dev) as its web development framework. You can optionally install the package management tool  [pnpm](https://pnpm.io).
 
 Once installed do:
 
@@ -70,7 +72,7 @@ A `lilt` server should have one or more admin users. To add an admin user, run t
 
 ### IMPORTANT - Run the cleanup script daily
 
-In the `utils` directory is a script named `cleanup.mjs`. This will delete old usercodes, older than a week, and answers made by these old usercodes. Please setup your system to run this daily, using a tool such as `cron` on Linux or the equivalent on Windows.  **You must ensure you do this for privacy reasons as users are advised that this will be done when they sign up for a user code.**
+In the `utils` directory is a script named `cleanup.mjs`. This will delete old usercodes, older than a week, and answers made by these old usercodes. Please setup your system to run this daily, using a tool such as `cron` on Linux or the equivalent on Windows.  **You must ensure you do this for privacy reasons as students/users are advised that this will be done when they sign up for a user code.**
 
 ### Start the server
 
@@ -83,24 +85,93 @@ Alternatively you can use `pnpm` rather than `npx`.
 
 ## Setup topics and exercises (tutors)
 
-When the server is running you can access the admin section with the following RURL:
+When the server is running you can access the admin section with the following URL:
 
 ```
 http://localhost:YOUR_CHOSEN_PORT/admin
 ```
 
-You need to setup your modules, topics and exercises within the admin section of the application.
+You need to setup your modules, topics and exercises within the admin section of the application. First log in as an admin:
 
-A number of options are available to setup modules, topics and exercises. These will be described in more detail in a later revision of this `README`.
+![Login to lilt](/pics/adminlogin.png)
+
+You will then see the main admin page:
+
+![lilt admin page](/pics/adminpage.png)
+
+There are a number of options. Adding and deleting modules is fairly self-explanatory; note that if you delete a module, all its associated topics and exercises will also be deleted. Editing a module however has more options so we will explore it in more detail.
+
+### Editing an existing module
+
+You can edit a module by adding and deleting topics, making topics public, and adding exercises to an existing topic. If you select a module from the dropdown list on the main admin page, you will see a screen like this:
+
+![Editing a module](/pics/editmodule.png)
+
+You can see a list of existing topics if any have been added already, and you can also add a new topic.
+
+With the existing topics you may write or update the topic's Markdown notes (described in more detail below), delete the topic, and make the topic public. 
+
+What does making a topic public mean? It means that all content of that topic will be accessible to all users, logged-in or not, irrespective of whether they have completed its exercises yet. Ideally you should make a topic public once all the classes for that topic have completed, so that anyone who misses a week (and thus misses the interactive exercises) will be able to view the content.
+
+### Adding an exercise
+
+If you scroll down below the list of topics, you can add an exercise:
+
+![Adding an exercise](/pics/addexercise1.png)
+
+You choose the topic the exercise will be associated with, add an introduction, then add one or more questions. Questions can be either text or multiple choice; the screenshot above shows a text question. Once you have written the question, click the "Add Question" button; this will add the question to the list of questions but will *not* yet save it in the database.
+
+When you have added the question you will see it in the "Questions so far" list:
+
+![Adding an exercise - 2](/pics/addexercise2.png)
+
+You can save the exercise to the database at any time; you are able to add additional questions later. Ensure you do save it with "Save Exercise To Database" at some point, otherwise your questions will be lost!
+
+You can also add multiple choice questions by selecting the "Multiple choice" question type:
+
+![Adding an exercise - multiple choice](/pics/addexercise3.png)
+
+Make sure you add the options on a separate line, beginning each option with a star, as shown above.
+
+### Managing exercises
+
+You can also manage exercises (e.g. edit exercise descriptions, edit questions, delete questions, add new questions to an exercise, authorise answers). To do this, follow the "Exercises and answers" link on the main admin page. You will see the page below:
+
+![Admin exercise management page](/pics/adminexman.png)
+
+You need to choose an exercise to edit as shown above. This will bring up the following content: 
+
+![Editing an exercise](/pics/adminexedit.png)
+
+Note how you can edit and delete exercises and questions. Deleting an exercise will delete all questions associated with that exercise.
+
+If you scroll down below the editing screen, you are also able to add new questions to the selected exercise.
+
+### Authorising answers
+
+When students have answered all questions in an exercise, hidden content will not be immediately visible. The intention is for the tutor to discuss the exercises in class, along with any common misunderstandings in students' answers. When this discussion is complete, the tutor would normally authorise all answers to a given exercise - irrespective of whether they are right or wrong. You can see this below:
+
+![Authorising answers](/pics/adminauthorise.png)
+
+Once all answers for a given exercise and for a given user are authorised, that user will be able to view protected content which depends on completion of that xercise.
+
 
 ## Write your notes (tutors)
 
-There are two methods to write your notes, via the *inbuilt graphical editor* or *manually*.
+You write your notes in Markdown, with custom extensions for specifying exercises and hidden content. [markdown-to-jsx](https://github.com/quantizor/markdown-to-jsx) is used. As stated above you can use the inbuilt graphical editor which will save you having to write the Markdown manually.
+
+There are thus two methods to write your notes, via the *inbuilt graphical editor* or *manually*.
 
 ### Using the inbuilt graphical editor
 
-This is accessible via logging in as an administrator - more details will appear
-. Notes will automatically be saved in the correct directory.
+This is accessible via the admin "edit module" functionality as introduced above. If you select to edit the notes, you will see a screen like the above appear:
+
+![Notes editor](/pics/writenotes.png)
+
+Note how the left side is the editor and the right side is a preview of how the notes will look. The editor has a toolbar including common page elements such as bold text, italic text, headings, images, tables, and so on.
+
+When you have finished editing, ensure you click "Save notes".  
+Notes will automatically be saved in the correct directory.
 
 ### Manually 
 
@@ -110,9 +181,7 @@ Alternatively you can write and save your notes manually - for example you might
 - Within this directory you should create separate subdirectories for each module, using the module code you specify when adding a module as an admin user as the directory name.
 - Then, you create numbered Markdown (`.md`) files within the module directory corresponding to each topic. The numbers correspond with the topic number, so topic 1 would be `1.md`, topic 2, `2.md` and so on. These numbers must correspond with the topic numbers you specified when you created them in the database.
 
-### How to write your notes
-
-You write your notes in Markdown, with custom extensions for specifying exercises and hidden content. [markdown-to-jsx](https://github.com/quantizor/markdown-to-jsx) is used. As stated above you can use the inbuilt graphical editor which will save you having to write the Markdown manually.
+### Using the lilt Markdown extensions 
 
 However, the custom extensions you will have to write manually yourself, even if using the graphical editor or a third-party Markdown editor. Here is some example Markdown with custom extensions (all of which are indicated using the symbol `@`). 
 

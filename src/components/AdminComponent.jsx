@@ -32,8 +32,8 @@ export default function AdminComponent({modules}) {
         <hr />
         <h2>Module {moduleInfo.moduleCode}</h2>
         <ModulesContext.Provider value={moduleInfo}>
-        <AddExerciseComponent />
         <AdminTopicComponent />
+        <AddExerciseComponent />
         </ModulesContext.Provider> 
         </> : "" }
         <hr /> 

@@ -9,7 +9,7 @@ export default function AddQuestionComponent({qType, onQuestionAdded}) {
 
     return <div>
         Question text: <br />
-        <input id='questionText' /><br />
+        <input id='questionText' style={{width: "90%"}}/><br />
         { qType == 2 ? 
             <QOptionsComponent 
                 options={optString} 
