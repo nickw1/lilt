@@ -5,6 +5,7 @@ export default function Layout({children}) {
     <html>
     <head>
     <title>LILT - Lightweight Interactive Learning Tool</title>
+    <link rel='stylesheet' type='text/css' href='https://code.cdn.mozilla.net/fonts/fira.css' />
     </head>
     <body>
     <div id="root">
@@ -14,4 +15,3 @@ export default function Layout({children}) {
     </html>
     );
 }
-// <link rel='stylesheet' type='text/css' href='https://code.cdn.mozilla.net/fonts/fira.css' />
