@@ -32,7 +32,7 @@ export default function AdminExerciseManagementComponent({allExercises}) {
         }} /> 
         <h2>Answers</h2>
         <h3>Answers for exercise {curExercise?.publicNumber}</h3>
-        <AdminAnswersHolder exid={curExercise?.id} />
+        <AdminAnswersHolder exid={curExercise?.id || null} />
          </>: "" }
         </div>;
 } 
