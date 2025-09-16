@@ -88,7 +88,7 @@ Alternatively you can use `pnpm` rather than `npx`.
 When the server is running you can access the admin section with the following URL:
 
 ```
-http://localhost:YOUR_CHOSEN_PORT/admin
+https://URL_OF_SERVER:YOUR_CHOSEN_PORT/admin
 ```
 
 You need to setup your modules, topics and exercises within the admin section of the application. First log in as an admin:
@@ -183,7 +183,7 @@ Alternatively you can write and save your notes manually - for example you might
 
 ### Using the lilt Markdown extensions 
 
-However, the custom extensions you will have to write manually yourself, even if using the graphical editor or a third-party Markdown editor. Here is some example Markdown with custom extensions (all of which are indicated using the symbol `@`). 
+However, the custom extensions you will have to write manually yourself, even if using the graphical editor or a third-party Markdown editor. 
 
 The extensions are as follows:
 
@@ -248,4 +248,35 @@ On the main page, students can signup for a random and anonymous 6-digit **user 
 
 These user codes are intended to be only usable for one week (i.e they are for the current topic only); in the `utils` directory, as stated above, there is a cleanup script which will delete answers and users older than a week **which you must set up to run daily** as discussed above.
 
-Again the main interface will be described in a later revision of this `README`.
+### Logging in
+
+Students should go to 
+```
+https://URL_OF_SERVER:PORT
+```
+and obtain a user code: 
+
+![Login screen](/pics/loginscreen.png)
+
+The privacy notice below will appear, to inform students that no personal information will be taken:
+
+![Privacy notice](/pics/privacynotice.png)
+
+Users will then be told their user code:
+
+![User code](/pics/usercode.png)
+
+and can log in:
+
+![Logged-in user](/pics/loggedin.png)
+
+
+### Accessing notes
+
+Students can then choose a module, and will be taken to that module's main screen:
+
+![Module main screen](/pics/mainscreen.png)
+
+They can then choose a topic. As discussed already, some topic content is public (and will always be visible) while other content depends on successful completion of exercises and authorisation of answers by the administrator. The screenshot below shows an example exercise and some hidden content which will only be revealed once the student has answered the questions and the tutor has authorised their answers:
+
+![Exercise view](/pics/exercise.png)
