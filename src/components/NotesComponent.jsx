@@ -18,7 +18,6 @@ const getTopicsListCached = cache(topicDao.getAllForModule.bind(topicDao));
 
 
 export default async function NotesComponent({module, initTopic}) {
-    console.log('refreshing NotesComponent...');
     let contentHiddenCount=0;
 
     const { isAdmin, uid } = await useLoggedIn();
@@ -72,7 +71,8 @@ export default async function NotesComponent({module, initTopic}) {
             return uid === null ? 
                 <p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}.</p> : exerciseHandler(exNum, parseInt(exMatch[3]));
         } else {
-            return protectedContent && node.type == RuleType.text && !dependencyCompleted ? "": next(); 
+//            return protectedContent && node.type == RuleType.text && !dependencyCompleted ? "": next(); 
+            return protectedContent && node.type != RuleType.paragraph && !dependencyCompleted ? "": next(); 
 
         }
     }
