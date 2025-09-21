@@ -10,7 +10,7 @@ import fs from 'node:fs/promises';
 export async function addModule(prevState, formData) {
     const { isAdmin } = await useLoggedIn();
     if(!isAdmin) {
-        return {"error" : "Only admins can add a module."};
+        return {modules: prevState.modules, "error" : "Only admins can add a module."};
     }
     const code = formData.get("moduleCode"), name = formData.get("moduleName");
     if(code && name && code.match("^\\w+$")) {
@@ -27,10 +27,11 @@ export async function addModule(prevState, formData) {
             }
         }
         const newState = structuredClone(prevState);
-        newState.push({id, code, name, warning});
+        newState.modules.push({id, code, name});
+        if(warning) newState.warning = warning;
         return newState;
     } else {
-        console.error("Server function addModule(): Name and code missing and/or invalid format for module code.");
+        return { modules: prevState.modules, error: "Name and/or code missing and/or invalid format for module code." };
     }
         
     return prevState;
