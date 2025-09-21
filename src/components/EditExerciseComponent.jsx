@@ -19,6 +19,8 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
     
     const qOutput = exDetails.questions?.map( question => <EditQuestion key={question.qid} question={question} onQuestionDeleted = { qid => {
         const newExDetails = {
+            id: exDetails.id,
+            publicNumber: exDetails.publicNumber,
             intro: exDetails.intro,
             questions : exDetails.questions.filter ( question => question.qid != qid )
         };
