@@ -1,7 +1,5 @@
 "use client"
 
-let exports = { };
-
 import { Fragment, useState } from 'react';
 import { Link } from '@lazarv/react-server/navigation';
 import AdminLoginComponent from './AdminLoginComponent.jsx';

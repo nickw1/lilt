@@ -5,7 +5,7 @@ import QOptionsComponent from './QOptionsComponent.jsx';
 import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
 import { editQuestion, deleteQuestion } from '../actions/question.mjs';
 
-export default function EditQuestion({question, onQuestionDeleted}) {
+export default function EditQuestion({question, num, onQuestionDeleted}) {
 
     const [questionDetails, setQuestionDetails] = useState(question);
     const [options, setOptions] = useState('');
@@ -13,7 +13,7 @@ export default function EditQuestion({question, onQuestionDeleted}) {
 
     return <div>
         <div style={{marginTop: '10px'}}>
-        <h4 style={{display: 'inline'}}>Question with ID {questionDetails.qid}</h4>
+        <h4 style={{display: 'inline'}}>Question {num}</h4>
         <span title='Delete Question'><ConfirmDeleteComponent color='red' onDeleteConfirmed={del} /></span>
         </div>
         <div> 
