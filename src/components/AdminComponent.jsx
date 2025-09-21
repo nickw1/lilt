@@ -11,6 +11,8 @@ import ModulesComponent from './ModulesComponent.jsx';
 import ModulesContext from '../context/module.mjs';
 import { getTopics } from '../actions/topic.mjs';
 
+import StaticUploadComponent from './StaticUploadComponent.jsx';
+
 export default function AdminComponent({modules}) {
 
     const [moduleInfo, setModuleInfo] = useState({
@@ -38,5 +40,6 @@ export default function AdminComponent({modules}) {
         </> : "" }
         <hr /> 
         <ModulesComponent modules={modules} />
+        <StaticUploadComponent />
         </Fragment>;
 }

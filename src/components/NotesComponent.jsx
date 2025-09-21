@@ -104,7 +104,7 @@ export default async function NotesComponent({module, initTopic}) {
                 renderRule: renderRuleHandler
             }}>{mdstring}</Markdown>;
         } catch(e) {
-            content = <p>Error loading markdown notes: {e.message}</p>;
+            content = <p>Error: {e.code == 'ENOENT' ? `Notes for ${module}, topic ${topic} not found.` : e.code}</p>;
         }
     }
     const displayedTopics = topic == 0 ? 

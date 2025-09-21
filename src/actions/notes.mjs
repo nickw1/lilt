@@ -8,7 +8,7 @@ export async function saveNotes(module, topicNum, notes) {
             await fs.writeFile(`${process.env.RESOURCES}/${module}/${topicNum}.md`, notes);
             return { message: "Saved successfully." };
         } catch(e) {
-            return { error: e.message };
+            return { error: e.code == "ENOENT" ? `Notes for ${module}, topic ${topicNum} not found.` : e.code };
         }
     } else {
         return { error: "Invalid topic number and/or module code." };
