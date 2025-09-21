@@ -36,7 +36,11 @@ export async function answerQuestions(prevState, formData) {
     }
 }
 
-export function authoriseQuestionAnswers(prevState, formData) {
+export async function authoriseQuestionAnswers(prevState, formData) {
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return {"error" : "Only admins can authorise answers."};
+    }
     const answerDao = new AnswerDao(db), topicDao = new TopicDao(db);
     let qid = formData.get("qid");
     if(qid && qid.match("^\\d+$")) {
@@ -52,7 +56,11 @@ export function authoriseQuestionAnswers(prevState, formData) {
     return prevState;
 }
 
-export function getAnswersForExercise(id) {
+export async function getAnswersForExercise(id) {
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return {"error" : "Only admins can get all answers."};
+    }
     const answerDao = new AnswerDao(db);
     return answerDao.getAnswersForExercise(id);
 }

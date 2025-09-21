@@ -4,9 +4,15 @@ import db from '../db/db.mjs'
 import TopicDao from '../dao/topic.mjs';
 import ModuleDao from '../dao/module.mjs';
 import Controller from '../controllers/controller.mjs';
+import useLoggedIn from '../hooks/login.mjs';
 import xss from 'xss';
 
-export function makePublic(id) {
+
+export async function makePublic(id) {
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return {"error" : "Only admins can make a topic public."};
+    }
     const topicDao = new TopicDao(db);
     if(id && id.toString().match("^\\d+$")) {
         const info = topicDao.makePublic(id);
@@ -16,7 +22,11 @@ export function makePublic(id) {
     }
 }
 
-export function addTopic(moduleCode, number, title) {
+export async function addTopic(moduleCode, number, title) {
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return {"error" : "Only admins can add a topic."};
+    }
     const topicDao = new TopicDao(db), moduleDao = new ModuleDao(db);
     if(moduleCode && number && title && number.match("^\\d+$")) {
         const moduleInfo = moduleDao.getModuleByCode(xss(moduleCode));
@@ -47,7 +57,11 @@ export function getTopics(moduleCode) {
     return res;
 }
 
-export function deleteTopic(id) {
+export async function deleteTopic(id) {
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return {"error" : "Only admins can delete a topic."};
+    }
     const controller = new Controller(db);
     return controller.deleteTopic(id);
 }
