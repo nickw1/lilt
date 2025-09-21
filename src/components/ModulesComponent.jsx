@@ -2,6 +2,7 @@ import AdminAddModuleComponent from './AdminAddModuleComponent.jsx';
 import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
 import { useActionState, useState } from 'react';
 import { addModule, deleteModule } from '../actions/module.mjs';
+
 export default function ModulesComponent({modules}) {
 
     const [modulesState, addModuleWithState] = useActionState(addModule, { error: "", modules });
@@ -20,8 +21,7 @@ export default function ModulesComponent({modules}) {
                 setDeletedModules(newDeletedModules);
             }
         }} /></li> ) }</ul>
-        <div style={{backgroundColor: deleteState.errors ? '#ffc0c0': '#c0ffc0'}}>{deleteState.errors ? <ul>{deleteState.errors.map(error => <li>{error}</li>)}</ul> : deleteState.message || ""}</div>
         <AdminAddModuleComponent onModuleSubmitted={addModuleWithState} />
-        <div style={{backgroundColor: modulesState.error ? '#ffc0c0': (modulesState.warning ? '#c0c0ff' : '#c0ffc0')}}>{modulesState.error || modulesState.warning || ""}</div>
+        <div style={{backgroundColor: modulesState.error ? '#ffc0c0': (modulesState.warning ? '#ffffc0' : '#c0ffc0') }}>{modulesState.error || modulesState.warning || modulesState.success}</div>
         </>;
 }

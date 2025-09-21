@@ -28,7 +28,9 @@ export async function addModule(prevState, formData) {
         }
         const newState = structuredClone(prevState);
         newState.modules.push({id, code, name});
-        if(warning) newState.warning = warning;
+        newState.warning = warning || null;
+        newState.success = "Successfully added module.";
+        newState.error = null;
         return newState;
     } else {
         return { modules: prevState.modules, error: "Name and/or code missing and/or invalid format for module code." };
