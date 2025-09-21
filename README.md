@@ -242,6 +242,12 @@ Some content which depends on exercise 2.
 Yet more public content.
 ```
 
+### Static files
+
+You can also include static files within your notes. For example you can include an image within your Markdown, or link to an HTML page. These need to be placed within a directory called `static` within your `RESOURCES` directory. *Currently you need to do this manually, i.e. save static content in the `static` folder, but it is planned to implement a static file upload facility*. 
+
+To refer to a static file, use `/static/filename`, so for example if there is a file called `cats.jpg` which you want to include in your notes, you would use `/static/cats.jpg`.
+
 ## Users/students
 
 On the main page, students can signup for a random and anonymous 6-digit **user code**. This identifies them as a user and allows `lilt` to determine if they have answered exercises and whether the tutor has authorised their answers.
