@@ -10,14 +10,17 @@ import { editExercise, deleteExercise, addQuestionsToExercise } from '../actions
 export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
     const [exDetails, setExDetails] = useState({});
 
-    const [status, setStatus] = useState({message: ""});
+    const [editStatus, setEditStatus] = useState({message: ""});
+    const [addQuestionStatus, setAddQuestionStatus] = useState({message: ""});
 
     useEffect(() => {
         setExDetails(exercise);
     }, [exercise]);
     
-    const qOutput = exDetails.questions?.map( question => <EditQuestion key={question.qid} question={question} onQuestionDeleted = { qid => {
+    const qOutput = exDetails.questions?.map( (question,i) => <EditQuestion key={question.qid} question={question} num={i+1} onQuestionDeleted = { qid => {
         const newExDetails = {
+            id: exDetails.id,
+            publicNumber: exDetails.publicNumber,
             intro: exDetails.intro,
             questions : exDetails.questions.filter ( question => question.qid != qid )
         };
@@ -40,31 +43,32 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
         } value={exDetails.intro} />
         <br />
         <button onClick={edit}>Save</button>
+        <p style={{backgroundColor: editStatus.error ? '#ffc0c0' : '#c0ffc0'}}>{editStatus.error || editStatus.message}</p>
         {qOutput}
         <h3>Add new questions</h3>
         <AddWholeQuestionComponent btnText='Save Questions To Database' onQuestionsSubmitted={(questions) => {
             return saveQuestionsToServer(exDetails.id, questions);
         }} />
-        <p style={{backgroundColor: status.error ? '#ffc0c0' : '#c0ffc0'}}>{status.error || status.message}</p>
+        <p style={{backgroundColor: addQuestionStatus.error ? '#ffc0c0' : '#c0ffc0'}}>{addQuestionStatus.error || addQuestionStatus.message}</p>
         </div>
         </div>;
 
     async function edit() {
         try {
             const results = await editExercise(exDetails.id, exDetails.intro);
-            setStatus(results.error ? {error: results.error} : {message: "Successfully updated."});
+            setEditStatus(results.error ? {error: results.error} : {message: "Successfully updated."});
         } catch(e) {
-            setStatus({error: e.message});
+            setEditStatus({error: e.message});
         }
     }
 
     async function del() {
         try {
             const results = await deleteExercise(exDetails.id);
-            setStatus(results.error ? {error: results.error} : {message: "Successfully deleted."});
+            setEditStatus(results.error ? {error: results.error} : {message: "Successfully deleted."});
             onExerciseDeleted(exDetails.id);
         } catch(e) {
-            setStatus({error: e.message});
+            setEditStatus({error: e.message});
         }
     }
 
@@ -85,14 +89,14 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
                 });
                 newExDetails.questions.push(...questions);
                 setExDetails(newExDetails);
-                setStatus({message: "Questions added successfully"});
+                setAddQuestionStatus({message: "Questions added successfully"});
                 return true;
             } else {
-                setStatus({error: results.error});
+                setAddQuestionStatus({error: results.error});
                 return false;
             }
         } catch(e) {
-            setStatus({error: e.message});
+            setAddQuestionStatus({error: e.message});
             return false;
         }
     }

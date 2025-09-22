@@ -6,10 +6,15 @@ import ModuleDao from '../dao/module.mjs';
 import TopicDao from '../dao/topic.mjs';
 import Controller from '../controllers/controller.mjs';
 import db from '../db/db.mjs';
+import useLoggedIn from '../hooks/login.mjs';
 import xss from 'xss';
 
 
-export function addQuestionsToExercise(id, questions) {
+export async function addQuestionsToExercise(id, questions) {
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return {"error" : "Only admins can add questions to an exercise."};
+    }
     const exerciseDao = new ExerciseDao(db), questionDao = new QuestionDao(db);
 
     if(id.toString().match("^\\d+$") && exerciseDao.getFullExercise(id)) {
@@ -20,7 +25,11 @@ export function addQuestionsToExercise(id, questions) {
     }
 }
 
-export function addExercise(exData) {
+export async function addExercise(exData) {
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return {"error" : "Only admins can add an exercise."};
+    }
     const moduleDao = new ModuleDao(db), topicDao = new TopicDao(db), exerciseDao = new ExerciseDao(db), questionDao = new QuestionDao(db);
     try {
         const { topic, intro, questions, moduleCode } = exData;
@@ -50,7 +59,11 @@ export function addExercise(exData) {
     }
 }
 
-export function editExercise(id, exercise) {
+export async function editExercise(id, exercise) {
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return {"error" : "Only admins can edit an exercise."};
+    }
     const exerciseDao = new ExerciseDao(db);
     try {
         if(exercise && id.toString().match("^\\d+$")) {
@@ -64,7 +77,11 @@ export function editExercise(id, exercise) {
     }
 }
 
-export function deleteExercise(id) {
+export async function deleteExercise(id) {
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return {"error" : "Only admins can delete an exercise."};
+    }
     const controller = new Controller(db);
     return controller.deleteExercise(id);
 }
