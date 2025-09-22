@@ -244,7 +244,7 @@ Yet more public content.
 
 ### Static files
 
-You can also include static files within your notes. For example you can include an image within your Markdown, or link to an HTML page. These need to be placed within a directory called `static` within your `RESOURCES` directory. *Currently you need to do this manually, i.e. save static content in the `static` folder, but it is planned to implement a static file upload facility*. 
+You can also include static files within your notes. For example you can include an image within your Markdown, or link to an HTML page. These need to be placed within a directory called `static` within your `RESOURCES` directory. Files can now be uploaded automatically to this directory from the admin page. 
 
 To refer to a static file, use `/static/filename`, so for example if there is a file called `cats.jpg` which you want to include in your notes, you would use `/static/cats.jpg`.
 
