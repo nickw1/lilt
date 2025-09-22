@@ -30,7 +30,7 @@ export default async function WriteNotesPage() {
         } else {
             content = <div>Module and topic number missing or in an invalid format.</div>;
         }
-        return <div>{content}><br /><Link to='/admin'>Back to admin page</Link></div>;
+        return <div>{content}<br /><Link to='/admin'>Back to admin page</Link></div>;
     } else {
         return <div>Only admins can access this page. <Link to='/admin'>Login as an admin</Link></div>;
     }

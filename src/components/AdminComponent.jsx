@@ -8,10 +8,10 @@ import AdminTopicComponent from './AdminTopicComponent.jsx';
 import AdminAddModuleComponent from './AdminAddModuleComponent.jsx';
 import ModuleChooseComponent from './ModuleChooseComponent.jsx';
 import ModulesComponent from './ModulesComponent.jsx';
+import StaticUploadComponent from './StaticUploadComponent.jsx';
 import ModulesContext from '../context/module.mjs';
 import { getTopics } from '../actions/topic.mjs';
 
-import StaticUploadComponent from './StaticUploadComponent.jsx';
 
 export default function AdminComponent({modules}) {
 
@@ -40,6 +40,7 @@ export default function AdminComponent({modules}) {
         </> : "" }
         <hr /> 
         <ModulesComponent modules={modules} />
+        <hr />
         <StaticUploadComponent />
         </Fragment>;
 }
