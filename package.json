@@ -19,9 +19,9 @@
     "vite": "^6.3.5"
   },
   "scripts": {
-    "dev": "pnpm react-server",
-    "build": "pnpm react-server build",
-    "start": "pnpm react-server start"
+    "dev": "npx react-server",
+    "build": "npx react-server build",
+    "start": "npx react-server start --port 3002"
   },
   "overrides": {
     "markdown-to-jsx": {
