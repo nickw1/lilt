@@ -28,7 +28,7 @@ async function menu() {
                 break;
             case 0:
                 break;
-            DEFAULT:
+            default:
                 console.log(chalk.bold.red("Invalid option."));
                 break;
         }
