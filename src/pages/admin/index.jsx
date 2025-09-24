@@ -6,7 +6,7 @@ import AdminLoginComponent from '../../components/AdminLoginComponent.jsx';
 export default async function AdminPage() {
 
     const { isAdmin } = await useLoggedIn();
-    const modules = useModules();
+    const modules = useModules(true);
 
     return <div>
             <h1>Admin page</h1>

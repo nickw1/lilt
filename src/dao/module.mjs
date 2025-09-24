@@ -11,8 +11,12 @@ export default class ModuleDao {
         return info.lastInsertRowid;
     }
 
-    getAll() {
-        const stmt = this.db.prepare("SELECT * FROM modules ORDER BY code");
+    getAll(showHidden = false) {
+        const stmt = this.db.prepare(
+            showHidden ? 
+            "SELECT * FROM modules ORDER BY code" :
+            "SELECT * FROM modules WHERE visible=1 ORDER BY code" 
+        );
         return stmt.all();
     }
 
@@ -29,6 +33,12 @@ export default class ModuleDao {
     getTopicsForModule(moduleId) {
         const stmt = this.db.prepare("SELECT * FROM topics WHERE moduleid=?");
         return stmt.all(moduleId);
+    }
+
+    setModuleVisibility(moduleId, isVisible) {
+        const stmt = this.db.prepare("UPDATE modules SET visible=? WHERE id=?");
+        const info = stmt.run(isVisible ? 1 : 0, moduleId);
+        return info.changes > 0;
     }
 
     deleteModule(moduleId) {

@@ -39,6 +39,18 @@ export async function addModule(prevState, formData) {
     return prevState;
 }
 
+export async function setModuleVisibility(id, isVisible) {
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return { "error" : "Only admins can change module visibility."};
+    }
+    const moduleDao = new ModuleDao(db);
+    if(!moduleDao.setModuleVisibility(id, isVisible)) {
+        return { "error" : "Cannot find module with that ID." };
+    }
+    return { success: true };
+}
+
 export async function deleteModule(id) {
     const { isAdmin } = await useLoggedIn();
     if(!isAdmin) {

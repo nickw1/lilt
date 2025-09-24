@@ -21,7 +21,7 @@ export default async function App() {
     const module = searchParams.module || '';
     const user = await useLoggedIn();
 
-    const modules = useModules();
+    const modules = useModules(user.isAdmin);
 
     const loginComponent = module ? 
 		(user.usercode === null ? <Link to='/'>Login</Link> : <LoggedInComponent usercode={user.usercode}/>) : 

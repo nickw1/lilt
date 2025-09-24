@@ -28,7 +28,7 @@ async function menu() {
                 break;
             case 0:
                 break;
-            default:
+            DEFAULT:
                 console.log(chalk.bold.red("Invalid option."));
                 break;
         }
@@ -55,14 +55,14 @@ async function setup(database, notes) {
             'DROP TABLE IF EXISTS qoptions',
             'DROP TABLE IF EXISTS questions',
             'DROP TABLE IF EXISTS exercises',
-            'CREATE TABLE exercises (id INTEGER PRIMARY KEY autoincrement, topic INTEGER, exercise text, moduleid integer, publicNumber integer)',
+            'CREATE TABLE exercises (id INTEGER PRIMARY KEY autoincrement, topic INTEGER, exercise text, moduleid INTEGER, publicNumber INTEGER)',
             'CREATE TABLE questions (id INTEGER PRIMARY KEY autoincrement, eid INTEGER, question TEXT, qtype TEXT, FOREIGN KEY (eid) REFERENCES exercises(id))',
             'CREATE TABLE qoptions(id INTEGER PRIMARY KEY autoincrement, qid INTEGER, option TEXT, FOREIGN KEY (qid) REFERENCES questions(id))',
             'CREATE TABLE usercodes (id INTEGER PRIMARY KEY autoincrement, usercode INTEGER, created REAL, loggedin INTEGER DEFAULT 0)',
-            'CREATE TABLE answers (id INTEGER PRIMARY KEY autoincrement, uid INTEGER, qid INTEGER, answer TEXT, authorised INTEGER DEFAULT 0, submitted integer, FOREIGN KEY (qid) REFERENCES questions(id), FOREIGN KEY (uid) REFERENCES usercodes(id))',
-            'CREATE TABLE topics (id integer primary key autoincrement, number integer, title text, unlocked integer default 0, moduleid integer, updated integer default 0)',
-            'CREATE TABLE admins(id integer primary key autoincrement, username text, password text, loggedin INTEGER DEFAULT 0)',
-            'CREATE TABLE modules (id integer primary key autoincrement, code text, name text)',
+            'CREATE TABLE answers (id INTEGER PRIMARY KEY autoincrement, uid INTEGER, qid INTEGER, answer TEXT, authorised INTEGER DEFAULT 0, submitted INTEGER, FOREIGN KEY (qid) REFERENCES questions(id), FOREIGN KEY (uid) REFERENCES usercodes(id))',
+            'CREATE TABLE topics (id INTEGER primary key autoincrement, number INTEGER, title text, unlocked INTEGER DEFAULT 0, moduleid INTEGER, updated INTEGER DEFAULT 0)',
+            'CREATE TABLE admins(id INTEGER primary key autoincrement, username text, password text, loggedin INTEGER DEFAULT 0)',
+            'CREATE TABLE modules (id INTEGER primary key autoincrement, code text, name text, visible INTEGER DEFAULT 1)',
         ];
         for(const statement of sql) {
             const stmt = db.prepare(statement);
