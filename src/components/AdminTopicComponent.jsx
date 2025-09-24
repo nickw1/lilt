@@ -22,23 +22,11 @@ export default function AdminTopicComponent() {
     }, [moduleInfo]);
 
     const tops = topicsState
-        .map((topic) => <li key={topic.id}>
+        .map((topic) => <li key={topic.id} style={{color: topic.visibility == 2 ? "gray":"black"}}>
             {topic.number} : {topic.title} ({moduleInfo.moduleCode})
-			<Link to={`/admin/notes/write?module=${moduleInfo.moduleCode}&topicNum=${topic.number}`}>
-			<Edit color='blue' />
-			</Link>
-            {topic.unlocked ? <span style={{color: "green", fontWeight: "bold", marginLeft: "8px", marginRight: "8px"}}>Public</span> : 
-                <button onClick={async() => {
-                    const result = await makePublic(topic.id);
-                    if(result.error) {
-                        setStatus({errors: [result.error]});
-                    } else {
-                        const newState = structuredClone(topicsState);
-                        newState.find(topic2 => topic2.id == topic.id).unlocked = true;
-                        setTopicsState(newState);
-                    }    
-                }}>Make Public</button>
-            }
+            <Link to={`/admin/notes/write?module=${moduleInfo.moduleCode}&topicNum=${topic.number}`}>
+            <Edit color='blue' />
+            </Link>
             <ConfirmDeleteComponent color='red' onDeleteConfirmed={async() => {
                 const deleteStatus = await deleteTopic(topic.id);
                 if(deleteStatus.errors && deleteStatus.errors.length > 0) {
@@ -47,10 +35,33 @@ export default function AdminTopicComponent() {
                     const newTopicsState = topicsState.filter( t => t.id != topic.id );
                     setTopicsState(newTopicsState);
                 }
-            }} /></li>)
+            }} />
+            <select defaultValue={topic.visibility} onChange={async(e) => {
+                const result = await makePublic(topic.id, e.target.value);
+                if(result.error) {
+                    setStatus({errors: [result.error]});
+                } else {
+                    const newState = structuredClone(topicsState);
+                    newState.find(topic2 => topic2.id == topic.id).visibility = e.target.value;
+                    setTopicsState(newState);
+                }    
+            }}>
+            <option value='0'>Normal</option>
+            <option value='1'>Public</option>
+            <option value='2'>Hidden</option>
+            </select>
+
+            </li>)
 
     return <div>
         <h3>Topics</h3>
+        <div><strong>Explanation of visibility levels:</strong>
+        <ul>
+        <li><em>Normal</em> - protected content requires exercise completion.</li>
+        <li><em>Public</em> - all content visible to all users.</li>
+        <li><em>Hidden</em> - topic visible to admin users only.</li>
+        </ul>
+        </div>
         <ul>{tops.length > 0 ? tops: "No topics."}</ul>
         <div style={{backgroundColor: status.errors ? '#ffc0c0': '#c0ffc0'}}>{status.errors ? <ul>{status.errors.map(error => <li>{error}</li>)}</ul> : status.message || ""}</div>
         <AdminAddTopicComponent moduleCode={moduleInfo.moduleCode} onTopicAdded={ topic => {

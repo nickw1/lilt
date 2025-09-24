@@ -23,7 +23,7 @@ export default function AdminComponent({modules}) {
         <p><Link to='/admin/exercises'>Exercises and answers</Link> | 
         <Link to='/'>Course notes</Link></p>
         <ModuleChooseComponent msg="Please choose a module to edit: " modules={modules} onModuleChosen={async(module) => {
-            const topics = await getTopics(module);
+            const topics = await getTopics(module, true);
             setModuleInfo({
                 moduleCode: module,
                 topics

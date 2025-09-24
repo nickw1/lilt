@@ -8,14 +8,14 @@ import useLoggedIn from '../hooks/login.mjs';
 import xss from 'xss';
 
 
-export async function makePublic(id) {
+export async function makePublic(id, state) {
     const { isAdmin } = await useLoggedIn();
     if(!isAdmin) {
         return {"error" : "Only admins can make a topic public."};
     }
     const topicDao = new TopicDao(db);
     if(id && id.toString().match("^\\d+$")) {
-        const info = topicDao.makePublic(id);
+        const info = topicDao.makePublic(id, state);
         return info.changes > 0 ? { nUpdated: info.changes } : { error: "Could not find topic with that ID." };
     } else {
         return { error: "No ID supplied." };
@@ -33,7 +33,7 @@ export async function addTopic(moduleCode, number, title) {
         if(moduleInfo) {
             const id = topicDao.addTopic(moduleInfo.id, xss(number), xss(title));
             if(id > 0) {
-                return { topic: { id, number, title, moduleCode, unlocked: false } };
+                return { topic: { id, number, title, moduleCode, visibility: 0 } };
             } else {
                 return {
                     error: "Unable to add topic."
@@ -51,9 +51,9 @@ export async function addTopic(moduleCode, number, title) {
     }
 }
 
-export function getTopics(moduleCode) {
+export function getTopics(moduleCode, showHidden = false) {
     const topicDao = new TopicDao(db);
-    const res = topicDao.getAllForModule(moduleCode);
+    const res = topicDao.getAllForModule(moduleCode, showHidden);
     return res;
 }
 

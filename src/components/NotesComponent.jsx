@@ -14,10 +14,10 @@ import db from '../db/db.mjs';
 const topicDao = new TopicDao(db);
 const exerciseDao = new ExerciseDao(db);
 const answerDao = new AnswerDao(db);
-const getTopicsListCached = cache(topicDao.getAllForModule.bind(topicDao));
 
 
 export default async function NotesComponent({module, initTopic}) {
+    console.log(`NotesComponent ${module} ${initTopic}`);
     let contentHiddenCount=0;
 
     const { isAdmin, uid } = await useLoggedIn();
@@ -78,7 +78,7 @@ export default async function NotesComponent({module, initTopic}) {
     }
 
 
-    const topicsList = getTopicsListCached(module);
+    const topicsList = topicDao.getAllForModule(module, isAdmin);
     const topic = (initTopic && `${initTopic}`.match("^\\d+$")) ? initTopic : 0;
 
     const completedStyle = {

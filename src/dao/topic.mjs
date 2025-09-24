@@ -6,14 +6,14 @@ export default class TopicDao {
     }
 
     addTopic(moduleId, number, title) {
-        const stmt = this.db.prepare("INSERT INTO topics(moduleid, number, title, unlocked) VALUES (?,?,?,0)");
+        const stmt = this.db.prepare("INSERT INTO topics(moduleid, number, title, visibility) VALUES (?,?,?,0)");
         const info = stmt.run(moduleId, number, title);
         return info.lastInsertRowid;
     }
 
-    makePublic(topicId) {
-        const stmt = this.db.prepare("UPDATE topics SET unlocked=1 WHERE id=?");
-        const info = stmt.run(topicId);
+    makePublic(topicId, state) {
+        const stmt = this.db.prepare("UPDATE topics SET visibility=? WHERE id=?");
+        const info = stmt.run(state, topicId);
         return info;
     }
    
@@ -28,12 +28,16 @@ export default class TopicDao {
     }
          
     getAll() {
-        const stmt = this.db.prepare("SELECT t.id,t.number,t.title,t.unlocked,m.code AS moduleCode FROM topics t INNER JOIN modules m ON t.moduleid=m.id ORDER BY m.code, t.number");
+        const stmt = this.db.prepare("SELECT t.id,t.number,t.title,t.visibility,m.code AS moduleCode FROM topics t INNER JOIN modules m ON t.moduleid=m.id ORDER BY m.code, t.number");
         return stmt.all();
     }
 
-    getAllForModule(moduleCode) {
-        const stmt = this.db.prepare("SELECT t.* FROM topics t INNER JOIN modules m ON t.moduleid=m.id WHERE m.code=? ORDER BY m.code, t.number");
+    getAllForModule(moduleCode, showHidden = false) {
+        const stmt = this.db.prepare(
+            showHidden ?
+            "SELECT t.* FROM topics t INNER JOIN modules m ON t.moduleid=m.id WHERE m.code=? ORDER BY m.code, t.number" :
+            "SELECT t.* FROM topics t INNER JOIN modules m ON t.moduleid=m.id WHERE m.code=? AND t.visibility < 2 ORDER BY m.code, t.number"
+        );
         return stmt.all(moduleCode);
     }
 

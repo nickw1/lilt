@@ -60,7 +60,7 @@ async function setup(database, notes) {
             'CREATE TABLE qoptions(id INTEGER PRIMARY KEY autoincrement, qid INTEGER, option TEXT, FOREIGN KEY (qid) REFERENCES questions(id))',
             'CREATE TABLE usercodes (id INTEGER PRIMARY KEY autoincrement, usercode INTEGER, created REAL, loggedin INTEGER DEFAULT 0)',
             'CREATE TABLE answers (id INTEGER PRIMARY KEY autoincrement, uid INTEGER, qid INTEGER, answer TEXT, authorised INTEGER DEFAULT 0, submitted INTEGER, FOREIGN KEY (qid) REFERENCES questions(id), FOREIGN KEY (uid) REFERENCES usercodes(id))',
-            'CREATE TABLE topics (id INTEGER primary key autoincrement, number INTEGER, title text, unlocked INTEGER DEFAULT 0, moduleid INTEGER, updated INTEGER DEFAULT 0)',
+            'CREATE TABLE topics (id INTEGER primary key autoincrement, number INTEGER, title text, visibility INTEGER DEFAULT 0, moduleid INTEGER, updated INTEGER DEFAULT 0)',
             'CREATE TABLE admins(id INTEGER primary key autoincrement, username text, password text, loggedin INTEGER DEFAULT 0)',
             'CREATE TABLE modules (id INTEGER primary key autoincrement, code text, name text, visible INTEGER DEFAULT 1)',
         ];
