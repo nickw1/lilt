@@ -17,7 +17,6 @@ const answerDao = new AnswerDao(db);
 
 
 export default async function NotesComponent({module, initTopic}) {
-    console.log(`NotesComponent ${module} ${initTopic}`);
     let contentHiddenCount=0;
 
     const { isAdmin, uid } = await useLoggedIn();
