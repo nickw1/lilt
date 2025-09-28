@@ -5,49 +5,40 @@ import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
 import { useActionState, useState, useEffect } from 'react';
 import { addModule, deleteModule, setModuleVisibility } from '../actions/module.mjs';
 
-export default function ModulesComponent({modules}) {
-
-    const [modulesState, addModuleWithState] = useActionState(addModule, { error: "", modules });
+export default function ModulesComponent({modules, onModulesChanged}) {
     const [deleteState, setDeleteState] = useState({message: ""});
-    const [deletedModules, setDeletedModules] = useState([]);
-    const [hiddenModules, setHiddenModules] = useState([]);
-
-    useEffect(() => {
-        setHiddenModules(
-            modules.filter(mod => !mod.visible).map(mod => mod.id)
-        );
-    }, [modules]);
 
     return <><h2>Modules</h2>
-        <ul>{ modulesState.modules.map ( module => {
-            const visibleModule = hiddenModules.indexOf(module.id) == -1;
-            return deletedModules.indexOf(module.id) != -1 ? "" : <li key={module.id} style={{color: visibleModule ? "black": "gray"}}>{module.code} : {module.name}<ConfirmDeleteComponent color='red' onDeleteConfirmed={async()=>{
+        <ul>{ modules.map ( module => {
+            const visibleModule = module.visible;
+            return <li key={module.id} style={{color: visibleModule ? "black": "gray"}}>{module.code} : {module.name}<ConfirmDeleteComponent color='red' onDeleteConfirmed={async()=>{
             const result = await deleteModule(module.id);
             if(result.errors && result.errors.length > 0) {
                 setDeleteState({errors: result.errors});
             } else {
-                const newDeletedModules = structuredClone(deletedModules);
-                newDeletedModules.push(module.id);
-                setDeletedModules(newDeletedModules);
+                const newModules = modules.filter ( mod => module.id != mod.id );
+                onModulesChanged(newModules);
             }
         }} />
         <button onClick={() => setIsVisible(module.id, !visibleModule)}>{visibleModule ? 'Hide' : 'Show'}</button>
         </li> }) }</ul>
-        <AdminAddModuleComponent onModuleSubmitted={addModuleWithState} />
-        <div style={{backgroundColor: modulesState.error ? '#ffc0c0': (modulesState.warning ? '#ffffc0' : '#c0ffc0') }}>{modulesState.error || modulesState.warning || modulesState.success}</div>
+        <AdminAddModuleComponent onModuleAdded={ module => {
+            let newModules = structuredClone(modules);
+            newModules.push(module);
+            onModulesChanged(newModules);
+        }} />
+        <div style={{backgroundColor: deleteState.error ? '#ffc0c0': '#c0ffc0'}}>{deleteState.error || deleteState.message}</div>
         </>;
 
     async function setIsVisible(id, visible) {
         const result = await setModuleVisibility(id, visible);
         if(result.success === true) {
-            let newHiddenModules = structuredClone(hiddenModules);
-            if(visible) {
-                const idx = hiddenModules.indexOf(id);
-                newHiddenModules.splice(idx, 1);
-            } else {
-                newHiddenModules.push(id);
+            let newModules = structuredClone(modules);
+            const module = newModules.find(mod => mod.id == id);
+            if(module) {
+                module.visible = visible;
             }
-            setHiddenModules(newHiddenModules);
+            onModulesChanged(newModules);
         }
     }
 }

@@ -7,12 +7,11 @@ import useLoggedIn from '../hooks/login.mjs';
 import xss from 'xss';
 import fs from 'node:fs/promises';
 
-export async function addModule(prevState, formData) {
+export async function addModule(code, name) {
     const { isAdmin } = await useLoggedIn();
     if(!isAdmin) {
-        return {modules: prevState.modules, "error" : "Only admins can add a module."};
+        return { error : "Only admins can add a module."};
     }
-    const code = formData.get("moduleCode"), name = formData.get("moduleName");
     if(code && name && code.match("^\\w+$")) {
         const moduleDao = new ModuleDao(db);
         const id = moduleDao.addModule(xss(code), xss(name));
@@ -23,20 +22,17 @@ export async function addModule(prevState, formData) {
             if(e.code == "EEXIST") {
                 warning = "Not creating directory for module as it already exists.";
             } else {
-                console.error(e);
+                return { error: e.message }; 
             }
         }
-        const newState = structuredClone(prevState);
-        newState.modules.push({id, code, name});
-        newState.warning = warning || null;
-        newState.success = "Successfully added module.";
-        newState.error = null;
-        return newState;
+        return { 
+            id,
+            warning : warning || null,
+            error: null
+        };
     } else {
-        return { modules: prevState.modules, error: "Name and/or code missing and/or invalid format for module code." };
+        return { error: "Name and/or code missing and/or invalid format for module code." };
     }
-        
-    return prevState;
 }
 
 export async function setModuleVisibility(id, isVisible) {

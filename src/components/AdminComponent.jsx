@@ -19,10 +19,12 @@ export default function AdminComponent({modules}) {
         moduleCode: "",
         topics: []
     });
+    const [moduleList, setModuleList] = useState(modules);
+ 
     return <Fragment>
         <p><Link to='/admin/exercises'>Exercises and answers</Link> | 
         <Link to='/'>Course notes</Link></p>
-        <ModuleChooseComponent msg="Please choose a module to edit: " modules={modules} onModuleChosen={async(module) => {
+        <ModuleChooseComponent msg="Please choose a module to edit: " modules={moduleList} onModuleChosen={async(module) => {
             const topics = await getTopics(module, true);
             setModuleInfo({
                 moduleCode: module,
@@ -39,7 +41,9 @@ export default function AdminComponent({modules}) {
         </ModulesContext.Provider> 
         </> : "" }
         <hr /> 
-        <ModulesComponent modules={modules} />
+        <ModulesComponent modules={moduleList} onModulesChanged={ alteredModules => {
+            setModuleList(alteredModules);
+        }} />
         <hr />
         <StaticUploadComponent />
         </Fragment>;
