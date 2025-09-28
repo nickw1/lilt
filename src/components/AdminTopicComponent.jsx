@@ -3,6 +3,7 @@
 import  { useState, useContext, useEffect } from 'react';
 import AdminAddTopicComponent from './AdminAddTopicComponent.jsx';
 import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
+import AddExerciseComponent from './AddExerciseComponent.jsx';
 import { makePublic, deleteTopic } from '../actions/topic.mjs';
 import ModulesContext from '../context/module.mjs';
 import { useClient } from '@lazarv/react-server/client';
@@ -69,5 +70,6 @@ export default function AdminTopicComponent() {
         newState.push(topic);
         setTopicsState(newState);
 }}  />
+        <AddExerciseComponent topics={topicsState}/>
         </div>;
 }

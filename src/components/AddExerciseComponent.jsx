@@ -5,7 +5,7 @@ import AddWholeQuestionComponent from './AddWholeQuestionComponent.jsx';
 import { addExercise } from '../actions/exercise.mjs';
 import ModuleContext from '../context/module.mjs';
 
-export default function AddExerciseComponent() {
+export default function AddExerciseComponent({topics}) {
 
     const moduleInfo = useContext(ModuleContext);
     const [addExerciseState, setAddExerciseState] = useState("");
@@ -15,7 +15,7 @@ export default function AddExerciseComponent() {
             <br />
             Topic Number: <br />
             <select id='topicNumber'>
-            { moduleInfo.topics.map ( topic => <option key={topic.id}>{topic.number}</option> ) }
+            { topics.map ( topic => <option key={topic.id}>{topic.number}</option> ) }
 
             </select>
             <br />

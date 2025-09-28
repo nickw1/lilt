@@ -3,7 +3,6 @@
 import { Fragment, useState } from 'react';
 import { Link } from '@lazarv/react-server/navigation';
 import AdminLoginComponent from './AdminLoginComponent.jsx';
-import AddExerciseComponent from './AddExerciseComponent.jsx';
 import AdminTopicComponent from './AdminTopicComponent.jsx';
 import AdminAddModuleComponent from './AdminAddModuleComponent.jsx';
 import ModuleChooseComponent from './ModuleChooseComponent.jsx';
@@ -37,7 +36,6 @@ export default function AdminComponent({modules}) {
         <h2>Module {moduleInfo.moduleCode}</h2>
         <ModulesContext.Provider value={moduleInfo}>
         <AdminTopicComponent />
-        <AddExerciseComponent />
         </ModulesContext.Provider> 
         </> : "" }
         <hr /> 
