@@ -28,19 +28,21 @@ export default async function NotesComponent({module, initTopic}) {
             const depExer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, dep); 
             exDependencyCompleted = depExer?.id ? answerDao.hasUserCompletedExercise(uid, depExer.id) : true;
         } 
+        let content = "";
         if(exDependencyCompleted) {
             // load exercise
             const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, ex);
             if(answerDao.hasUserCompletedExercise(uid, exer.id)) {
-                return <p style={completedStyle} key={`ex-completed-${ex}`}>You have completed exercise {ex}.</p>;
+                content = <p style={completedStyle} key={`ex-completed-${ex}`}>You have completed exercise {ex}.</p>;
             } else {
                 const exercise = exerciseDao.getFullExercise(exer.id);
-                return <Fragment key={`ex-${exer.id}`}><h2>Exercise {ex}</h2><ExerciseComponent exercise={exercise} /></Fragment>;
+                content = <Fragment key={`ex-${exer.id}`}><ExerciseComponent exercise={exercise} /></Fragment>;
             }
          } else {
             hiddenExercises.push(parseInt(ex));
-            return uid !== null && hiddenExercises.indexOf(dep) == -1 ? <p style={unauthorisedStyle} key={`ex-unauthorised-${ex}-${dep}`}>This content is hidden as you need to complete exercise {dep} first.</p>: "";
+            content = uid !== null && hiddenExercises.indexOf(dep) == -1 ? <p style={unauthorisedStyle} key={`ex-unauthorised-${ex}-${dep}`}>This content is hidden as you need to complete exercise {dep} first.</p>: "";
          }
+         return <div key={`ex-heading-${ex}`}><h2>Exercise {ex}</h2>{content}</div>;
     }
 
     function renderRuleHandler (next, node, renderChildren) {
@@ -51,14 +53,15 @@ export default async function NotesComponent({module, initTopic}) {
             exMatch = /^@(ex\d+)(\((\d+)\))?$/.exec(node.children[0].text);
         }
         if(matches) {
+			const heading = <h2 key={`answer-title-${matches[2]}`}>Answer to exercise {matches[2]}</h2>;
             protectedContent = true;
             const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, matches[2]);
             dependencyCompleted = isAdmin || answerDao.hasUserCompletedExercise(uid, exer.id);
             if(dependencyCompleted) {
-                  return matches[1] == "answer" ? <h2 key={`answer-title-${matches[2]}`}>Answer to exercise {matches[2]}</h2> : ""; // return nothing for depends, switch to protected content
+                  return matches[1] == "answer" ? heading : ""; // return nothing for depends, switch to protected content
             } else {
                 const dependency = parseInt(matches[2]);
-                return uid === null || hiddenExercises.indexOf(dependency) != -1 ? "" : <p style={unauthorisedStyle} key={`hidden-content-${contentHiddenCount++}`}>This content is hidden as you need to complete exercise {dependency} first.</p>;
+                return uid === null || hiddenExercises.indexOf(dependency) != -1 ? "" : <div key={`hidden-content-${contentHiddenCount++}`}>{matches[1] == "answer" ? heading : <h3>Protected content</h3>}<p style={unauthorisedStyle} key={`hidden-content-${contentHiddenCount++}`}>This content is hidden as you need to complete exercise {dependency} first.</p></div>;
             }
         } else if (node.type == RuleType.text && node.text.startsWith("@public")) {
             protectedContent = false;
@@ -66,7 +69,7 @@ export default async function NotesComponent({module, initTopic}) {
         } else if (exMatch) {
             const exNum = exMatch[1].substring(2);
             return uid === null ? 
-                <p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}.</p> : exerciseHandler(exNum, parseInt(exMatch[3]));
+                <div key={`ex-${exNum}-notloggedin`}><h2>Exercise {exNum}</h2><p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}.</p></div> : exerciseHandler(exNum, parseInt(exMatch[3]));
         } else {
 //            return protectedContent && node.type == RuleType.text && !dependencyCompleted ? "": next(); 
             return protectedContent && node.type != RuleType.paragraph && !dependencyCompleted ? "": next(); 
