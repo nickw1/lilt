@@ -17,21 +17,20 @@ const answerDao = new AnswerDao(db);
 
 
 export default async function NotesComponent({module, initTopic}) {
-    let contentHiddenCount=0;
+    let contentHiddenCount=0, topicDetail;
 
     const { isAdmin, uid } = await useLoggedIn();
     const hiddenExercises = [];
 
     function exerciseHandler(ex, dep) {
         let exDependencyCompleted = isAdmin || dep === undefined;
-        const { id: topicId } = topicDao.getTopicByModuleCodeAndNumber(module, topic);
         if(!exDependencyCompleted) {
-            const depExer = exerciseDao.getExerciseByPublicNumber(topicId, dep); 
+            const depExer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, dep); 
             exDependencyCompleted = depExer?.id ? answerDao.hasUserCompletedExercise(uid, depExer.id) : true;
         } 
         if(exDependencyCompleted) {
             // load exercise
-            const exer = exerciseDao.getExerciseByPublicNumber(topicId, ex);
+            const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, ex);
             if(answerDao.hasUserCompletedExercise(uid, exer.id)) {
                 return <p style={completedStyle} key={`ex-completed-${ex}`}>You have completed exercise {ex}.</p>;
             } else {
@@ -53,8 +52,7 @@ export default async function NotesComponent({module, initTopic}) {
         }
         if(matches) {
             protectedContent = true;
-            const { id: topicId} = topicDao.getTopicByModuleCodeAndNumber(module, topic);
-            const exer = exerciseDao.getExerciseByPublicNumber(topicId, matches[2]);
+            const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, matches[2]);
             dependencyCompleted = isAdmin || answerDao.hasUserCompletedExercise(uid, exer.id);
             if(dependencyCompleted) {
                   return matches[1] == "answer" ? <h2 key={`answer-title-${matches[2]}`}>Answer to exercise {matches[2]}</h2> : ""; // return nothing for depends, switch to protected content
@@ -96,12 +94,18 @@ export default async function NotesComponent({module, initTopic}) {
     let protectedContent = false, dependencyCompleted = false;
 
     if(topic > 0) {
+        topicDetail = topicDao.getTopicByModuleCodeAndNumber(module, topic);
         try {
             const mdstring =  (await fs.readFile(`${process.env.RESOURCES}/${module}/${topic}.md`)).toString();
 
-            content = <Markdown options={{
-                renderRule: renderRuleHandler
-            }}>{mdstring}</Markdown>;
+            content = <main>
+                <header className='notesHeader'>
+                <h1>Topic {topicDetail.number}</h1>
+                <h1>{topicDetail.title}</h1></header>
+                <Markdown options={{
+                    renderRule: renderRuleHandler
+                }}>{mdstring}</Markdown>
+            </main>;
         } catch(e) {
             content = <p>Error: {e.code == 'ENOENT' ? `Notes for ${module}, topic ${topic} not found.` : e.code}</p>;
         }
