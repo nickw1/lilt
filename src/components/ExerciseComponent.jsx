@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useActionState } from 'react';
+import Markdown from 'markdown-to-jsx';
 import { answerQuestions } from '../actions/answer.mjs';
 
 export default function ExerciseComponent({exercise}) {
@@ -18,10 +19,34 @@ export default function ExerciseComponent({exercise}) {
             return <li key={fieldId}><span>{question.question}</span><br /><select id={fieldId} name={fieldId} defaultValue={question.options[0]}>{options}</select></li>
 
         } else {
-            return <li key={fieldId}><span>{question.question}</span><br /><textarea style={{width:'50%', height: '50px'}} id={fieldId} name={fieldId}></textarea></li>;
+            return <li key={fieldId}>
+                <Markdown options={{
+                    disableParsingRawHTML: true,
+                    overrides: {
+                        iframe: () => null,
+                        script: () => null,
+                        object: () => null,
+                        style:  () => null,
+                        img:  () => null,
+                        a: () => null
+                }}}>{question.question}</Markdown>
+                <br /><textarea style={{width:'50%', height: '50px'}} id={fieldId} name={fieldId}></textarea></li>;
         }    
     });
-    content.push(<form key={formId} id={formId} action={answerQuestionsWithState}>{exercise.intro}
+    content.push(<form 
+        key={formId} 
+        id={formId} 
+        action={answerQuestionsWithState}>    
+        <Markdown options={{
+            disableParsingRawHTML: true,
+            overrides: {
+                iframe: () => null,
+                script: () => null,
+                object: () => null,
+                style:  () => null,
+                img:  () => null,
+                a: () => null
+            }}}>{exercise.intro}</Markdown>
         <ul>{q}</ul>
         { !exercise.completed || !exercise.showInputs ? <input type='submit' value='Answer Questions' onClick={answerQuestions} /> : <em>Submission disabled now you have completed or the notes have been made public.</em> } </form>);
   
