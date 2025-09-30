@@ -43,7 +43,7 @@ async function addAdmin() {
     console.log(lastInsertRowid ? 'Admin added.':'Error adding admin.');
 }
 
-async function setup(database, notes) {
+async function setup(database, notes, editNotesEnabled) {
     try {
         const db = new Database(database);
         const sql = [
@@ -75,7 +75,7 @@ async function setup(database, notes) {
             console.log(`Creating ${notes}.`);
             fs.mkdir(notes);
         }
-        await fs.writeFile(envFile, `RESOURCES=${notes}\nNOTES_DB=${database}\n`);
+        await fs.writeFile(envFile, `RESOURCES=${notes}\nNOTES_DB=${database}\nEDIT_NOTES_ENABLED=${editNotesEnabled}`);
         return { success: true };
     } catch(e) {
         return { error: e.message };
@@ -95,9 +95,12 @@ async function init() {
         const notes = readlineSync.questionPath(chalk.yellow("Please enter the desired location for the notes directory (full path). The\ndirectory 'notes' will be created here.\n"), { 
             limitMessage: chalk.bold.red("Please enter a valid directory path.")
         });
+        const editNotesEnabled = readlineSync.question(chalk.yellow("Do you want to allow users to edit notes from within lilt? (y/n)")).toLowerCase();
+
         const status = await setup(
             `${database}/lilt.db`,
-            `${notes}/notes`
+            `${notes}/notes`,
+            editNotesEnabled == "y" ? "yes": editNotesEnabled
         );
         console.log(status.error ?
             chalk.bold.red(status.error) : 

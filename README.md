@@ -63,7 +63,7 @@ node utils/setup.mjs
 ```
 it will first ask you for the directory you wish to store the SQLite database (`lilt.db`) and the directory you wish to store the notes (which will be a subdirectory called `notes`). 
 
-Please enter those directories. The setup tool will then exit. You will notice that in the main lilt directory, a file called `.env` has been created, storing the location of the database and the notes.
+Please enter those directories. You can also choose whether you would like admin users to edit notes directly from within `lilt` (recommended on an intranet, you might want to turn off on a public server for security reasons). The setup tool will then exit. You will notice that in the main lilt directory, a file called `.env` has been created, storing the location of the database, the notes, and whether notes editing is enabled.
 
 
 ### Setup an admin user

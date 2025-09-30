@@ -9,10 +9,11 @@ import ModuleChooseComponent from './ModuleChooseComponent.jsx';
 import ModulesComponent from './ModulesComponent.jsx';
 import StaticUploadComponent from './StaticUploadComponent.jsx';
 import ModulesContext from '../context/module.mjs';
+import EditNotesContext from '../context/editNotesEnabled.mjs';
 import { getTopics } from '../actions/topic.mjs';
 
 
-export default function AdminComponent({modules}) {
+export default function AdminComponent({modules, editNotesEnabled}) {
 
     const [moduleInfo, setModuleInfo] = useState({
         moduleCode: "",
@@ -35,7 +36,9 @@ export default function AdminComponent({modules}) {
         <hr />
         <h2>Module {moduleInfo.moduleCode}</h2>
         <ModulesContext.Provider value={moduleInfo}>
+        <EditNotesContext.Provider value={editNotesEnabled}>
         <AdminTopicComponent />
+        </EditNotesContext.Provider>
         </ModulesContext.Provider> 
         </> : "" }
         <hr /> 

@@ -10,7 +10,7 @@ export default async function GetStaticContent(context) {
             return new Response(content);
         } catch(e) {
             const notfound = e.code == "ENOENT";
-            return new Response(notfound ? "404 Not Found": e.code, {
+            return new Response(notfound ? "404 Not Found": `Internal error: code ${e.code}`, {
                 status: notfound ? 404: 500
             });
         }

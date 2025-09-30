@@ -6,12 +6,14 @@ import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
 import AddExerciseComponent from './AddExerciseComponent.jsx';
 import { makePublic, deleteTopic } from '../actions/topic.mjs';
 import ModulesContext from '../context/module.mjs';
+import EditNotesContext from '../context/editNotesEnabled.mjs';
 import { useClient } from '@lazarv/react-server/client';
 import { Link } from '@lazarv/react-server/navigation';
 import { Edit } from 'react-feather';
 
 export default function AdminTopicComponent() {
     const moduleInfo = useContext(ModulesContext);
+    const editNotesEnabled = useContext(EditNotesContext);
 
     const [topicsState, setTopicsState] = useState(moduleInfo.topics);
     const [status, setStatus] = useState({message : ""});
@@ -25,9 +27,9 @@ export default function AdminTopicComponent() {
     const tops = topicsState
         .map((topic) => <li key={topic.id} style={{color: topic.visibility == 2 ? "gray":"black"}}>
             {topic.number} : {topic.title} ({moduleInfo.moduleCode})
-            <Link to={`/admin/notes/write?module=${moduleInfo.moduleCode}&topicNum=${topic.number}`}>
+            { editNotesEnabled == "true" ? <Link to={`/admin/notes/write?module=${moduleInfo.moduleCode}&topicNum=${topic.number}`}>
             <Edit color='blue' />
-            </Link>
+            </Link> : "" }
             <ConfirmDeleteComponent color='red' onDeleteConfirmed={async() => {
                 const deleteStatus = await deleteTopic(topic.id);
                 if(deleteStatus.errors && deleteStatus.errors.length > 0) {

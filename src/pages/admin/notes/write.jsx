@@ -13,10 +13,12 @@ export default async function WriteNotesPage() {
     const { isAdmin } = await useLoggedIn();
 
     loadEnvFile();
- 
-    if(isAdmin) {
-        const { module, topicNum } = searchParams;
+
+    if(process.env.EDIT_NOTES_ENABLED != "true") {
+        return <div>Notes editing has been turned off.</div>
+	} else if(isAdmin) {
         let content = "";
+        const { module, topicNum } = searchParams;
         if(module && topicNum && topicNum.match("^\\d+$") && module.match("^\\w+$")) {
             try {
                 const notes = (await fs.readFile(`${process.env.RESOURCES}/${module}/${topicNum}.md`)).toString();

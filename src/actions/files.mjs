@@ -25,7 +25,7 @@ export async function uploadFile(prevState, formData) {
             return { "error" : "Missing or invalid file." };
         }
     } catch(e) {
-        return { "error" : e.message };
+        return { "error" : `Internal error: code ${e.code}` };
     }
     return { success: true };
 }
