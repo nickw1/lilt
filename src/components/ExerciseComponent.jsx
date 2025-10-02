@@ -27,8 +27,7 @@ export default function ExerciseComponent({exercise}) {
                         script: () => null,
                         object: () => null,
                         style:  () => null,
-                        img:  () => null,
-                        a: () => null
+                        img: ({...props}) => props.src.startsWith("/static/") ? <img {...props} /> : null,
                 }}}>{question.question}</Markdown>
                 <br /><textarea style={{width:'50%', height: '50px'}} id={fieldId} name={fieldId}></textarea></li>;
         }    
@@ -44,8 +43,7 @@ export default function ExerciseComponent({exercise}) {
                 script: () => null,
                 object: () => null,
                 style:  () => null,
-                img:  () => null,
-                a: () => null
+                img: ({...props}) => props.src.startsWith("/static/") ? <img {...props} /> : null,
             }}}>{exercise.intro}</Markdown>
         <ul>{q}</ul>
         { !exercise.completed || !exercise.showInputs ? <input type='submit' value='Answer Questions' onClick={answerQuestions} /> : <em>Submission disabled now you have completed or the notes have been made public.</em> } </form>);
