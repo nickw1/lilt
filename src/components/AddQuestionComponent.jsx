@@ -30,6 +30,8 @@ export default function AddQuestionComponent({qType, onQuestionAdded}) {
             q.options = optString.split('*').splice(1).map ( opt => opt.trim() );
         }
         onQuestionAdded(q);
+        document.getElementById('questionText').value = "";
+        setOptString("");
     }
             
 }

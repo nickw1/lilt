@@ -39,6 +39,7 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
                 const newExDetails = structuredClone(exDetails);
                 newExDetails.intro = e.target.value;
                 setExDetails(newExDetails);
+                setEditStatus("");
             }
         } value={exDetails.intro} />
         <br />

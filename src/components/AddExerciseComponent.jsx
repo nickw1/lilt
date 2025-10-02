@@ -20,16 +20,18 @@ export default function AddExerciseComponent({topics}) {
             </select>
             <br />
             Exercise Introduction:<br />
-            <textarea id='intro' style={{width:'50%', height:'100px'}}></textarea>
+            <textarea id='exIntro' style={{width:'50%', height:'100px'}} onChange={() => setAddExerciseState("")}></textarea>
             { moduleInfo.moduleCode != "" ? 
             <AddWholeQuestionComponent btnText='Save Exercise To Database' onQuestionsSubmitted={async(questions) => {
                 results = await addExercise({
                     topic: document.getElementById('topicNumber').value,
-                    intro: document.getElementById('intro').value,
+                    intro: document.getElementById('exIntro').value,
                     questions,
                     moduleCode: moduleInfo.moduleCode
                 });
                 setAddExerciseState(results.eid ? `Added exercise with ID ${results.eid}`: (results.error || ""));
+                document.getElementById('exIntro').value = '';
+                return results.eid ? true : false; 
             }} allowNoQuestions='true' />
              : "" }
             <p style={{backgroundColor: results?.error ? '#ffc0c0' : '#c0ffc0'}} >{addExerciseState}</p>

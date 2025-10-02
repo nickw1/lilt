@@ -21,6 +21,7 @@ export default function EditQuestion({question, num, onQuestionDeleted}) {
             const newQDetails = structuredClone(questionDetails);
             newQDetails.question = e.target.value;
             setQuestionDetails(newQDetails);
+            setStatus("");
         }} defaultValue={questionDetails.question} 
         style = {{ width: "40%" }} />
         {question.options ? 
