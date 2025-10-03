@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import QOptionsComponent from './QOptionsComponent.jsx';
 import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
 import { editQuestion, deleteQuestion } from '../actions/question.mjs';
@@ -8,8 +8,12 @@ import { editQuestion, deleteQuestion } from '../actions/question.mjs';
 export default function EditQuestion({question, num, onQuestionDeleted}) {
 
     const [questionDetails, setQuestionDetails] = useState(question);
-    const [options, setOptions] = useState('');
+    const [options, setOptions] = useState(question.options);
     const [status, setStatus] = useState({message: ''});
+
+    useEffect(() => {
+        setOptions(question.options.map(option => `* ${option}`).join('\n'))
+    }, [question]);
 
     return <div>
         <div style={{marginTop: '10px'}}>
@@ -26,10 +30,11 @@ export default function EditQuestion({question, num, onQuestionDeleted}) {
         style = {{ width: "40%" }} />
         {question.options ? 
             <QOptionsComponent 
-                options={question.options.map (option => 
-                    `* ${option}`).join('\n')
-                } 
-                onOptionsChanged={ opts => setOptions(opts) }
+                options={options}
+                onOptionsChanged={ opts => {
+                    setOptions(opts) 
+                    setStatus("");
+                }}
             /> : "" }
         </div>
         <button onClick={edit}>Save</button>
