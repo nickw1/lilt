@@ -1,5 +1,6 @@
 import React, { Fragment, cache } from 'react';
 import Markdown, { RuleType } from 'markdown-to-jsx';
+import SyntaxHighlight from './SyntaxHighlight.jsx';
 import fs from 'fs/promises';
 import ExerciseComponent from './ExerciseComponent.jsx';
 import TopicListComponent from './TopicListComponent.jsx';
@@ -53,7 +54,7 @@ export default async function NotesComponent({module, initTopic}) {
             exMatch = /^@(ex\d+)(\((\d+)\))?$/.exec(node.children[0].text);
         }
         if(matches) {
-			const heading = <h2 key={`answer-title-${matches[2]}`}>Answer to exercise {matches[2]}</h2>;
+            const heading = <h2 key={`answer-title-${matches[2]}`}>Answer to exercise {matches[2]}</h2>;
             protectedContent = true;
             const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, matches[2]);
             dependencyCompleted = isAdmin || answerDao.hasUserCompletedExercise(uid, exer.id) || topicDetail.visibility == 1;
@@ -106,7 +107,10 @@ export default async function NotesComponent({module, initTopic}) {
                 <h1>Topic {topicDetail.number}</h1>
                 <h1>{topicDetail.title}</h1></header>
                 <Markdown options={{
-                    renderRule: renderRuleHandler
+                    renderRule: renderRuleHandler,
+                    overrides: {
+                        code: SyntaxHighlight
+                    }
                 }}>{mdstring}</Markdown>
             </main>;
         } catch(e) {

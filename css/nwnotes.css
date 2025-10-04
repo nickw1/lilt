@@ -49,11 +49,8 @@ a {
 
 pre {
     font-size: 120%;
-    border-style: solid;
-    background-color: white;
     padding: 5px;
     overflow: auto;
-    background-color: #f0f0f0;
 }
 
 pre.vector {
