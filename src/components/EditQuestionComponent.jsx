@@ -12,7 +12,7 @@ export default function EditQuestion({question, num, onQuestionDeleted}) {
     const [status, setStatus] = useState({message: ''});
 
     useEffect(() => {
-        setOptions(question.options.map(option => `* ${option}`).join('\n'))
+        setOptions(question.options?.map(option => `* ${option}`).join('\n') ?? "")
     }, [question]);
 
     return <div>
