@@ -18,7 +18,7 @@ const answerDao = new AnswerDao(db);
 
 
 export default async function NotesComponent({module, initTopic}) {
-    let contentHiddenCount=0, topicDetail;
+    let keyCount=0, topicDetail;
 
     const { isAdmin, uid } = await useLoggedIn();
     const hiddenExercises = [];
@@ -62,7 +62,7 @@ export default async function NotesComponent({module, initTopic}) {
                   return matches[1] == "answer" ? heading : ""; // return nothing for depends, switch to protected content
             } else {
                 const dependency = parseInt(matches[2]);
-                return uid === null || hiddenExercises.indexOf(dependency) != -1 ? "" : <div key={`hidden-content-${contentHiddenCount++}`}>{matches[1] == "answer" ? heading : <h3>Protected content</h3>}<p style={unauthorisedStyle} key={`hidden-content-${contentHiddenCount++}`}>This content is hidden as you need to complete exercise {dependency} first.</p></div>;
+                return uid === null || hiddenExercises.indexOf(dependency) != -1 ? "" : <div key={`hidden-content-${keyCount++}`}>{matches[1] == "answer" ? heading : <h3>Protected content</h3>}<p style={unauthorisedStyle} key={`hidden-content-${keyCount++}`}>This content is hidden as you need to complete exercise {dependency} first.</p></div>;
             }
         } else if (node.type == RuleType.text && node.text.startsWith("@public")) {
             protectedContent = false;
@@ -72,9 +72,13 @@ export default async function NotesComponent({module, initTopic}) {
             return uid === null && topicDetail.visibility != 1 ? 
                 <div key={`ex-${exNum}-notloggedin`}><h2>Exercise {exNum}</h2><p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}.</p></div> : exerciseHandler(exNum, parseInt(exMatch[3]));
         } else {
-//            return protectedContent && node.type == RuleType.text && !dependencyCompleted ? "": next(); 
-            return protectedContent && node.type != RuleType.paragraph && !dependencyCompleted ? "": next(); 
-
+            return protectedContent && node.type != RuleType.paragraph && !dependencyCompleted ? "" : (
+                node.type == RuleType.codeBlock ?
+                    <SyntaxHighlight key={`code-${keyCount++}`} lang={node.lang}>
+                    {node.text}
+                    </SyntaxHighlight> 
+                    : next()
+            );
         }
     }
 
@@ -107,10 +111,7 @@ export default async function NotesComponent({module, initTopic}) {
                 <h1>Topic {topicDetail.number}</h1>
                 <h1>{topicDetail.title}</h1></header>
                 <Markdown options={{
-                    renderRule: renderRuleHandler,
-                    overrides: {
-                        code: SyntaxHighlight
-                    }
+                    renderRule: renderRuleHandler
                 }}>{mdstring}</Markdown>
             </main>;
         } catch(e) {
