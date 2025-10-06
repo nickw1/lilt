@@ -12,7 +12,7 @@ export default function ExerciseComponent({exercise}) {
     function renderRuleHandler (next, node, renderChildren) {
         return node.type == RuleType.codeBlock ?
             <SyntaxHighlight key={`code-${keyCount++}`} lang={node.lang}>
-                    {node.text}
+                    {node.text.replace("&lt;", "<").replace("&gt;",">")}
                     </SyntaxHighlight> 
                     : next()
     }
