@@ -1,10 +1,21 @@
 "use client"
 
 import React, { useActionState } from 'react';
-import Markdown from 'markdown-to-jsx';
+import Markdown, { RuleType } from 'markdown-to-jsx';
 import { answerQuestions } from '../actions/answer.mjs';
+import SyntaxHighlight from './SyntaxHighlight.jsx';
 
 export default function ExerciseComponent({exercise}) {
+
+    let keyCount = 0;
+
+    function renderRuleHandler (next, node, renderChildren) {
+        return node.type == RuleType.codeBlock ?
+            <SyntaxHighlight key={`code-${keyCount++}`} lang={node.lang}>
+                    {node.text}
+                    </SyntaxHighlight> 
+                    : next()
+    }
 
     const formId = `ex${exercise.id}`; 
     const content = [];
@@ -21,6 +32,7 @@ export default function ExerciseComponent({exercise}) {
         } else {
             return <li key={fieldId}>
                 <Markdown options={{
+                    renderRule: renderRuleHandler,
                     disableParsingRawHTML: true,
                     overrides: {
                         iframe: () => null,
@@ -37,6 +49,7 @@ export default function ExerciseComponent({exercise}) {
         id={formId} 
         action={answerQuestionsWithState}>    
         <Markdown options={{
+            renderRule: renderRuleHandler,
             disableParsingRawHTML: true,
             overrides: {
                 iframe: () => null,
