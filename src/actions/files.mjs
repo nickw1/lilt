@@ -7,11 +7,13 @@ import useLoggedIn from '../hooks/login.mjs';
 
 export async function uploadFile(prevState, formData) {
     const MAX_SIZE = 500000;
+    loadEnvFile();
     const { isAdmin } = await useLoggedIn();
     if(!isAdmin) {
         return { "error" : "Only admins can upload files." };
+    } else if (process.env.EDIT_NOTES_ENABLED !== "true") {
+        return { "error" : "File upload disabled. Please set EDIT_NOTES_ENABLED to 'true'." };
     }
-    loadEnvFile();
     const file = formData.get("staticFile");
     try {
         if(file && file instanceof File) {

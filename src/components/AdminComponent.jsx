@@ -46,6 +46,6 @@ export default function AdminComponent({modules, editNotesEnabled}) {
             setModuleList(alteredModules);
         }} />
         <hr />
-        <StaticUploadComponent />
+        { editNotesEnabled === "true" ? <StaticUploadComponent /> : <p><em>File upload disabled, please set <code>EDIT_NOTES_ENABLED</code> in <code>.env</code> to <code>true</code> to enable it.</em></p> }
         </Fragment>;
 }

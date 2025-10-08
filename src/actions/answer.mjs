@@ -32,7 +32,7 @@ export async function answerQuestions(prevState, formData) {
             answered
         };
     } else {
-        return {"error": "Not logged in / invalid user"};
+        return {"error": "Not logged in. Your login may have timed out, please login again."};
     }
 }
 
