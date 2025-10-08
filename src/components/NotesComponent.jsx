@@ -62,7 +62,7 @@ export default async function NotesComponent({module, initTopic}) {
                   return matches[1] == "answer" ? heading : ""; // return nothing for depends, switch to protected content
             } else {
                 const dependency = parseInt(matches[2]);
-                return uid === null || hiddenExercises.indexOf(dependency) != -1 ? "" : <div key={`hidden-content-${keyCount++}`}>{matches[1] == "answer" ? heading : <h3>Protected content</h3>}<p style={unauthorisedStyle} key={`hidden-content-${keyCount++}`}>This content is hidden as you need to complete exercise {dependency} first.</p></div>;
+                return uid === null || hiddenExercises.indexOf(dependency) != -1 ? "" : <div key={`hidden-content-ex-${matches[2]}-${keyCount++}`}>{matches[1] == "answer" ? heading : <h3>Protected content</h3>}<p style={unauthorisedStyle} key={`hidden-content-${keyCount++}`}>This content is hidden as you need to complete exercise {dependency} first.</p></div>;
             }
         } else if (node.type == RuleType.text && node.text.startsWith("@public")) {
             protectedContent = false;
@@ -74,7 +74,7 @@ export default async function NotesComponent({module, initTopic}) {
         } else {
             return protectedContent && node.type != RuleType.paragraph && !dependencyCompleted ? "" : (
                 node.type == RuleType.codeBlock ?
-                    <SyntaxHighlight key={`code-${keyCount++}`} lang={node.lang}>
+                    <SyntaxHighlight key={`module-${module}-topic-${topic}-code-${keyCount++}`} lang={node.lang}>
                     {node.text}
                     </SyntaxHighlight> 
                     : next()
