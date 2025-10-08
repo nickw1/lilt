@@ -11,7 +11,7 @@ export default function AdminAnswersHolder({exid}) {
     useEffect( () => {
         const timerHandle = setInterval(async() => {
             retrieveAnswers();
-        },  2000);
+        },  5000);
         retrieveAnswers();
         return () => clearInterval(timerHandle);
     }, [exid]);

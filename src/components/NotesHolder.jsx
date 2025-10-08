@@ -9,7 +9,7 @@ export default function NotesHolder({children}) {
     useEffect(() => {
         timerIdRef.current = setInterval(() => {
             navigate();
-        }, 5000);
+        }, 15000);
         return () => clearInterval(timerIdRef.current);
     }, []);
 
