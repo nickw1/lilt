@@ -33,12 +33,9 @@ export default async function NotesComponent({module, initTopic}) {
         if(exDependencyCompleted || topicDetail.visibility == 1) {
             // load exercise
             const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, ex);
-            if(answerDao.hasUserCompletedExercise(uid, exer.id)) {
-                content = <p style={completedStyle} key={`ex-completed-${ex}`}>You have completed exercise {ex}.</p>;
-            } else {
-                const exercise = exerciseDao.getFullExercise(exer.id);
-                content = <Fragment key={`ex-${exer.id}`}><ExerciseComponent exercise={exercise} /></Fragment>;
-            }
+            const completed = answerDao.hasUserCompletedExercise(uid, exer.id);
+			const exercise = exerciseDao.getFullExercise(exer.id);
+			content = <Fragment key={`ex-${exer.id}`}><ExerciseComponent exercise={exercise} submittable={!completed && topicDetail.visibility == 0} /></Fragment>;
          } else {
             hiddenExercises.push(parseInt(ex));
             content = uid !== null && hiddenExercises.indexOf(dep) == -1 ? <p style={unauthorisedStyle} key={`ex-unauthorised-${ex}-${dep}`}>This content is hidden as you need to complete exercise {dep} first.</p>: "";

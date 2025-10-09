@@ -5,7 +5,7 @@ import Markdown, { RuleType } from 'markdown-to-jsx';
 import { answerQuestions } from '../actions/answer.mjs';
 import SyntaxHighlight from './SyntaxHighlight.jsx';
 
-export default function ExerciseComponent({exercise}) {
+export default function ExerciseComponent({exercise, submittable}) {
 
     let keyCount = 0;
 
@@ -18,7 +18,6 @@ export default function ExerciseComponent({exercise}) {
     }
 
     const formId = `ex${exercise.id}`; 
-    const content = [];
     let options;
     const [ answerState, answerQuestionsWithState ] = useActionState(answerQuestions, { status: "", error: null, answered: [] });
     const q = exercise.questions.map (question => {
@@ -44,7 +43,7 @@ export default function ExerciseComponent({exercise}) {
                 <br /><textarea style={{width:'50%', height: '50px'}} id={fieldId} name={fieldId}></textarea></li>;
         }    
     });
-    content.push(<form 
+    const content = <form 
         key={formId} 
         id={formId} 
         action={answerQuestionsWithState}>    
@@ -59,7 +58,7 @@ export default function ExerciseComponent({exercise}) {
                 img: ({...props}) => props.src.startsWith("/static/") ? <img {...props} /> : null,
             }}}>{exercise.intro}</Markdown>
         <ul>{q}</ul>
-        { !exercise.completed || !exercise.showInputs ? <input type='submit' value='Answer Questions' onClick={answerQuestions} /> : <em>Submission disabled now you have completed or the notes have been made public.</em> } </form>);
+        { submittable ? <input type='submit' value='Answer Questions' onClick={answerQuestions} /> : <em>Submission disabled now you have completed or the notes have been made public.</em> } </form>;
   
     return <div>
         {content}
