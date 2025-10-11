@@ -19,15 +19,15 @@ import useModules from '../hooks/modules.mjs';
 export default async function App() {
     const searchParams = useSearchParams();
     const module = searchParams.module || '';
-    const user = await useLoggedIn();
+    const { usercode, isAdmin } = await useLoggedIn();
 
-    const modules = useModules(user.isAdmin);
+    const modules = useModules(isAdmin);
 
     const loginComponent = module ? 
-		(user.usercode === null ? <Link to='/'>Login</Link> : <LoggedInComponent usercode={user.usercode}/>) : 
+        (usercode === null ? <Link to='/'>Login</Link> : <LoggedInComponent usercode={usercode}/>) : 
         <LoginComponent 
             style={{display: module ? 'inline' : 'block' }} 
-            usercode={user.usercode}  />
+            usercode={usercode}  />
 
 
 
@@ -38,10 +38,14 @@ export default async function App() {
     const login = module ? 
         <div style={{    
             display: 'flex', 
-            justifyContent: 'flex-end', 
+            justifyContent: 'right', 
             marginRight: '20px'
-        }} className='logininput'>{loginComponent}</div> : 
-        <div>{loginComponent}</div>;
+        }} className='logininput'>
+        {loginComponent}
+        </div> :
+        <div>
+        {loginComponent}
+        </div>;
 
     const modChoose = module ? 
         "" : <div>{moduleChooseComponent}</div>;

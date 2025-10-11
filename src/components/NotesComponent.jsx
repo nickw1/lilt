@@ -1,4 +1,5 @@
 import React, { Fragment, cache } from 'react';
+import { Link } from '@lazarv/react-server/navigation';
 import Markdown, { RuleType } from 'markdown-to-jsx';
 import SyntaxHighlight from './SyntaxHighlight.jsx';
 import fs from 'fs/promises';
@@ -34,8 +35,8 @@ export default async function NotesComponent({module, initTopic}) {
             // load exercise
             const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, ex);
             const completed = answerDao.hasUserCompletedExercise(uid, exer.id);
-			const exercise = exerciseDao.getFullExercise(exer.id);
-			content = <Fragment key={`ex-${exer.id}`}><ExerciseComponent exercise={exercise} submittable={!completed && topicDetail.visibility == 0} /></Fragment>;
+            const exercise = exerciseDao.getFullExercise(exer.id);
+            content = <Fragment key={`ex-${exer.id}`}><ExerciseComponent exercise={exercise} submittable={!completed && topicDetail.visibility == 0} /></Fragment>;
          } else {
             hiddenExercises.push(parseInt(ex));
             content = uid !== null && hiddenExercises.indexOf(dep) == -1 ? <p style={unauthorisedStyle} key={`ex-unauthorised-${ex}-${dep}`}>This content is hidden as you need to complete exercise {dep} first.</p>: "";
@@ -115,10 +116,20 @@ export default async function NotesComponent({module, initTopic}) {
             content = <p>Error: {e.code == 'ENOENT' ? `Notes for ${module}, topic ${topic} not found.` : e.code}</p>;
         }
     }
-    const displayedTopics = topic == 0 ? 
-            <TopicListComponent module={module} topicsList={topicsList} /> :
-            <TopicNavComponent module={module} topicsList={topicsList} currentTopic={topic} /> ;
-               
+    const adminLink = <Link to='/admin'>Admin Page</Link>
+    const displayedTopics = topic == 0 ?  
+            <>
+            <div style={{display: 'flex', justifyContent: 'end'}}>
+            {adminLink}
+            </div>
+            <TopicListComponent module={module} topicsList={topicsList} />
+            </> :
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            {adminLink}
+            <TopicNavComponent module={module} topicsList={topicsList} 
+             currentTopic={topic} />
+             </div> ;
+
     return <div>
         {displayedTopics}
         <div>{content}</div>
