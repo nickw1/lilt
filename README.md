@@ -12,6 +12,8 @@ Then, once the class discussion has taken place for a given exercise, the tutors
 
 With `lilt` 2, tutors now write code in [Markdown](https://markdownguide.org) with custom extensions to support exercises and hidden content. There is now an included WYSIWYG (what-you-see-is-what-you-get) notes editor allowing tutors to write their notes via a graphical interface without necessarily knowing Markdown.
 
+For computing topics, `lilt` syntax-highlights Markdown code blocks using [Shiki](https://shiki.matsu.io).
+
 ## What lilt is not
 
 First of all, a quick word on what `lilt` is not. It is not, and does not aim to be, a full Virtual Learning Environment (VLE). Students do not provide their personal details at all, providing a private and anonymous environment. `lilt` does not aim to assess students over the period of a whole module, but just aims to check their understanding of the current topic.
