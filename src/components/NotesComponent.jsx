@@ -116,7 +116,7 @@ export default async function NotesComponent({module, initTopic}) {
             content = <p>Error: {e.code == 'ENOENT' ? `Notes for ${module}, topic ${topic} not found.` : e.code}</p>;
         }
     }
-    const adminLink = <Link to='/admin'>Admin Page</Link>
+    const adminLink = isAdmin ? <Link to='/admin'>Admin Page</Link> : "";
     const displayedTopics = topic == 0 ?  
             <>
             <div style={{display: 'flex', justifyContent: 'end'}}>

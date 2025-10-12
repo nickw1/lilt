@@ -15,7 +15,6 @@ export async function answerQuestions(prevState, formData) {
     const answered = [];
     if(uid !== null) {
         const status = [];
-        let nAnswered = 0;
         for(let [key, answer] of formData) {
             const qid = key.substr(1);
             if(qid && answer && qid.match("^\\d+$")) {
