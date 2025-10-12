@@ -29,7 +29,8 @@ export default function ExerciseComponent({exercise, submittable}) {
             return <li key={fieldId}><span>{question.question}</span><br /><select id={fieldId} name={fieldId} defaultValue={question.options[0]}>{options}</select></li>
 
         } else {
-            return <li key={fieldId}>
+            return question.question ? 
+                <li key={fieldId}>
                 <Markdown options={{
                     renderRule: renderRuleHandler,
                     disableParsingRawHTML: true,
@@ -40,8 +41,9 @@ export default function ExerciseComponent({exercise, submittable}) {
                         style:  () => null,
                         img: ({...props}) => props.src.startsWith("/static/") ? <img {...props} /> : null,
                 }}}>{question.question}</Markdown>
-                <br /><textarea style={{width:'50%', height: '50px'}} id={fieldId} name={fieldId}></textarea></li>;
-        }    
+                <br />
+                <textarea style={{width:'50%', height: '50px'}} id={fieldId} name={fieldId}></textarea></li> : 
+                <input type='hidden' key={fieldId} name={fieldId} id={fieldId} value='Answered' /> }
     });
     const content = <form 
         key={formId} 

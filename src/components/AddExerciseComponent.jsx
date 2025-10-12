@@ -26,7 +26,7 @@ export default function AddExerciseComponent({topics}) {
                 results = await addExercise({
                     topic: document.getElementById('topicNumber').value,
                     intro: document.getElementById('exIntro').value,
-                    questions,
+                    questions: questions.length === 0 ? [{question: null, options: null}] : questions,
                     moduleCode: moduleInfo.moduleCode
                 });
                 setAddExerciseState(results.eid ? `Added exercise with ID ${results.eid}`: (results.error || ""));
