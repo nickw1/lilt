@@ -124,7 +124,7 @@ export default async function NotesComponent({module, initTopic}) {
             </div>
             <TopicListComponent module={module} topicsList={topicsList} />
             </> :
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            <div style={{display: 'flex', justifyContent:  isAdmin ?  'space-between': 'end' }}>
             {adminLink}
             <TopicNavComponent module={module} topicsList={topicsList} 
              currentTopic={topic} />
