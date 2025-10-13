@@ -18,7 +18,7 @@ export default function ExerciseComponent({exercise, submittable}) {
     }
 
     const formId = `ex${exercise.id}`; 
-    let options;
+    let options, realQuestion = false;
     const [ answerState, answerQuestionsWithState ] = useActionState(answerQuestions, { status: "", error: null, answered: [] });
     const q = exercise.questions.map (question => {
         const fieldId = `q${question.qid}`;
@@ -29,6 +29,8 @@ export default function ExerciseComponent({exercise, submittable}) {
             return <li key={fieldId}><span>{question.question}</span><br /><select id={fieldId} name={fieldId} defaultValue={question.options[0]}>{options}</select></li>
 
         } else {
+            if(question.question) realQuestion = true;
+
             return question.question ? 
                 <li key={fieldId}>
                 <Markdown options={{
@@ -60,7 +62,7 @@ export default function ExerciseComponent({exercise, submittable}) {
                 img: ({...props}) => props.src.startsWith("/static/") ? <img {...props} /> : null,
             }}}>{exercise.intro}</Markdown>
         <ul>{q}</ul>
-        { submittable ? <input type='submit' value='Answer Questions' onClick={answerQuestions} /> : <em>Submission disabled now you have completed or the notes have been made public.</em> } </form>;
+        { submittable ? <input type='submit' value={realQuestion ? 'Answer Questions' : 'Click when complete'} onClick={answerQuestions} /> : <em>Submission disabled now you have completed or the notes have been made public.</em> } </form>;
   
     return <div>
         {content}
