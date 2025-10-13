@@ -37,22 +37,19 @@ As `lilt` servers are expected to be small-scale, servicing just a small number 
 
 You need [Node.js](https://nodejs.org) - at least version 20 - installed on your system.
 
-`lilt` uses [@lazarv/react-server](https://react-server.dev) as its web development framework. You can optionally install the package management tool  [pnpm](https://pnpm.io).
+`lilt` uses [@lazarv/react-server](https://react-server.dev) as its web development framework. You should also install the package management tool [pnpm](https://pnpm.io).
 
 Once installed do:
 
 ```
-npm install
+pnpm install
 ```
 
 Then build:
 
 ```
-npm react-server build
+pnpm react-server build
 ```
-
-You can alternatively use `pnpm` rather than `npm`.
-
 
 ### Setup lilt 
 
@@ -65,8 +62,9 @@ node utils/setup.mjs
 ```
 it will first ask you for the directory you wish to store the SQLite database (`lilt.db`) and the directory you wish to store the notes (which will be a subdirectory called `notes`). 
 
-Please enter those directories. You can also choose whether you would like admin users to edit notes directly from within `lilt` (recommended on an intranet, you might want to turn off on a public server for security reasons). The setup tool will then exit. You will notice that in the main lilt directory, a file called `.env` has been created, storing the location of the database, the notes, and whether notes editing is enabled.
+Please enter those directories. You can also choose whether you would like admin users to edit notes directly from within `lilt` (recommended on an intranet, but you might want to turn off on a public server for security reasons). The setup tool will then exit. You will notice that in the main lilt directory, a file called `.env` has been created, storing the location of the database, the notes, and whether notes editing is enabled.
 
+If you wish to enable or disable notes editing later, you can edit the .env file, specifically the `EDIT_NOTES_ENABLED` setting. Set it to `true` to enable or `false` to disable.
 
 ### Setup an admin user
 
@@ -80,10 +78,9 @@ In the `utils` directory is a script named `cleanup.mjs`. This will delete old u
 
 Start the server with:
 ```
-npx react-server start --port YOUR_CHOSEN_PORT
+pnpm react-server start --port YOUR_CHOSEN_PORT
 ```
 Port is 3000 by default.
-Alternatively you can use `pnpm` rather than `npx`.
 
 ## Setup topics and exercises (tutors)
 
@@ -105,15 +102,19 @@ There are a number of options. Adding and deleting modules is fairly self-explan
 
 ### Editing an existing module
 
-You can edit a module by adding and deleting topics, making topics public, and adding exercises to an existing topic. If you select a module from the dropdown list on the main admin page, you will see a screen like this:
+You can edit a module by adding and deleting topics, making topics public or hidden, and adding exercises to an existing topic. If you select a module from the dropdown list on the main admin page, you will see a screen like this:
 
 ![Editing a module](/pics/editmodule.png)
 
 You can see a list of existing topics if any have been added already, and you can also add a new topic.
 
-With the existing topics you may write or update the topic's Markdown notes (described in more detail below), delete the topic, and make the topic public. 
+With the existing topics you may write or update the topic's Markdown notes (described in more detail below), delete the topic, and set the topic's visiblility.
 
-What does making a topic public mean? It means that all content of that topic will be accessible to all users, logged-in or not, irrespective of whether they have completed its exercises yet. Ideally you should make a topic public once all the classes for that topic have completed, so that anyone who misses a week (and thus misses the interactive exercises) will be able to view the content.
+There are three visibility levels:
+
+- *Normal* : the usual level. Content which depends on completing an exercise is hidden.
+- *Public* : all content of that topic will be accessible to all users, logged-in or not, irrespective of whether they have completed its exercises yet. Ideally you should make a topic public once all the classes for that topic have completed, so that anyone who misses a week (and thus misses the interactive exercises) will be able to view the content.
+- *Hidden* : the topic will be completely hidden to regular or non-logged-in users. Only administrators will be able to view the content. This is useful if you are still writing a topic and do not want it to be visible yet.
 
 ### Adding an exercise
 
@@ -134,6 +135,8 @@ You can also add multiple choice questions by selecting the "Multiple choice" qu
 ![Adding an exercise - multiple choice](/pics/addexercise3.png)
 
 Make sure you add the options on a separate line, beginning each option with a star, as shown above.
+
+Finally it is possible to add an exercise with no questions. This might be useful if you are doing a paper exercise where students do not need to answer any quiz questions, but where you might want to hide content until a discussion on the exercise has been done.
 
 ### Managing exercises
 
@@ -157,6 +160,7 @@ When students have answered all questions in an exercise, hidden content will no
 
 Once all answers for a given exercise and for a given user are authorised, that user will be able to view protected content which depends on completion of that xercise.
 
+For exercises with no questions (e.g. paper-based exercises) where you want to hde the discussion until students have tried out the exercise, the message "Answered" will appear for each student that clicks the completion button after completing the exercise (see "adding an exercise", above).
 
 ## Write your notes (tutors)
 
@@ -166,7 +170,7 @@ There are thus two methods to write your notes, via the *inbuilt graphical edito
 
 ### Using the inbuilt graphical editor
 
-This is accessible via the admin "edit module" functionality as introduced above. If you select to edit the notes, you will see a screen like the above appear:
+As long as it was enabled during setup, this is accessible via the admin "edit module" functionality as introduced above. If you select to edit the notes, you will see a screen like the above appear:
 
 ![Notes editor](/pics/writenotes.png)
 
