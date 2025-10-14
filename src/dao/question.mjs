@@ -22,7 +22,7 @@ export default class QuestionDao {
 
     addQuestion(eid, q) {
         const stmt = this.db.prepare("INSERT INTO questions(eid, question, qtype) VALUES (?,?,?)");
-        const info = stmt.run(xss(eid), q.question === null ? null : xss(q.question), q.options ? "options" : "text");
+        const info = stmt.run(xss(eid), xss(q.question), q.options ? "options" : "text");
         const qid = info.lastInsertRowid;
         if(qid > 0 && q.options) {
             for (let option of q.options) {
