@@ -55,7 +55,7 @@ async function setup(database, notes, editNotesEnabled) {
             'DROP TABLE IF EXISTS qoptions',
             'DROP TABLE IF EXISTS questions',
             'DROP TABLE IF EXISTS exercises',
-            'CREATE TABLE exercises (id INTEGER PRIMARY KEY autoincrement, topic INTEGER, exercise text, moduleid INTEGER, publicNumber INTEGER)',
+            'CREATE TABLE exercises (id INTEGER PRIMARY KEY autoincrement, topic INTEGER, exercise text, moduleid INTEGER, publicNumber INTEGER, unlocked INTEGER DEFAULT 0)',
             'CREATE TABLE questions (id INTEGER PRIMARY KEY autoincrement, eid INTEGER, question TEXT, qtype TEXT, FOREIGN KEY (eid) REFERENCES exercises(id))',
             'CREATE TABLE qoptions(id INTEGER PRIMARY KEY autoincrement, qid INTEGER, option TEXT, FOREIGN KEY (qid) REFERENCES questions(id))',
             'CREATE TABLE usercodes (id INTEGER PRIMARY KEY autoincrement, usercode INTEGER, created REAL, loggedin INTEGER DEFAULT 0)',

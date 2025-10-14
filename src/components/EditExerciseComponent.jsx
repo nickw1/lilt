@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import EditQuestion from './EditQuestionComponent.jsx';
 import AddWholeQuestionComponent from './AddWholeQuestionComponent.jsx';
 import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
-import { editExercise, deleteExercise, addQuestionsToExercise } from '../actions/exercise.mjs';
+import { editExercise, deleteExercise, addQuestionsToExercise, setUnlocked } from '../actions/exercise.mjs';
 
 
 export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
@@ -27,10 +27,10 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
         setExDetails(newExDetails);
     }}/> );
     
-
     
     return exDetails.questions === undefined ? "" : <div>
-        <div style={{marginTop: '10px'}}><h3 style={{display: 'inline'}}>Exercise {exDetails.publicNumber} (ID {exDetails.id})</h3>
+        <div style={{marginTop: '10px'}}>
+        <h3 style={{display: 'inline'}}>Exercise {exDetails.publicNumber} (ID {exDetails.id})</h3>
         <span title='Delete exercise'><ConfirmDeleteComponent color='red' onDeleteConfirmed={del} /></span>
         </div>
         <div>
@@ -44,6 +44,26 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
         } value={exDetails.intro} />
         <br />
         <button onClick={edit}>Save</button>
+        <div>Visibility:
+        <select value={exDetails.unlocked} onChange={async(e) => {
+            try {
+                const newUnlockedStatus = await setUnlocked(exDetails.id, e.target.value);
+                if(newUnlockedStatus?.error) {    
+                    setEditStatus(newUnlockedStatus);
+                }
+                else if(newUnlockedStatus !== null) {
+                    const newExDetails = structuredClone(exDetails);
+                    newExDetails.unlocked = newUnlockedStatus;
+                    setExDetails(newExDetails);
+                }
+            } catch(e) {
+                setEditStatus({error: e.message});
+            }
+        }}>
+        <option value='0'>Default</option>
+        <option value='1'>Unlocked</option>
+        </select>
+        </div>
         <p style={{backgroundColor: editStatus.error ? '#ffc0c0' : '#c0ffc0'}}>{editStatus.error || editStatus.message}</p>
         {qOutput}
         <h3>Add new questions</h3>

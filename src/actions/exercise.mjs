@@ -78,12 +78,27 @@ export async function editExercise(id, exercise) {
 }
 
 export async function deleteExercise(id) {
-    const { isAdmin } = await useLoggedIn();
-    if(!isAdmin) {
-        return {"error" : "Only admins can delete an exercise."};
+    if(id.toString().match("^\\d+$")) {
+        const { isAdmin } = await useLoggedIn();
+        if(!isAdmin) {
+            return {"error" : "Only admins can delete an exercise."};
+        }
+        const controller = new Controller(db);
+        return controller.deleteExercise(id);
+    } 
+    return {"error": "Invalid ID."};
+}
+
+export async function setUnlocked(id, unlockStatus) {
+    if(id.toString().match("^\\d+$")) {
+        const { isAdmin } = await useLoggedIn();
+        if(!isAdmin) {
+            return {"error" : "Only admins can unlock an exercise."};
+        }
+        const exerciseDao = new ExerciseDao(db);
+        return exerciseDao.setUnlocked(id, unlockStatus) == 1 ? unlockStatus: null; 
     }
-    const controller = new Controller(db);
-    return controller.deleteExercise(id);
+    return {"error": "Invalid ID."};
 }
 
 export function getFullExercise(id) {

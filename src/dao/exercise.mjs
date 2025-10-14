@@ -26,12 +26,13 @@ export default class ExerciseDao {
     }
 
     getFullExercise(exerciseId) {
-        const stmt0 = this.db.prepare("SELECT exercise FROM exercises WHERE id=?");
+        const stmt0 = this.db.prepare("SELECT exercise, unlocked FROM exercises WHERE id=?");
         const results0 = stmt0.get(exerciseId);
         if(results0 !== undefined) {
             const ex = {
                 id: exerciseId,
                 intro : results0.exercise,
+                unlocked: results0.unlocked,
                 questions: []
             };
             const stmt = this.db.prepare("SELECT q.id AS qid, qo.id AS qoid, q.question, qo.option FROM questions q LEFT JOIN qoptions qo ON q.id=qo.qid WHERE q.eid=? ORDER BY qid, qoid");
@@ -77,6 +78,12 @@ export default class ExerciseDao {
     editExercise(id, exercise) {
         const stmt = this.db.prepare("UPDATE exercises SET exercise=? WHERE id=?");
         const info = stmt.run(xss(exercise), id);
+        return info.changes; 
+    }
+
+    setUnlocked(id, unlocked) {
+        const stmt = this.db.prepare("UPDATE exercises SET unlocked=? WHERE id=?");
+        const info = stmt.run(unlocked ? 1:0, id);
         return info.changes; 
     }
 

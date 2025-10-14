@@ -26,12 +26,12 @@ export default async function NotesComponent({module, initTopic}) {
 
     function exerciseHandler(ex, dep) {
         let exDependencyCompleted = isAdmin || dep === undefined;
+        const depExer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, dep); 
         if(!exDependencyCompleted) {
-            const depExer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, dep); 
             exDependencyCompleted = depExer?.id ? answerDao.hasUserCompletedExercise(uid, depExer.id) : true;
         } 
         let content = "";
-        if(exDependencyCompleted || topicDetail.visibility == 1) {
+        if(exDependencyCompleted || depExer?.unlocked == 1 || topicDetail.visibility == 1) {
             // load exercise
             const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, ex);
             const completed = answerDao.hasUserCompletedExercise(uid, exer.id);
@@ -55,7 +55,7 @@ export default async function NotesComponent({module, initTopic}) {
             const heading = <h2 key={`answer-title-${matches[2]}`}>Answer to exercise {matches[2]}</h2>;
             protectedContent = true;
             const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, matches[2]);
-            dependencyCompleted = isAdmin || answerDao.hasUserCompletedExercise(uid, exer.id) || topicDetail.visibility == 1;
+            dependencyCompleted = isAdmin || topicDetail.visibility == 1 || exer.unlocked == 1 || answerDao.hasUserCompletedExercise(uid, exer.id);
             if(dependencyCompleted) {
                   return matches[1] == "answer" ? heading : ""; // return nothing for depends, switch to protected content
             } else {
@@ -67,7 +67,8 @@ export default async function NotesComponent({module, initTopic}) {
             dependencyCompleted = false;
         } else if (exMatch) {
             const exNum = exMatch[1].substring(2);
-            return uid === null && topicDetail.visibility != 1 ? 
+            const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, exNum);
+            return uid === null && exer.unlocked != 1 && topicDetail.visibility != 1 ? 
                 <div key={`ex-${exNum}-notloggedin`}><h2>Exercise {exNum}</h2><p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}.</p></div> : exerciseHandler(exNum, parseInt(exMatch[3]));
         } else {
             return protectedContent && node.type != RuleType.paragraph && !dependencyCompleted ? "" : (
