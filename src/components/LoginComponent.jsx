@@ -20,10 +20,10 @@ export default function LoginComponent({usercode}) {
         :
         <>
         <form action={loginWithState} key='formLogin'>
-        <div id='newUserStatus' style={{fontSize: "60%", fontWeight: "bold"}}>{newUserState?.usercode ? `Your user code is ${newUserState.usercode} and is valid for one week, please login` : (newUserState?.error || "")}</div>
+        <div id='newUserStatus' style={{fontSize: "60%", fontWeight: "bold", backgroundColor : newUserState?.usercode ? '#c0ffc0' : '#ffc0c0' }}>{newUserState?.usercode ? `Your user code is ${newUserState.usercode} and is valid for one week, please login` : (newUserState?.error || "")}</div>
         User code: <input id='usercode' name='usercode' />
         <input type='submit' value='Login'  />
-        <div id='loginError'>{loginState?.error || ""}</div>
+        <div id='loginError' style={{backgroundColor: '#ffc0c0'}}>{loginState?.error || ""}</div>
         </form>
         <input type='button' value='Get New User Code' onClick={ () => setNewUserStage(1) } />
         </>)
