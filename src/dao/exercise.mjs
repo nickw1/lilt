@@ -83,7 +83,7 @@ export default class ExerciseDao {
 
     setUnlocked(id, unlocked) {
         const stmt = this.db.prepare("UPDATE exercises SET unlocked=? WHERE id=?");
-        const info = stmt.run(unlocked ? 1:0, id);
+        const info = stmt.run(unlocked, id);
         return info.changes; 
     }
 
