@@ -27,6 +27,12 @@ export default class TopicDao {
         return stmt.run(new Date().getTime(), questionId);
     }
          
+    getLastUpdateTime(topicId) {
+        const stmt = this.db.prepare("SELECT updated FROM topics WHERE id=?");
+        const row = stmt.get(topicId);
+        return row?.updated ?? null;
+    }
+
     getAll() {
         const stmt = this.db.prepare("SELECT t.id,t.number,t.title,t.visibility,m.code AS moduleCode FROM topics t INNER JOIN modules m ON t.moduleid=m.id ORDER BY m.code, t.number");
         return stmt.all();

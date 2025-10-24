@@ -23,6 +23,8 @@ export default async function App() {
 
     const modules = useModules(isAdmin);
 
+    const initTopic = searchParams.topic || 0;
+
     const loginComponent = module ? 
         (usercode === null ? <Link to='/'>Login</Link> : <LoggedInComponent usercode={usercode}/>) : 
         <LoginComponent 
@@ -74,8 +76,8 @@ export default async function App() {
         <p><strong>Modules</strong></p>
         <LinkModuleChooseComponent modules={modules} curModule={module} />
         </div>
-        <NotesHolder>
-        <NotesComponent module={module} initTopic={searchParams.topic || 0} />
+        <NotesHolder topic={initTopic}>
+        <NotesComponent module={module} initTopic={initTopic} />
         </NotesHolder></div> : ""  }
         </div>;
 
