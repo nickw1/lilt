@@ -1,6 +1,5 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { getAnswersForExercise }  from '../actions/answer.mjs';
 import AdminAnswersListComponent from './AdminAnswersListComponent.jsx';
 
 export default function AdminAnswersHolder({exid}) { 
@@ -18,7 +17,11 @@ export default function AdminAnswersHolder({exid}) {
 
     async function retrieveAnswers() {
         const allAnswers = [];
-        const ans = exid === null ? [] : await getAnswersForExercise(exid);
+        let ans = [];
+        if(exid !== null) {
+            const response = await fetch(`/exercise/${exid}/answers`);
+            ans = await response.json(); 
+        }
         let currentQuestionId = 0, currentQuestion = null;
         for(let answer of ans) {
             if(answer.qid != currentQuestionId) {

@@ -54,12 +54,3 @@ export async function authoriseQuestionAnswers(prevState, formData) {
     }
     return prevState;
 }
-
-export async function getAnswersForExercise(id) {
-    const { isAdmin } = await useLoggedIn();
-    if(!isAdmin) {
-        return {"error" : "Only admins can get all answers."};
-    }
-    const answerDao = new AnswerDao(db);
-    return answerDao.getAnswersForExercise(id);
-}

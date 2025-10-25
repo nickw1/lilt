@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 
 import EditExerciseComponent from './EditExerciseComponent.jsx';
 import AdminAnswersHolder from './AdminAnswersHolder.jsx';
-import { getFullExercise } from '../actions/exercise.mjs';
 
 export default function AdminExerciseManagementComponent({allExercises}) {
 
@@ -16,7 +15,8 @@ export default function AdminExerciseManagementComponent({allExercises}) {
         <select onChange={async(e) => {
             const [ exid ] = e.target.value.split(':');
             const exer = exercises.find(ex => ex.id == exid)||{};
-            const { questions, intro }  = await getFullExercise(exid);
+            const response = await fetch(`/exercise/${exid}`);
+            const { questions, intro }  = await response.json(); 
             exer.questions = questions;
             exer.intro = intro;
             setCurExercise(exer);

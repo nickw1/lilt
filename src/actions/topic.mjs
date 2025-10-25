@@ -51,12 +51,6 @@ export async function addTopic(moduleCode, number, title) {
     }
 }
 
-export function getTopics(moduleCode, showHidden = false) {
-    const topicDao = new TopicDao(db);
-    const res = topicDao.getAllForModule(moduleCode, showHidden);
-    return res;
-}
-
 export async function deleteTopic(id) {
     const { isAdmin } = await useLoggedIn();
     if(!isAdmin) {

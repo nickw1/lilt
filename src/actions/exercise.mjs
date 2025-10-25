@@ -100,13 +100,3 @@ export async function setUnlocked(id, unlockStatus) {
     }
     return {"error": "Invalid ID."};
 }
-
-export function getFullExercise(id) {
-    if(id.toString().match("^\\d+$")) {
-        const exerciseDao = new ExerciseDao(db); 
-        const ex = exerciseDao.getFullExercise(id);
-        return ex;
-    } else {
-        return { error: "Invalid format for ID." };
-    }
-}

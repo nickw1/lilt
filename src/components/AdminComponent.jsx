@@ -10,7 +10,6 @@ import ModulesComponent from './ModulesComponent.jsx';
 import StaticUploadComponent from './StaticUploadComponent.jsx';
 import ModulesContext from '../context/module.mjs';
 import EditNotesContext from '../context/editNotesEnabled.mjs';
-import { getTopics } from '../actions/topic.mjs';
 
 
 export default function AdminComponent({modules, editNotesEnabled}) {
@@ -25,7 +24,8 @@ export default function AdminComponent({modules, editNotesEnabled}) {
         <p><Link to='/admin/exercises'>Exercises and answers</Link> | 
         <Link to='/'>Course notes</Link></p>
         <ModuleChooseComponent msg="Please choose a module to edit: " modules={moduleList} onModuleChosen={async(module) => {
-            const topics = await getTopics(module, true);
+            const response = await fetch(`/module/${module}/topics?showHidden=1`);
+            const topics = await response.json();
             setModuleInfo({
                 moduleCode: module,
                 topics
