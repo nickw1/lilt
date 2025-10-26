@@ -96,7 +96,13 @@ export async function setUnlocked(id, unlockStatus) {
             return {"error" : "Only admins can unlock an exercise."};
         }
         const exerciseDao = new ExerciseDao(db);
-        return exerciseDao.setUnlocked(id, unlockStatus) == 1 ? unlockStatus: null; 
+        const result = exerciseDao.setUnlocked(id, unlockStatus);
+        if(result == 1) {
+            const topicDao = new TopicDao(db);
+            topicDao.markUpdatedByExercise(id);
+            return unlockStatus;
+        }
+        return null;
     }
     return {"error": "Invalid ID."};
 }

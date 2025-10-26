@@ -46,7 +46,7 @@ export async function authoriseQuestionAnswers(prevState, formData) {
         qid = parseInt(qid);
         const authorised = answerDao.authoriseQuestionAnswers(qid);
         if(authorised) {
-            topicDao.updateTopicOnAuthorisationByQuestion(qid);
+            topicDao.markUpdatedByQuestion(qid);
             const newState = structuredClone(prevState);
             newState.push(qid);
             return newState;

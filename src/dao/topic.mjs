@@ -17,14 +17,24 @@ export default class TopicDao {
         return info;
     }
    
-    updateTopicOnAuthorisation(answerId) {
+    markUpdatedByAnswer(answerId) {
         const stmt = this.db.prepare("UPDATE topics SET updated=? WHERE id=(SELECT e.topic FROM exercises e INNER JOIN questions q ON q.eid=e.id INNER JOIN answers a ON a.qid=q.id WHERE a.id=?)");
         return stmt.run(new Date().getTime(), answerId);
     }
 
-    updateTopicOnAuthorisationByQuestion(questionId) {
+    markUpdatedByQuestion(questionId) {
         const stmt = this.db.prepare("UPDATE topics SET updated=? WHERE id=(SELECT e.topic FROM exercises e INNER JOIN questions q ON q.eid=e.id WHERE q.id=?)");
         return stmt.run(new Date().getTime(), questionId);
+    }
+
+    markUpdatedByExercise(exId) {
+        const stmt = this.db.prepare("UPDATE topics SET updated=? WHERE id=(SELECT e.topic FROM exercises e WHERE e.id=?)");
+        return stmt.run(new Date().getTime(), exId);
+    }
+
+    markUpdated(id) {
+        const stmt = this.db.prepare("UPDATE topics SET updated=? WHERE id=?");
+        return stmt.run(new Date().getTime(), id);
     }
          
     getLastUpdateTime(topicId) {

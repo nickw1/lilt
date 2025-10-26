@@ -16,7 +16,11 @@ export async function makePublic(id, state) {
     const topicDao = new TopicDao(db);
     if(id && id.toString().match("^\\d+$")) {
         const info = topicDao.makePublic(id, state);
-        return info.changes > 0 ? { nUpdated: info.changes } : { error: "Could not find topic with that ID." };
+        if(info.changes > 0) {
+            topicDao.markUpdated(id);
+            return { nUpdated: info.changes };
+        }
+        return { error: "Could not find topic with that ID." };
     } else {
         return { error: "No ID supplied." };
     }
