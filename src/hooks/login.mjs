@@ -1,22 +1,18 @@
 import UserDao from '../dao/user.mjs';
 import db from '../db/db.mjs';
-import { getIronSession } from 'iron-session';
-import { cookieName, password } from '../misc/session.mjs';
-import Cookies from '../misc/cookies.mjs';
+import { useHttpContext } from '@lazarv/react-server';
 
-export default async function useLoggedIn() {
-    const session = await getIronSession(new Cookies(), { 
-        cookieName, password
-    } );
-    const userDao = new UserDao(db);
-    if(session?.uid !== undefined) {
-        const isLoggedIn = (session.admin && userDao.isAdminLoggedIn(session.admin)) || (session.uid && userDao.isLoggedIn(session.uid));
-        
+export default /*async*/ function useLoggedIn() {
+ 	const userDao = new UserDao(db);
+    const {
+        platform: { request: req }
+    } = useHttpContext();
+    if(req.session?.uid !== undefined){
         return {
-            uid: session.uid,
-            usercode: session.admin ? 0 : userDao.findUserById(session.uid)?.usercode,
-            isAdmin: session.admin ? true: false
-        };    
+            uid: req.session.uid,
+            usercode: req.session.admin ? 0 : userDao.findUserById(req.session.uid)?.usercode,
+            isAdmin: req.session.admin ? true: false
+        };
     }
-    return { usercode: null, uid: null, isAdmin: false };
+    return { usercode: null, uid: null, admin: false };
 }

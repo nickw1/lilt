@@ -1,7 +1,7 @@
 "use server"
 
 import ModuleDao from '../dao/module.mjs';
-import Controller from '../controllers/controller.mjs';
+import DeleteController from '../controllers/delete.mjs';
 import db from '../db/db.mjs';
 import useLoggedIn from '../hooks/login.mjs';
 import xss from 'xss';
@@ -52,7 +52,7 @@ export async function deleteModule(id) {
     if(!isAdmin) {
         return {"error" : "Only admins can delete a module."};
     }
-    const controller = new Controller(db);
+    const controller = new DeleteController(db);
     const module = controller.moduleDao.getModuleById(id);
     const result = controller.deleteModule(id);
     if(result.errors && result.errors.length > 0) {

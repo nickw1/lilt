@@ -4,7 +4,7 @@ import ExerciseDao from '../dao/exercise.mjs';
 import QuestionDao from '../dao/question.mjs';
 import ModuleDao from '../dao/module.mjs';
 import TopicDao from '../dao/topic.mjs';
-import Controller from '../controllers/controller.mjs';
+import DeleteController from '../controllers/delete.mjs';
 import db from '../db/db.mjs';
 import useLoggedIn from '../hooks/login.mjs';
 import xss from 'xss';
@@ -83,7 +83,7 @@ export async function deleteExercise(id) {
         if(!isAdmin) {
             return {"error" : "Only admins can delete an exercise."};
         }
-        const controller = new Controller(db);
+        const controller = new DeleteController(db);
         return controller.deleteExercise(id);
     } 
     return {"error": "Invalid ID."};

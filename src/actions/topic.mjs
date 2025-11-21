@@ -3,7 +3,7 @@
 import db from '../db/db.mjs'
 import TopicDao from '../dao/topic.mjs';
 import ModuleDao from '../dao/module.mjs';
-import Controller from '../controllers/controller.mjs';
+import DeleteController from '../controllers/delete.mjs';
 import useLoggedIn from '../hooks/login.mjs';
 import xss from 'xss';
 
@@ -60,6 +60,6 @@ export async function deleteTopic(id) {
     if(!isAdmin) {
         return {"error" : "Only admins can delete a topic."};
     }
-    const controller = new Controller(db);
+    const controller = new DeleteController(db);
     return controller.deleteTopic(id);
 }

@@ -4,7 +4,7 @@ import TopicDao from '../dao/topic.mjs';
 import ModuleDao from '../dao/module.mjs';
 import db from '../db/db.mjs';
 
-export default class Controller {
+export default class DeleteController {
 
     constructor(db) {
         this.moduleDao = new ModuleDao(db);
@@ -41,23 +41,6 @@ export default class Controller {
             return { errors };
         } else {
             return { errors: ["Invalid format for topic ID."] };
-        }
-    }
-
-    deleteModule(id) {
-        const errors = [];
-        if(id.toString().match("^\\d+$")) {
-            const moduleInfo = this.moduleDao.getTopicsForModule(id);
-            for(const topic of moduleInfo) { 
-                const topicDeleteStatus = this.deleteTopic(topic.id);
-                if(topicDeleteStatus.errors) {
-                    errors.push(...topicDeleteStatus.errors);
-                }
-            }
-            if(errors.length === 0) this.moduleDao.deleteModule(id);
-            return { errors };
-        } else {
-            return { errors: ["Invalid format for module ID."] };
         }
     }
 }

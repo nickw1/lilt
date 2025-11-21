@@ -1,27 +1,64 @@
 "use client"
 
-import { useActionState } from 'react';
-import { adminLogin, logout } from '../actions/user.mjs';
+import React, { useState, useEffect, startTransition } from 'react';
 import { useClient } from '@lazarv/react-server/client';
 
 export default function AdminLoginComponent({isAdmin}) {
-    
-    const { navigate } = useClient();
-    const [ adminLoginState, adminLoginWithState ] = useActionState(adminLogin, null);
 
+    const { navigate } = useClient();
+ 
     return <div>
+        <form>
         { !isAdmin ? 
-            <form action={adminLoginWithState}>
-            Username: <br /> <input id='username' name='username' /> <br />
-            Password: <br /> <input id='pass' name='pass' type='password' /> <br />
-            <input type='submit' value='Login' />
-            <br />{ adminLoginState?.error || "" }
-            </form>
+            <>Username: <br /> <input id='username' /> <br />
+            Password: <br /> <input id='password' type='password' /> <br />
+            <input type='button' value='Login' onClick={login} /></>
             :
             <>Logged in as admin user. 
-            <form action={logout}>
-            <input type='submit' value='Logout'  /></form>
+            <a href='#' onClick={logout}>Logout</a>
             </>
         }
+        </form>
+        <div id='adminLoginError'></div>
         </div>
+
+    async function login() {
+        try {
+            const response = await fetch('/user/admin/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value
+                })
+            });
+            const json = await response.json();
+            if(response.status == 200) {
+                startTransition(async() => navigate('/admin'));
+                document.getElementById('adminLoginError').innerHTML = '';
+            } else {
+                document.getElementById('adminLoginError').innerHTML = json.error;
+            }
+        } catch(e) {
+            document.getElementById('adminLoginError').innerHTML = e; 
+        }
+    }
+
+    async function logout() {
+        try {
+            const response = await fetch('/user/logout', {
+                method: 'POST'
+            });
+            const json = await response.json();
+            if(response.status == 200) {
+                startTransition(async() => navigate('/admin'));
+            } else {
+                alert("Logout error - this probably shouldn't happen!");
+            }
+        } catch(e) {
+            alert(e);
+        }
+    }
 }
