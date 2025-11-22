@@ -28,10 +28,13 @@ app.use(expressSession({
     }
 }));
 
+// Change if you want to run on another port
+const PORT = 3002;
+
 const [reactServerModule, ...reactServerArgs] = 
     process.env.NODE_ENV !== "production" ?
     ["@lazarv/react-server/dev"] :
-    ["@lazarv/react-server/node", { origin: "http://localhost:3002"}];
+    ["@lazarv/react-server/node", { origin: `http://localhost:${PORT}`}];
 const { reactServer } = await import(reactServerModule);
 const server = await reactServer(...reactServerArgs);
 
@@ -51,7 +54,6 @@ app.use('/', async(req, res, next) => {
     middlewares(req, res, next);
 });
 
-const PORT = 3002;
 app.listen(PORT, () => {
     console.log(`App running on port ${PORT}.`);
 });

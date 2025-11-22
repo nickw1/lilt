@@ -78,9 +78,11 @@ In the `utils` directory is a script named `cleanup.mjs`. This will delete old u
 
 Start the server with:
 ```
-pnpm react-server start --port YOUR_CHOSEN_PORT
+NODE_ENV=production node server.mjs
 ```
-Port is 3000 by default.
+Port is 3002 by default but you can edit the `server.mjs` to change this.
+
+If running on anything other than `localhost` you will need to set up a reverse proxy to allow access through a server such as Apache or Nginx: this is out of scope for these docs but there is plenty of info online detailing how to do this.
 
 ## Setup topics and exercises (tutors)
 
