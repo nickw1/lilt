@@ -18,7 +18,6 @@ export default function LoginComponent({usercode}) {
         </form>
         :
         <>
-        <form key='formLogin'>
         <div id='newUserStatus' style={{fontSize: "60%", fontWeight: "bold", backgroundColor : newUserState?.usercode ? '#c0ffc0' : '#ffc0c0' }}>{newUserState?.usercode ? `Your user code is ${newUserState.usercode} and is valid for one week, please login` : (newUserState?.error || "")}</div>
         User code: <input id='usercode' name='usercode' />
         <button type='button' onClick={() => {
@@ -26,7 +25,6 @@ export default function LoginComponent({usercode}) {
             login();
         }}>Login!</button>
         <div id='loginError' style={{backgroundColor: '#ffc0c0'}}></div>
-        </form>
         <input type='button' value='Get New User Code' onClick={ () => setNewUserStage(1) } />
         </>)
         : <LoggedInComponent usercode={usercode}/>;

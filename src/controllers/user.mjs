@@ -55,9 +55,5 @@ export default class UserController {
         res.json({loggedIn: req.session?.uid !== undefined ? true: false,
                   uid: req.session.uid});
     }
-
-    getAdminLogin(req, res) {
-        res.json({loggedIn: req.session.admin ? true: false});
-    }
 }
 
