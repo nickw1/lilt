@@ -1,5 +1,4 @@
 import express from 'express';
-import { reactServer } from '@lazarv/react-server/dev';
 import Database from 'better-sqlite3';
 import expressSession from 'express-session';
 import betterSqlite3Session from 'express-session-better-sqlite3';
@@ -29,9 +28,12 @@ app.use(expressSession({
     }
 }));
 
-
-//const server = await reactServer({origin:"http://localhost:3002"});
-const server = await reactServer();
+const [reactServerModule, ...reactServerArgs] = 
+    process.env.NODE_ENV !== "production" ?
+    ["@lazarv/react-server/dev"] :
+    ["@lazarv/react-server/node", { origin: "http://localhost:3002"}];
+const { reactServer } = await import(reactServerModule);
+const server = await reactServer(...reactServerArgs);
 
 app.use('/user', userRouter);
 app.use('/exercise', exerciseRouter);
@@ -41,7 +43,7 @@ app.use('/static', staticRouter);
 // Front-end pings the server every minute when user is answering exercise,
 // prevents session timeouts before user submits
 app.get('/ping', (req, res) => {
-	res.send("ok");
+    res.send("ok");
 });
 
 app.use('/', async(req, res, next) => {
