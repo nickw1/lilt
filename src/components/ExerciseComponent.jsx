@@ -50,7 +50,7 @@ export default function ExerciseComponent({exercise, submittable}) {
                     // long exercise
                     const time = new Date().getTime();
                     if(time - lastPing.current > 60000) {
-                        await fetch(`/ping?time=${time}`);    
+                        await fetch(`/user/login?time=${time}`);    
                         lastPing.current = time;
                     }
                 }} style={{width:'50%', height: '50px'}} id={fieldId} name={fieldId}></textarea></li>;

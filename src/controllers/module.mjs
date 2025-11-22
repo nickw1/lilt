@@ -26,7 +26,8 @@ export default class ModuleController {
                 const dao = new TopicDao(this.db);
                 const results = dao.getTopicByModuleCodeAndNumber(req.params.code, req.params.id);
                 if(results) {
-                    res.json({updateTime: results.updated});
+                    res.set({'Cache-Control' : 'no-store'})
+                        .json({updateTime: results.updated});
                 } else {
                     res.status(404).json({error: "Cannot find that module and topic"});
                 }

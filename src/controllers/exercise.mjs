@@ -25,7 +25,8 @@ export default class ExerciseController {
             const match = req.params.id.match("^\\d+$");
             if(match) {
                 const answerDao = new AnswerDao(this.db);
-                res.json(answerDao.getAnswersForExercise(req.params.id));
+                res.set({'Cache-Control': 'no-store'})
+                    .json(answerDao.getAnswersForExercise(req.params.id));
             } else {
                 res.status(500).json({error: "Invalid format for exercise ID"});
             }
