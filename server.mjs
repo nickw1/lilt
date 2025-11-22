@@ -38,6 +38,12 @@ app.use('/exercise', exerciseRouter);
 app.use('/module', moduleRouter);
 app.use('/static', staticRouter);
 
+// Front-end pings the server every minute when user is answering exercise,
+// prevents session timeouts before user submits
+app.get('/ping', (req, res) => {
+	res.send("ok");
+});
+
 app.use('/', async(req, res, next) => {
     const { middlewares } = await server;
     middlewares(req, res, next);

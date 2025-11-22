@@ -24,7 +24,7 @@ export default class ModuleController {
         if(match) {
             try {
                 const dao = new TopicDao(this.db);
-                const results = dao.getTopicByModuleCodeAndNumber(req.params.code, req.params.number);
+                const results = dao.getTopicByModuleCodeAndNumber(req.params.code, req.params.id);
                 if(results) {
                     res.json({updateTime: results.updated});
                 } else {
