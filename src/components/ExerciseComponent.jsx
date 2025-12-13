@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useActionState } from 'react';
+import React, { useState, useActionState, useRef } from 'react';
 import Markdown, { RuleType } from 'markdown-to-jsx';
 import { answerQuestions } from '../actions/answer.mjs';
 import SyntaxHighlight from './SyntaxHighlight.jsx';
@@ -8,6 +8,7 @@ import SyntaxHighlight from './SyntaxHighlight.jsx';
 export default function ExerciseComponent({exercise, submittable}) {
 
     let keyCount = 0;
+    const lastPing = useRef(0);
 
     function renderRuleHandler (next, node, renderChildren) {
         return node.type == RuleType.codeBlock ?
@@ -43,7 +44,16 @@ export default function ExerciseComponent({exercise, submittable}) {
                         img: ({...props}) => props.src.startsWith("/static/") ? <img {...props} /> : null,
                 }}}>{question.question}</Markdown>
                 <br />
-                <textarea style={{width:'50%', height: '50px'}} id={fieldId} name={fieldId}></textarea></li>;
+                <textarea onChange={async() => {
+                    // Ping the server every minute when the user enters 
+                    // something, to prevent the session timing out during a 
+                    // long exercise
+                    const time = new Date().getTime();
+                    if(time - lastPing.current > 3000) {
+                        await fetch(`/user/current?time=${time}`);    
+                        lastPing.current = time;
+                    }
+                }} style={{width:'50%', height: '50px'}} id={fieldId} name={fieldId}></textarea></li>;
        }
     });
     const content = <form 
