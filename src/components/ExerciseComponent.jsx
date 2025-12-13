@@ -46,11 +46,16 @@ export default function ExerciseComponent({exercise, submittable}) {
                 <br />
                 <textarea onChange={async() => {
                     // Ping the server every minute when the user enters 
-                    // something, to prevent the session timing out during a 
-                    // long exercise
+                    // something, to prevent the session timing out 
+                    // during a long exercise. Also check user is still
+                    // logged in.
                     const time = new Date().getTime();
                     if(time - lastPing.current > 3000) {
-                        await fetch(`/user/current?time=${time}`);    
+                        const response = await fetch(`/user/current?time=${time}`);    
+                        const { loggedIn } = await response.json();
+                        if(!loggedIn) {
+                            alert("Your session has timed out, please login again.");
+                        }
                         lastPing.current = time;
                     }
                 }} style={{width:'50%', height: '50px'}} id={fieldId} name={fieldId}></textarea></li>;
