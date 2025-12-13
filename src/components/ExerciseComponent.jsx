@@ -30,7 +30,7 @@ export default function ExerciseComponent({exercise, submittable}) {
             return <li key={fieldId}><span>{question.question}</span><br /><select id={fieldId} name={fieldId} defaultValue={question.options[0]}>{options}</select></li>
 
         } else {
-            if(question.question) hasQuestions = true;
+            if(question.question || question.options) hasQuestions = true;
 
             return <li key={fieldId}>
                 <Markdown options={{
