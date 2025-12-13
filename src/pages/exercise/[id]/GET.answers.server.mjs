@@ -18,7 +18,10 @@ export default async function GetAnswersForExercise(context) {
         return new Response(
             JSON.stringify(answerDao.getAnswersForExercise(match[1])),
          { 
-            headers: { "Content-Type": "application/json" }
+            headers: { 
+                "Content-Type": "application/json",
+                "Cache-Control": "no-store"
+            }
         });    
     } else {
         return new Response(

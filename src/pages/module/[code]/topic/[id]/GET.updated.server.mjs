@@ -10,7 +10,10 @@ export default async function GetUpdateTime(context) {
             if(results) {
                 return new Response(
                     JSON.stringify({updateTime: results.updated}), {
-                        headers: {"Content-Type": "application/json" }
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Cache-Control": "no-store"
+                        }
                     }
                 );
             } else {
