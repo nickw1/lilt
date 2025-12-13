@@ -4,3 +4,9 @@ onlyBuiltDependencies:
   - better-sqlite3
   - esbuild
   - rolldown
+
+overrides:
+  hono@>=4.8.0 <4.9.6: '>=4.9.6'
+  hono@<4.9.7: '>=4.9.7'
+  hono@>=1.1.0 <4.10.2: '>=4.10.2'
+  hono@<4.10.3: '>=4.10.3'
