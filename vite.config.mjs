@@ -5,5 +5,12 @@ export default defineConfig({
     // base: '/lilt/', // uncomment if you have a non-default base dir e.g. https://example.com/lilt
     plugins: [react()],
     port: 3002,
-    resolve: { external: ["iron-session"] }
+    resolve: { external: [
+        "iron-session",
+        "shiki",
+        "@uiw/react-md-editor",
+        "react-modal",
+        "interweave",
+        "react-feather"
+    ] }
 });
