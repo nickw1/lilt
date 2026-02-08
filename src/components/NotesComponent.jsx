@@ -106,12 +106,16 @@ export default async function NotesComponent({module, initTopic}) {
             const mdstring =  (await fs.readFile(`${process.env.RESOURCES}/${module}/${topic}.md`)).toString();
 
             content = <main>
+                { topicDetail.visibility == 2 && !isAdmin ?
+                <p>This content is currently not available.</p> :
+                <div>
                 <header className='notesHeader'>
                 <h1>Topic {topicDetail.number}</h1>
                 <h1>{topicDetail.title}</h1></header>
                 <Markdown options={{
                     renderRule: renderRuleHandler
                 }}>{mdstring}</Markdown>
+                </div> }
             </main>;
         } catch(e) {
             content = <p>Error: {e.code == 'ENOENT' ? `Notes for ${module}, topic ${topic} not found.` : e.code}</p>;
