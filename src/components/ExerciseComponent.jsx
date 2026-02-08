@@ -27,10 +27,11 @@ export default function ExerciseComponent({exercise, submittable}) {
             let options = question.options.map ( (option,i) =>  {
                 return <option key={`${fieldId}-${i}`}>{option}</option>;
             });
+            hasQuestions = true;
             return <li key={fieldId}><span>{question.question}</span><br /><select id={fieldId} name={fieldId} defaultValue={question.options[0]}>{options}</select></li>
 
         } else {
-            if(question.question || question.options) hasQuestions = true;
+            if(question.question) hasQuestions = true;
 
             return <li key={fieldId}>
                 <Markdown options={{
