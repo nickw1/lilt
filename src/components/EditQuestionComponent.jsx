@@ -21,13 +21,13 @@ export default function EditQuestion({question, num, onQuestionDeleted}) {
         <span title='Delete Question'><ConfirmDeleteComponent color='red' onDeleteConfirmed={del} /></span>
         </div>
         <div> 
-            <input type='text' onChange={ e => {
+            <textarea onChange={ e => {
             const newQDetails = structuredClone(questionDetails);
             newQDetails.question = e.target.value;
             setQuestionDetails(newQDetails);
             setStatus("");
         }} defaultValue={questionDetails.question} 
-        style = {{ width: "40%" }} />
+        style = {{ width: "40%", height: "100px" }}></textarea>
         {question.options ? 
             <QOptionsComponent 
                 options={options}
