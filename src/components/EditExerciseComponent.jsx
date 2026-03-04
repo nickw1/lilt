@@ -22,6 +22,7 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
             id: exDetails.id,
             publicNumber: exDetails.publicNumber,
             intro: exDetails.intro,
+            unlocked: exDetails.unlocked,
             questions : exDetails.questions.filter ( question => question.qid != qid )
         };
         setExDetails(newExDetails);

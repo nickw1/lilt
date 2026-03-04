@@ -16,9 +16,10 @@ export default function AdminExerciseManagementComponent({allExercises}) {
             const [ exid ] = e.target.value.split(':');
             const exer = exercises.find(ex => ex.id == exid)||{};
             const response = await fetch(`/exercise/${exid}`);
-            const { questions, intro }  = await response.json(); 
+            const { questions, intro, unlocked }  = await response.json(); 
             exer.questions = questions;
             exer.intro = intro;
+            exer.unlocked = unlocked;
             setCurExercise(exer);
         }}>
         { exercises.map (exercise => <option key={exercise.id} value={`${exercise.id}:${exercise.publicNumber}`}>{exercise.moduleCode}: T{exercise.topicNumber}: Ex {exercise.publicNumber}</option>) }
