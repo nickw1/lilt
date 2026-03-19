@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@lazarv/react-server": "0.0.0-experimental-ea7a06c-20251214-7d32325f",
+    "@lazarv/react-server": "0.0.0-experimental-2c58efe-20260319-b8d37058",
     "@uiw/react-md-editor": "^4.0.11",
     "bcrypt": "^5.1.1",
     "better-sqlite3": "^12.5.0",
@@ -24,21 +24,5 @@
     "dev": "pnpm react-server",
     "build": "pnpm react-server build",
     "start": "pnpm react-server start --port 3002"
-  },
-  "overrides": {
-    "markdown-to-jsx": {
-      "react": "0.0.0-experimental-bdb4a96f-20250801"
-    },
-    "react-feather": {
-      "react": "0.0.0-experimental-bdb4a96f-20250801"
-    },
-    "react-modal": {
-      "react": "0.0.0-experimental-bdb4a96f-20250801",
-      "react-dom": "0.0.0-experimental-bdb4a96f-20250801"
-    },
-    "@uiw/react-md-editor": {
-      "react": "0.0.0-experimental-bdb4a96f-20250801",
-      "react-dom": "0.0.0-experimental-bdb4a96f-20250801"
-    }
   }
 }
