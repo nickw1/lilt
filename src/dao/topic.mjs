@@ -11,6 +11,12 @@ export default class TopicDao {
         return info.lastInsertRowid;
     }
 
+    editTopic(topicId, publicNumber, title) {
+        const stmt = this.db.prepare("UPDATE topics SET number=?, title=? WHERE id=?");
+        const info = stmt.run(publicNumber, title, topicId);
+        return info.changes == 1;
+    }
+
     makePublic(topicId, state) {
         const stmt = this.db.prepare("UPDATE topics SET visibility=? WHERE id=?");
         const info = stmt.run(state, topicId);

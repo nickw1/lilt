@@ -63,3 +63,21 @@ export async function deleteTopic(id) {
     const controller = new Controller(db);
     return controller.deleteTopic(id);
 }
+
+export async function editTopic(state, formData) {
+	const id = formData.get("id"), publicNumber = formData.get("publicNumber"), title = formData.get("title");
+	console.log(`Details: ${id} ${publicNumber} ${title}`);
+    const { isAdmin } = await useLoggedIn();
+    if(!isAdmin) {
+        return {"error" : "Only admins can edit a topic.", ...state};
+    }
+    if(id && publicNumber && title && id.match("^\\d+$") && publicNumber.match("^\\d+$")) {
+        const topicDao = new TopicDao(db);
+        return topicDao.editTopic(id, publicNumber, xss(title)) == 1 ? { id, number: publicNumber, title } : state;
+    } else {
+        return{
+            error: "ID, public number and title not supplied or in invalid format.",
+            ...state
+        };
+    }
+}
