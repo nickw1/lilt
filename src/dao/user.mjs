@@ -1,18 +1,18 @@
 import bcrypt from 'bcrypt';
 
 export default class UserDao {
-    
+
     constructor(db) {
         this.db = db;
     }
 
     addUser() {
         let code = 0, attempts = 0;
-        while(attempts < 10 && (code == 0 || this.findUserByCode(code))) {
+        while (attempts < 10 && (code == 0 || this.findUserByCode(code))) {
             code = Math.round(100000 + Math.random() * 900000);
             attempts++;
         }
-        if(attempts < 10) {
+        if (attempts < 10) {
             const stmt = this.db.prepare("INSERT INTO usercodes(usercode, created) VALUES(?,julianday())");
             const info = stmt.run(code);
             return info.changes ? code : 0;
@@ -35,21 +35,21 @@ export default class UserDao {
 
     setLoggedIn(id, status) {
         const stmt = this.db.prepare("UPDATE usercodes SET loggedin=? WHERE id=? AND (julianday() - created < 7)");
-        const info = stmt.run(status ? 1:0, id);
+        const info = stmt.run(status ? 1 : 0, id);
         return info.changes ? true : false;
     }
 
     setAdminLoggedIn(username, status) {
         const stmt = this.db.prepare("UPDATE admins SET loggedin=? WHERE username=?");
-        const info = stmt.run(status ? 1:0, username);
+        const info = stmt.run(status ? 1 : 0, username);
         return info.changes ? true : false;
     }
 
     isLoggedIn(id) {
         const stmt = this.db.prepare("SELECT loggedin FROM usercodes WHERE id=?");
         const results = stmt.get(id);
-        if(results) {
-            return results.loggedin ? true: false;
+        if (results) {
+            return results.loggedin ? true : false;
         }
         return false;
     }
@@ -57,8 +57,8 @@ export default class UserDao {
     isAdminLoggedIn(username) {
         const stmt = this.db.prepare("SELECT loggedin FROM admins WHERE username=?");
         const results = stmt.get(username);
-        if(results) {
-            return results.loggedin ? true: false;
+        if (results) {
+            return results.loggedin ? true : false;
         }
         return false;
     }
@@ -71,20 +71,27 @@ export default class UserDao {
         return info.changes;
     }
 
-    async findAdmin(username, password) {
+    findAdminByUsername(username) {
         const stmt = this.db.prepare("SELECT * FROM admins WHERE username=?");
-        const result = stmt.get(username);
-        if(result) {
+        return stmt.get(username);
+    }
+
+    async findAdmin(username, password) {
+        const result = this.findAdminByUsername(username);
+        if (result) {
             const match = await bcrypt.compare(password, result.password);
-            return match ?  result.username : null;
+            return match ? result.username : null;
         }
         return null;
     }
 
     async addAdmin(username, password) {
-        const encPassword = await bcrypt.hash(password, 10);
-        const stmt = this.db.prepare("INSERT INTO admins(username, password) VALUES(?, ?)");
-        return stmt.run(username, encPassword);
+        if (this.findAdminByUsername(username) === null) {
+            const encPassword = await bcrypt.hash(password, 10);
+            const stmt = this.db.prepare("INSERT INTO admins(username, password) VALUES(?, ?)");
+            return stmt.run(username, encPassword);
+        }
+        return null;
     }
 
     deleteOldUsercodes() {
