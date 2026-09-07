@@ -1,6 +1,5 @@
 import db from '../../db/db.mjs';
 import ExerciseDao from '../../dao/exercise.mjs';
-import useLoggedIn from '../../hooks/login.mjs';
 
 export default async function GetFullExercise(context) {
     const match = context.url.pathname.match("/exercise/(\\d+)/?$");

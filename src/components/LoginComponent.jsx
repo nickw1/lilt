@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useActionState } from 'react';
+import { useState, useActionState } from 'react';
 import { useClient } from "@lazarv/react-server/client";
 import { login, newUser } from '../actions/user.mjs';
 import LoggedInComponent from './LoggedInComponent.jsx';
@@ -9,8 +9,6 @@ export default function LoginComponent({usercode}) {
     const [newUserState, newUserWithState] = useActionState(newUser, null);
     const [newUserStage, setNewUserStage] = useState(0);
     const [loginState, loginWithState] = useActionState(login, null);
-     
-    const { navigate } = useClient();
 
     return usercode === null ? 
          (newUserStage === 1 && newUserState === null ?  <form action={newUserWithState} onSubmit={() => setNewUserStage(2)}>

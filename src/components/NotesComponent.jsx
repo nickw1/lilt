@@ -1,4 +1,4 @@
-import React, { Fragment, cache } from 'react';
+import { Fragment } from 'react';
 import { Link } from '@lazarv/react-server/navigation';
 import Markdown, { RuleType } from 'markdown-to-jsx';
 import SyntaxHighlight from './SyntaxHighlight.jsx';

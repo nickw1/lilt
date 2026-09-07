@@ -6,7 +6,6 @@ import { useClient } from '@lazarv/react-server/client';
 
 export default function AdminLoginComponent({isAdmin}) {
     
-    const { navigate } = useClient();
     const [ adminLoginState, adminLoginWithState ] = useActionState(adminLogin, null);
 
     return <div>

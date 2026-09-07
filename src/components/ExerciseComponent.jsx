@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useActionState, useRef } from 'react';
+import { useActionState, useRef } from 'react';
 import Markdown, { RuleType } from 'markdown-to-jsx';
 import { answerQuestions } from '../actions/answer.mjs';
 import SyntaxHighlight from './SyntaxHighlight.jsx';
@@ -19,7 +19,7 @@ export default function ExerciseComponent({exercise, submittable}) {
     }
 
     const formId = `ex${exercise.id}`; 
-    let options, hasQuestions = false;
+    let hasQuestions = false;
     const [ answerState, answerQuestionsWithState ] = useActionState(answerQuestions, { status: "", error: null, answered: [] });
     const q = exercise.questions.map (question => {
         const fieldId = `q${question.qid}`;

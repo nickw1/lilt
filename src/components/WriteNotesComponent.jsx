@@ -5,7 +5,6 @@ import MDEditor, { commands } from '@uiw/react-md-editor';
 //import '@uiw/react-md-editor/dist/mdeditor.css'; 
 // manual import seems to fix css issue - the dist file however doesn't work correctly
 import '@uiw/react-md-editor/markdown-editor.css';
-import Markdown from 'markdown-to-jsx';
 import { saveNotes } from '../actions/notes.mjs';
 
 // TODO want to use @uiw/react-md-editor for a full-featured React WYSIWYG

@@ -2,8 +2,8 @@
 
 import AdminAddModuleComponent from './AdminAddModuleComponent.jsx';
 import ConfirmDeleteComponent from './ConfirmDeleteComponent.jsx';
-import { useActionState, useState, useEffect } from 'react';
-import { addModule, deleteModule, setModuleVisibility } from '../actions/module.mjs';
+import { useState } from 'react';
+import { deleteModule, setModuleVisibility } from '../actions/module.mjs';
 
 export default function ModulesComponent({modules, onModulesChanged}) {
     const [deleteState, setDeleteState] = useState({message: ""});

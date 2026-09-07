@@ -1,5 +1,5 @@
 "use client"
-import React, { startTransition } from 'react';
+import { startTransition } from 'react';
 import { useClient } from '@lazarv/react-server/client';
 
 export default function ModuleChooseComponent ({modules, onModuleChosen, msg})  {

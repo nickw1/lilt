@@ -2,7 +2,6 @@ import QuestionDao from '../dao/question.mjs';
 import ExerciseDao from '../dao/exercise.mjs';
 import TopicDao from '../dao/topic.mjs';
 import ModuleDao from '../dao/module.mjs';
-import db from '../db/db.mjs';
 
 export default class Controller {
 

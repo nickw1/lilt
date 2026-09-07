@@ -94,13 +94,6 @@ export default function EditExerciseComponent({exercise, onExerciseDeleted}) {
         }
     }
 
-    function onQuestionAdded(q) {
-        const ed = structuredClone(exDetails);
-        ed.questions.push(q);
-        setExDetails(ed);
-        //document.getElementById('questionType').value = 0;
-    }
-
     async function saveQuestionsToServer(id, questions) {
         try {
             const results = await addQuestionsToExercise(id, questions);

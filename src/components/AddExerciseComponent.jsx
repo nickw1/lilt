@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useContext } from 'react';
+import  { useState, useContext } from 'react';
 import AddWholeQuestionComponent from './AddWholeQuestionComponent.jsx';
 import { addExercise } from '../actions/exercise.mjs';
 import ModuleContext from '../context/module.mjs';

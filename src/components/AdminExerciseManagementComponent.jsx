@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import EditExerciseComponent from './EditExerciseComponent.jsx';
 import AdminAnswersHolder from './AdminAnswersHolder.jsx';

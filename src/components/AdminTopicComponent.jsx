@@ -9,7 +9,6 @@ import ModulesContext from '../context/module.mjs';
 import EditNotesContext from '../context/editNotesEnabled.mjs';
 import AdminEditTopicComponent from './AdminEditTopicComponent.jsx';
 import { useClient } from '@lazarv/react-server/client';
-import { Link } from '@lazarv/react-server/navigation';
 
 export default function AdminTopicComponent() {
     const moduleInfo = useContext(ModulesContext);
@@ -17,8 +16,6 @@ export default function AdminTopicComponent() {
 
     const [topicsState, setTopicsState] = useState(moduleInfo.topics);
     const [status, setStatus] = useState({message : ""});
-
-    const { navigate } = useClient();
 
     useEffect(() => {
         setTopicsState(moduleInfo.topics);

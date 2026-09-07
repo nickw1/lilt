@@ -2,9 +2,7 @@ import fs from 'node:fs/promises';
 import { useSearchParams } from '@lazarv/react-server';
 import { Link } from '@lazarv/react-server/navigation';
 import useLoggedIn from '../../../hooks/login.mjs';
-import useModules from '../../../hooks/modules.mjs';
 import WriteNotesComponent from '../../../components/WriteNotesComponent.jsx';
-import AdminLoginComponent from '../../../components/AdminLoginComponent.jsx';
 import { loadEnvFile } from 'node:process';
 
 export default async function WriteNotesPage() {
