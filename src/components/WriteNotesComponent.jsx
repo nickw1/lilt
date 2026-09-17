@@ -21,12 +21,12 @@ export default function WriteNotesComponent({notes, module, topicNum}) {
             height="80%"
             onChange={setMarkdown} 
             extraCommands={[commands.group([
-                commands.title1,
-                commands.title2,
-                commands.title3,
-                commands.title4,
-                commands.title5,
-                commands.title6
+                commands.heading1,
+                commands.heading2,
+                commands.heading3,
+                commands.heading4,
+                commands.heading5,
+                commands.heading6
             ], { 
                 name: 'headings', 
                 groupName: 'headings', 
