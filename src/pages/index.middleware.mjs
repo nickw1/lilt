@@ -4,6 +4,7 @@ import { cookieName, password } from '../misc/session.mjs'
 import Cookies from '../misc/cookies.mjs';
 
 export default async function SessionRefreshMiddleware() {
+
     const { uid } = await useLoggedIn();
     if(uid !== null) {
         // refresh the session

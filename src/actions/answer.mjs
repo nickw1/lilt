@@ -2,8 +2,6 @@
 
 import db from '../db/db.mjs';
 import AnswerDao from '../dao/answer.mjs';
-import UserDao from '../dao/user.mjs';
-import QuestionDao from '../dao/question.mjs';
 import TopicDao from '../dao/topic.mjs';
 import useLoggedIn from '../hooks/login.mjs';
 import xss from 'xss';

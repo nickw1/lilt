@@ -6,17 +6,18 @@ import { cookieName, password } from '../misc/session.mjs';
 import Cookies from '../misc/cookies.mjs';
 import UserDao from '../dao/user.mjs';
 import db from '../db/db.mjs';
+import { loadEnvFile } from 'node:process';
 
 export async function login(prevState, formData) {
     const userDao = new UserDao(db);
     const usercode = formData.get("usercode");
-    if(usercode && usercode.match("^\\d+$")) {
+    if (usercode && usercode.match("^\\d+$")) {
         const user = userDao.findUserByCode(usercode);
-        if(user) {
-            const session = await getIronSession(new Cookies(), { 
+        if (user) {
+            const session = await getIronSession(new Cookies(), {
                 cookieName, password
-            } );
-            if(userDao.setLoggedIn(user.id, true)) {
+            });
+            if (userDao.setLoggedIn(user.id, true)) {
                 session.uid = user.id;
                 await session.save();
                 redirect('/');
@@ -33,12 +34,12 @@ export async function login(prevState, formData) {
 
 export async function logout() {
     const userDao = new UserDao(db);
-    const session = await getIronSession(new Cookies(), { 
+    const session = await getIronSession(new Cookies(), {
         cookieName, password
-    } );
+    });
     let success = false;
-    if(session.admin) {
-        if(userDao.setAdminLoggedIn(session.admin, false)) {
+    if (session.admin) {
+        if (userDao.setAccountLoggedIn(session.admin, false)) {
             success = true;
             delete session.admin;
             delete session.uid;
@@ -47,13 +48,13 @@ export async function logout() {
         }
     } else {
         success = true;
-        if(userDao.setLoggedIn(session.uid, false)) {
+        if (userDao.setLoggedIn(session.uid, false)) {
             delete session.uid;
             session.destroy();
             redirect('/');
         }
     }
-    if(!success) {
+    if (!success) {
         return { error: "Failed to log out user." };
     }
 }
@@ -67,20 +68,35 @@ export async function newUser(prevState, formData) {
 export async function adminLogin(prevState, formData) {
     const userDao = new UserDao(db);
     const username = formData.get("username"), pass = formData.get("pass");
-    if(username && pass) {
-        const user = await userDao.findAdmin(username, pass);
-        if(user === null) {
+    if (username && pass) {
+        const user = await userDao.findAccount(username, pass);
+        if (user === null) {
             return { error: "Cannot find admin user" };
         } else {
-            const session = await getIronSession(new Cookies(), { 
+            const session = await getIronSession(new Cookies(), {
                 cookieName, password
-            } );
-            session.admin = username; 
+            });
+            session.admin = username;
             session.uid = 0; // use 0 for admin user
             await session.save();
-            redirect('/admin'); 
-        } 
+            redirect('/admin');
+        }
     } else {
         return { error: "Login details missing or in an invalid format." };
+    }
+}
+
+export async function gatekeeper(prevState, formData) {
+    loadEnvFile();
+    const passcode = formData.get("passcode");
+    if (passcode == process.env.GATEKEEPER) {
+        const session = await getIronSession(new Cookies(), {
+            cookieName, password
+        });
+        session.gatekeeper = true;
+        await session.save();
+        redirect('/');
+    } else {
+        return { error: "Invalid gatekeeper passcode. " };
     }
 }
