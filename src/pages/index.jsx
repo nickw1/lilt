@@ -1,4 +1,5 @@
-
+import Cookies from '../misc/cookies.mjs';
+import GatekeeperComponent from '../components/GatekeeperComponent.jsx';
 import LoginComponent from '../components/LoginComponent.jsx';
 import LoggedInComponent from '../components/LoggedInComponent.jsx';
 import ModuleChooseComponent from '../components/ModuleChooseComponent.jsx';
@@ -6,6 +7,7 @@ import LinkModuleChooseComponent from '../components/LinkModuleChooseComponent.j
 import NotesHolder from '../components/NotesHolder.jsx';
 import NotesComponent from '../components/NotesComponent.jsx';
 import { useSearchParams } from '@lazarv/react-server';
+import { getIronSession } from 'iron-session';
 
 
 import { Link } from '@lazarv/react-server/navigation';
@@ -13,69 +15,95 @@ import { Link } from '@lazarv/react-server/navigation';
 import useLoggedIn from '../hooks/login.mjs';
 import useModules from '../hooks/modules.mjs';
 
+import { loadEnvFile } from 'node:process';
+import { cookieName, password } from '../misc/session.mjs';
+
+
 export default async function App() {
     const searchParams = useSearchParams();
     const module = searchParams.module || '';
-    const { usercode, isAdmin } = await useLoggedIn();
 
-    const modules = useModules(isAdmin);
+    loadEnvFile();
 
-    const initTopic = searchParams.topic || 0;
+    const session = await getIronSession(new Cookies(), {
+        cookieName, password
+    });
 
-    const loginComponent = module ? 
-        (usercode === null ? <Link to='/'>Login</Link> : <LoggedInComponent usercode={usercode}/>) : 
-        <LoginComponent 
-            style={{display: module ? 'inline' : 'block' }} 
-            usercode={usercode}  />
+    const passedGatekeeper = !process.env.GATEKEEPER || session.gatekeeper;
 
-
-
-    const moduleChooseComponent =  <ModuleChooseComponent modules={modules} 
-            style={{display: module ? 'inline': 'block' }} 
-             />; 
-
-    const login = module ? 
-        <div style={{    
-            display: 'flex', 
-            justifyContent: 'right', 
-            marginRight: '20px'
-        }} className='logininput'>
-        {loginComponent}
-        </div> :
-        <div>
-        {loginComponent}
-        </div>;
-
-    const modChoose = module ? 
-        "" : <div>{moduleChooseComponent}</div>;
-
-    const title = module ? 
-        <header id='appTitle'>
-        <h1>lilt: Lightweight Interactive Learning Tool</h1>
-        </header> 
-        : 
-        <>
-        <h1>lilt</h1>
+    const unLoggedInTitle = <><h1>lilt</h1>
         <p style={{
-            fontSize: '75%', 
+            fontSize: '75%',
             color: 'teal'
-        }}>Lightweight Interactive Learning Tool</p>
-        </>;
+        }}>Lightweight Interactive Learning Tool</p></>;
 
-    return <div style={{height: "100%"}}><div className={ module? 'loginstuff' : 'intro'}>
-        {title}
-        {login}
-        {modChoose}
-        </div>
-        { module ?  
-        <div className='flexContainer'>
-        <div className='sidebar'>
-        <p><strong>Modules</strong></p>
-        <LinkModuleChooseComponent modules={modules} curModule={module} />
-        </div>
-        <NotesHolder module={module} topic={initTopic}>
-        <NotesComponent module={module} initTopic={initTopic} />
-        </NotesHolder></div> : ""  }
-        </div>;
+    if (passedGatekeeper) {
 
+        const { usercode, isAdmin } = await useLoggedIn();
+
+        const modules = useModules(isAdmin);
+
+        const initTopic = searchParams.topic || 0;
+
+        const loginComponent = module ?
+            (usercode === null ? <Link to='/'>Login</Link> : <LoggedInComponent usercode={usercode} />) :
+            <LoginComponent
+                style={{ display: module ? 'inline' : 'block' }}
+                usercode={usercode} />
+
+
+
+        const moduleChooseComponent = <ModuleChooseComponent modules={modules}
+            style={{ display: module ? 'inline' : 'block' }}
+        />;
+
+        const login = module ?
+            <div style={{
+                display: 'flex',
+                justifyContent: 'right',
+                marginRight: '20px'
+            }} className='logininput'>
+                {loginComponent}
+            </div> :
+            <div>
+                {loginComponent}
+            </div>;
+
+        const modChoose = module ?
+            "" : <div>{moduleChooseComponent}</div>;
+
+        const title = module ?
+            <header id='appTitle'>
+                <h1>lilt: Lightweight Interactive Learning Tool</h1>
+            </header>
+            :
+            unLoggedInTitle;
+
+        return (
+            <div style={{ height: "100%" }}><div className={module ? 'loginstuff' : 'intro'}>
+                {title}
+                {login}
+                {modChoose}
+            </div>
+                {module ?
+                    <div className='flexContainer'>
+                        <div className='sidebar'>
+                            <p><strong>Modules</strong></p>
+                            <LinkModuleChooseComponent modules={modules} curModule={module} />
+                        </div>
+                        <NotesHolder module={module} topic={initTopic}>
+                            <NotesComponent module={module} initTopic={initTopic} />
+                        </NotesHolder></div> : ""}
+            </div>
+        );
+    } else {
+        return (
+            <div style={{ height: "100%" }}><div className='intro'>
+                {unLoggedInTitle}
+                <GatekeeperComponent />
+            </div>
+            </div>
+        );
+    }
 }
+

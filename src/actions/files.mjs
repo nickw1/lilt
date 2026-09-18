@@ -1,6 +1,6 @@
 "use server"
 
-import fs, { writeFile } from 'node:fs/promises';
+import fs from 'node:fs/promises';
 import { loadEnvFile } from 'node:process';
 import { Buffer } from 'node:buffer';
 import useLoggedIn from '../hooks/login.mjs';
