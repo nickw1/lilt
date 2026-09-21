@@ -24,5 +24,10 @@
     "dev": "pnpm react-server",
     "build": "pnpm react-server build",
     "start": "pnpm react-server start --port 3002"
+  },
+  "overrides": {
+    
+      "rollup": ">=4.59.0"
+    
   }
 }
