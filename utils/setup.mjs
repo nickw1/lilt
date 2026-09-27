@@ -39,7 +39,7 @@ async function addAdmin() {
     loadEnvFile(envFile);
     const username = readlineSync.question("Enter username:");
     const password = readlineSync.question("Enter password:", { hideEchoBack: true });
-    if (dao.findAdminByUsername(username) === null) {
+    if (!dao.findAdminByUsername(username)) {
         const { lastInsertRowid } = await dao.addAdmin(username, password);
         console.log(lastInsertRowid ? 'Admin added.' : 'Error adding admin.');
     } else {

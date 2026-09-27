@@ -86,12 +86,9 @@ export default class UserDao {
     }
 
     async addAdmin(username, password) {
-        if (this.findAdminByUsername(username) === null) {
-            const encPassword = await bcrypt.hash(password, 10);
-            const stmt = this.db.prepare("INSERT INTO admins(username, password) VALUES(?, ?)");
-            return stmt.run(username, encPassword);
-        }
-        return null;
+        const encPassword = await bcrypt.hash(password, 10);
+        const stmt = this.db.prepare("INSERT INTO admins(username, password) VALUES(?, ?)");
+        return stmt.run(username, encPassword);
     }
 
     deleteOldUsercodes() {

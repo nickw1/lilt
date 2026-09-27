@@ -39,7 +39,7 @@ export async function logout() {
     });
     let success = false;
     if (session.admin) {
-        if (userDao.setAccountLoggedIn(session.admin, false)) {
+        if (userDao.setAdminLoggedIn(session.admin, false)) {
             success = true;
             delete session.admin;
             delete session.uid;
@@ -66,10 +66,14 @@ export async function newUser(prevState, formData) {
 }
 
 export async function adminLogin(prevState, formData) {
+   
     const userDao = new UserDao(db);
     const username = formData.get("username"), pass = formData.get("pass");
+     console.log(`admin login $username $pass`)
     if (username && pass) {
-        const user = await userDao.findAccount(username, pass);
+        const user = await userDao.findAdmin(username, pass);
+        console.log('account')
+        console.log(user)
         if (user === null) {
             return { error: "Cannot find admin user" };
         } else {
