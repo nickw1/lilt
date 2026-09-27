@@ -82,7 +82,7 @@ export default async function NotesComponent({module, initTopic}) {
     }
 
 
-    const topicsList = topicDao.getAllForModule(module, isAdmin);
+    const topicsList = topicDao.getAllForModule(module, true);
     const topic = (initTopic && `${initTopic}`.match("^\\d+$")) ? initTopic : 0;
 
     const completedStyle = {
