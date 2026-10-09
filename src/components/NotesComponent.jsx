@@ -13,6 +13,9 @@ import useLoggedIn from '../hooks/login.mjs';
 
 import db from '../db/db.mjs';
 
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
+
 const topicDao = new TopicDao(db);
 const exerciseDao = new ExerciseDao(db);
 const answerDao = new AnswerDao(db);
@@ -73,9 +76,10 @@ export default async function NotesComponent({module, initTopic}) {
         } else {
             return protectedContent && node.type != RuleType.paragraph && !dependencyCompleted ? "" : (
                 node.type == RuleType.codeBlock ?
+                    (node.lang == 'math' ? <Latex>{node.text}</Latex> :
                     <SyntaxHighlight key={`module-${module}-topic-${topic}-code-${keyCount++}`} lang={node.lang}>
                     {node.text}
-                    </SyntaxHighlight> 
+                    </SyntaxHighlight>) 
                     : next()
             );
         }
