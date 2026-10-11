@@ -52,10 +52,14 @@ export default function ExerciseComponent({exercise, submittable}) {
                     // logged in.
                     const time = new Date().getTime();
                     if(time - lastPing.current > 3000) {
-                        const response = await fetch(`/user/current?time=${time}`);    
-                        const { loggedIn } = await response.json();
-                        if(!loggedIn) {
-                            alert("Your session has timed out, please login again.");
+                        const response = await fetch(`/user/current?time=${time}`);  
+                        let loggedOut = response.status == 401;  
+                        if(!loggedOut) {
+                            const { loggedIn } = await response.json();
+                            loggedOut = !loggedIn;
+                        }
+                        if(loggedOut) {
+                            alert("You are not logged in. If you were not expecting this, your session may have timed out, in which case you need to login again.");
                         }
                         lastPing.current = time;
                     }
