@@ -1,11 +1,13 @@
 import { Fragment } from 'react';
 import { Link } from '@lazarv/react-server/navigation';
 import Markdown, { RuleType } from 'markdown-to-jsx';
+import { Interweave } from 'interweave';
 import SyntaxHighlight from './SyntaxHighlight.jsx';
 import fs from 'fs/promises';
 import ExerciseComponent from './ExerciseComponent.jsx';
 import TopicListComponent from './TopicListComponent.jsx';
 import TopicNavComponent from './TopicNavComponent.jsx';
+import MathRenderer from './MathRenderer.jsx';
 import TopicDao from '../dao/topic.mjs';
 import ExerciseDao from '../dao/exercise.mjs';
 import AnswerDao from '../dao/answer.mjs';
@@ -13,54 +15,55 @@ import useLoggedIn from '../hooks/login.mjs';
 
 import db from '../db/db.mjs';
 
-import 'katex/dist/katex.min.css';
-import Latex from 'react-latex-next';
+import katex from 'katex';
+
+//import Latex from 'react-latex-next';
 
 const topicDao = new TopicDao(db);
 const exerciseDao = new ExerciseDao(db);
 const answerDao = new AnswerDao(db);
 
 
-export default async function NotesComponent({module, initTopic}) {
-    let keyCount=0, topicDetail;
+export default async function NotesComponent({ module, initTopic }) {
+    let keyCount = 0, topicDetail;
 
     const { isAdmin, uid } = await useLoggedIn();
     const hiddenExercises = [];
 
     function exerciseHandler(ex, dep) {
         let exDependencyCompleted = isAdmin || dep === undefined;
-        const depExer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, dep); 
-        if(!exDependencyCompleted) {
+        const depExer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, dep);
+        if (!exDependencyCompleted) {
             exDependencyCompleted = depExer?.id ? answerDao.hasUserCompletedExercise(uid, depExer.id) : true;
-        } 
+        }
         let content = "";
-        if(exDependencyCompleted || depExer?.unlocked == 1 || topicDetail.visibility == 1) {
+        if (exDependencyCompleted || depExer?.unlocked == 1 || topicDetail.visibility == 1) {
             // load exercise
             const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, ex);
             const completed = answerDao.hasUserCompletedExercise(uid, exer.id);
             const exercise = exerciseDao.getFullExercise(exer.id);
             content = <Fragment key={`ex-${exer.id}`}><ExerciseComponent exercise={exercise} submittable={!completed && topicDetail.visibility == 0} /></Fragment>;
-         } else {
+        } else {
             hiddenExercises.push(parseInt(ex));
-            content = uid !== null && hiddenExercises.indexOf(dep) == -1 ? <p style={unauthorisedStyle} key={`ex-unauthorised-${ex}-${dep}`}>This content is hidden as you need to complete exercise {dep} first.</p>: "";
-         }
-         return <div key={`ex-heading-${ex}`}><h2>Exercise {ex}</h2>{content}</div>;
+            content = uid !== null && hiddenExercises.indexOf(dep) == -1 ? <p style={unauthorisedStyle} key={`ex-unauthorised-${ex}-${dep}`}>This content is hidden as you need to complete exercise {dep} first.</p> : "";
+        }
+        return <div key={`ex-heading-${ex}`}><h2>Exercise {ex}</h2>{content}</div>;
     }
 
-    function renderRuleHandler (next, node, renderChildren) {
+    function renderRuleHandler(next, node, renderChildren) {
         let matches = null, exMatch = null;
-        if(node.type == RuleType.paragraph && node.children[0].type == RuleType.text) {
+        if (node.type == RuleType.paragraph && node.children[0].type == RuleType.text) {
 
-            matches =  /^@(answer|depends)\((\d+)\)$/.exec(node.children[0].text);
+            matches = /^@(answer|depends)\((\d+)\)$/.exec(node.children[0].text);
             exMatch = /^@(ex\d+)(\((\d+)\))?$/.exec(node.children[0].text);
         }
-        if(matches) {
+        if (matches) {
             const heading = <h2 key={`answer-title-${matches[2]}`}>Answer to exercise {matches[2]}</h2>;
             protectedContent = true;
             const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, matches[2]);
             dependencyCompleted = isAdmin || topicDetail.visibility == 1 || exer.unlocked == 1 || answerDao.hasUserCompletedExercise(uid, exer.id);
-            if(dependencyCompleted) {
-                  return matches[1] == "answer" ? heading : ""; // return nothing for depends, switch to protected content
+            if (dependencyCompleted) {
+                return matches[1] == "answer" ? heading : ""; // return nothing for depends, switch to protected content
             } else {
                 const dependency = parseInt(matches[2]);
                 return uid === null || hiddenExercises.indexOf(dependency) != -1 ? "" : <div key={`hidden-content-ex-${matches[2]}-${keyCount++}`}>{matches[1] == "answer" ? heading : <h3>Protected content</h3>}<p style={unauthorisedStyle} key={`hidden-content-${keyCount++}`}>This content is hidden as you need to complete exercise {dependency} first.</p></div>;
@@ -71,17 +74,32 @@ export default async function NotesComponent({module, initTopic}) {
         } else if (exMatch) {
             const exNum = exMatch[1].substring(2);
             const exer = exerciseDao.getExerciseByPublicNumber(topicDetail.id, exNum);
-            return uid === null && exer.unlocked != 1 && topicDetail.visibility != 1 ? 
+            return uid === null && exer.unlocked != 1 && topicDetail.visibility != 1 ?
                 <div key={`ex-${exNum}-notloggedin`}><h2>Exercise {exNum}</h2><p style={unauthorisedStyle} key={`ex-login-needed-${exNum}`}>You must be logged in to attempt exercise {exNum}.</p></div> : exerciseHandler(exNum, parseInt(exMatch[3]));
         } else {
-            return protectedContent && node.type != RuleType.paragraph && !dependencyCompleted ? "" : (
+            //const fixed = node.text?.replace(/\\\\/g, "\\");
+            if (node.type == RuleType.codeBlock && (!protectedContent || dependencyCompleted)) {
+                if (node.lang == 'math') {
+                    const renderedMath = katex.renderToString(node.text, { output: "html"});
+                    console.log(`*****************************renderedMath is ${renderedMath}`);
+                    return <MathRenderer math={renderedMath} />;
+                } else {
+                    return (
+                        <SyntaxHighlight key={`module-${module}-topic-${topic}-code-${keyCount++}`} lang={node.lang}>
+                            {node.text}
+                        </SyntaxHighlight>
+                    )
+                }
+            }
+            return protectedContent && node.type != RuleType.paragraph && !dependencyCompleted ? "" : next();
+            /*(
                 node.type == RuleType.codeBlock ?
-                    (node.lang == 'math' ? <Latex>{node.text}</Latex> :
-                    <SyntaxHighlight key={`module-${module}-topic-${topic}-code-${keyCount++}`} lang={node.lang}>
-                    {node.text}
-                    </SyntaxHighlight>) 
+                    (node.lang == 'math' ? <Latex strict>{fixed}</Latex> :
+                        <SyntaxHighlight key={`module-${module}-topic-${topic}-code-${keyCount++}`} lang={node.lang}>
+                            {node.text}
+                        </SyntaxHighlight>)
                     : next()
-            );
+            );*/
         }
     }
 
@@ -100,47 +118,48 @@ export default async function NotesComponent({module, initTopic}) {
         margin: '4px',
         borderRadius: '4px',
     };
- 
+
     let content = ''; // placeholder
     let protectedContent = false, dependencyCompleted = false;
 
-    if(topic > 0) {
+    if (topic > 0) {
         topicDetail = topicDao.getTopicByModuleCodeAndNumber(module, topic);
         try {
-            const mdstring =  (await fs.readFile(`${process.env.RESOURCES}/${module}/${topic}.md`)).toString();
+            const mdstring = await fs.readFile(`${process.env.RESOURCES}/${module}/${topic}.md`, 'utf-8');
+            //# console.log(JSON.stringify(mdstring))
 
             content = <main>
-                { topicDetail.visibility == 2 && !isAdmin ?
-                <p>This content is currently not available.</p> :
-                <div>
-                <header className='notesHeader'>
-                <h1>Topic {topicDetail.number}</h1>
-                <h1>{topicDetail.title}</h1></header>
-                <Markdown options={{
-                    renderRule: renderRuleHandler
-                }}>{mdstring}</Markdown>
-                </div> }
+                {topicDetail.visibility == 2 && !isAdmin ?
+                    <p>This content is currently not available.</p> :
+                    <div>
+                        <header className='notesHeader'>
+                            <h1>Topic {topicDetail.number}</h1>
+                            <h1>{topicDetail.title}</h1></header>
+                        <Markdown options={{
+                            renderRule: renderRuleHandler
+                        }}>{mdstring}</Markdown>
+                    </div>}
             </main>;
-        } catch(e) {
+        } catch (e) {
             content = <p>Error: {e.code == 'ENOENT' ? `Notes for ${module}, topic ${topic} not found.` : e.code}</p>;
         }
     }
     const adminLink = isAdmin ? <Link to='/admin'>Admin Page</Link> : "";
-    const displayedTopics = topic == 0 ?  
-            <>
-            <div style={{display: 'flex', justifyContent: 'end'}}>
-            {adminLink}
+    const displayedTopics = topic == 0 ?
+        <>
+            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                {adminLink}
             </div>
             <TopicListComponent module={module} topicsList={topicsList} />
-            </> :
-            <div style={{display: 'flex', justifyContent:  isAdmin ?  'space-between': 'end' }}>
+        </> :
+        <div style={{ display: 'flex', justifyContent: isAdmin ? 'space-between' : 'end' }}>
             {adminLink}
-            <TopicNavComponent module={module} topicsList={topicsList} 
-             currentTopic={topic} />
-             </div> ;
+            <TopicNavComponent module={module} topicsList={topicsList}
+                currentTopic={topic} />
+        </div>;
 
     return <div>
         {displayedTopics}
         <div>{content}</div>
-        </div>;
+    </div>;
 }
