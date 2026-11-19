@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "noEmit": true,
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "skipLibCheck": true,
+        "jsx": "preserve",
+        "allowJs": true,
+        "types": [
+            "vite/client",
+            "@vitejs/plugin-rsc/types"
+        ],
+    },
+    "include": [
+        "server.ts",
+        "./src/**/*.tsx",
+        "actions/*.ts",
+        "hooks/*.ts",
+        "misc/modules.ts", 
+        "misc/login.ts"    
+    ]
+}
