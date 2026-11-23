@@ -228,3 +228,12 @@ export interface DeleteModuleReturn {
     errors: string[];
     warning?: string;
 }
+
+export interface GatekeeperState {
+    success: boolean;
+    error?: string;
+}
+
+export interface GatekeeperSession {
+    gatekeeper: boolean;
+}

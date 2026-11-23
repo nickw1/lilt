@@ -9,7 +9,6 @@ export const cookieName = "loginSession";
 export const password = process.env.SESSION_PASS as SessionOptions["password"];
 
 export async function getSession<T extends object>(request: Request) {
-    console.log("getSession(): headers: ", getPendingResponseHeaders());
     return await getIronSession<T>(webCookies(request, getPendingResponseHeaders()!), { cookieName, password, ttl: 3600 });
 }
 

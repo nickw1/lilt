@@ -3,7 +3,7 @@
 import { getRequest, getPendingResponseHeaders } from 'tinyrsc/server';
 import db from '../db';
 import UserDao from '../dao/user.mjs';
-import type { LoginState, AdminLoginState } from '../types/';
+import type { LoginState, AdminLoginState, GatekeeperState, GatekeeperSession } from '../types/';
 import { getSession } from '../misc/session';
 import type { UidSession } from "../types";
 
@@ -11,8 +11,6 @@ import type { UidSession } from "../types";
 
 export async function login(prevState: LoginState, formData: FormData): Promise<LoginState> {
     const request = getRequest()!;
-    console.log('+++++++login() server function: request=', request);
-    console.log('pending response headers: ', getPendingResponseHeaders());
     const userDao = new UserDao(db);
     const usercodeStr = formData.get("usercode") as string | null;
     if (usercodeStr === null) {
@@ -30,10 +28,8 @@ export async function login(prevState: LoginState, formData: FormData): Promise<
                     console.log(`Set user with id ${user.id} as logged in`);
                     session.uid = user.id;
                     await session.save();
-                    console.log('in server function, pending response headers now: ', getPendingResponseHeaders());
                     return { usercode, error: null };
                 } else {
-                    console.log('failed to login user');
                     return { usercode: null, error: "Failed to login user. It's likely the user code has expired." };
                 }
 
@@ -70,7 +66,6 @@ export async function logout() {
 export async function newUser() {
     const userDao = new UserDao(db);
     const usercode = userDao.addUser();
-    console.log(`newUser(): got a usercode: ${usercode}`);
     return usercode > 0 ? { usercode } : { error: "Failed to create new user" };
 }
 
@@ -91,4 +86,17 @@ export async function adminLogin(prevState: AdminLoginState, formData: FormData)
         }
     }
     return { adminLoggedIn: false, error: "Login credentials not provided or username in unexpected format" };
+}
+
+export async function gatekeeper(prevState: GatekeeperState | null, formData: FormData) : Promise<GatekeeperState> {
+    const request = getRequest()!;
+    const passcode = formData.get("passcode");
+    if (passcode == process.env.GATEKEEPER) {
+        const session = await getSession<GatekeeperSession>(request);
+        session.gatekeeper = true;
+        await session.save();
+        return { success: true };
+    } else {
+        return { success: false, error: "Invalid gatekeeper passcode." };
+    }
 }
