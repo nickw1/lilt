@@ -10,7 +10,7 @@ import ExerciseDao from './dao/exercise.mjs';
 import fs from 'node:fs/promises';
 import mime from 'mime-types';
 
-const PORT = 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
 const app = express();
 app.use(express.json());
